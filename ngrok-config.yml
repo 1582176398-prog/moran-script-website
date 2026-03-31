@@ -1,0 +1,12 @@
+# ngrok配置 - 墨染剧本杀网站部署
+version: "2"
+authtoken: # 请从https://dashboard.ngrok.com/get-started/your-authtoken获取token
+
+tunnels:
+  moran-script:
+    proto: http
+    addr: 8899
+    hostname: moran-script.ngrok-free.app # 免费子域名
+    region: ap # 亚太地区
+    log_level: debug
+    inspect: false

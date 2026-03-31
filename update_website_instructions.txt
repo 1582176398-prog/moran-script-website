@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# 更新 请君入瓮 的简介
+replace_in_file(filePath, "<p>请君入瓮.*?</p>", "<p>六名角色卷入权谋漩涡，在虚实交织的瓮中局里经历三次身份反转，体验"白切黑"人设与禁忌之恋，最终直面"破局成饵"的人性考验</p>", flags=re.DOTALL)
+
+# 移除 请君入瓮 的角色简介按钮（如果存在）
+# 需要查找并移除 onclick="showRoleModal('qingjunruweng')" 的按钮
+# 更新 流芳 的简介
+replace_in_file(filePath, "<p>流芳.*?</p>", "<p>以明末清初"江阴八十一日"抗清起义为背景，六位身份各异的角色被卷入历史洪流，在"剃发易服"的抗争中，揭开古籍《江阴志》隐藏的笔迹与家族秘辛，见证十万人同心死义的壮烈誓言，体验家国大义与血脉亲情交织的史诗迷局</p>", flags=re.DOTALL)
+
+# 移除 流芳 的角色简介按钮（如果存在）
+# 需要查找并移除 onclick="showRoleModal('liufang')" 的按钮
+# 更新 如故 的简介
+replace_in_file(filePath, "<p>如故.*?</p>", "<p>六位被命运戏弄的权贵子弟，机关算尽强求相逢，恨海难填又相思如故，在壁阴倒转、时间重回的轮回中，上演一场机关算尽、黄泉相见的纯恨虐恋</p>", flags=re.DOTALL)
+
+# 移除 如故 的角色简介按钮（如果存在）
+# 需要查找并移除 onclick="showRoleModal('rugu')" 的按钮
+# 更新 阙落 的简介
+replace_in_file(filePath, "<p>阙落.*?</p>", "<p>以"禽兽王朝"为背景，六名皇族权贵子弟在朝堂倾轧与爱恨纠葛中，揭开被历史掩埋的极致虐恋与权力阴谋。历史人物化身剧中角色，玩家将亲历那段荒诞又悲凉的乱世风云，在权谋与情感的撕扯中，体验"阙落"二字背后的深意——宫阙倾颓，繁华落尽，唯有真情与执念穿越历史尘埃，留下一声叹息。</p>", flags=re.DOTALL)
+
+# 移除 阙落 的角色简介按钮（如果存在）
+# 需要查找并移除 onclick="showRoleModal('queluo')" 的按钮
+# 更新 万仞青山听水寒 的简介
+replace_in_file(filePath, "<p>万仞青山听水寒.*?</p>", "<p>说书少年百里优秀，台上讲六人逆天传奇，忽转新篇述梦境奇遇，素月明河、沧江灯火皆入话中。至精彩处却哑然收声，眼底微红，叹息饮酒半醉而去。稚子追问姓名，但答"百里优秀"，远水远山，故人故事。</p>", flags=re.DOTALL)
+
+# 更新 万仞青山听水寒 的角色数据
+# 需要更新JavaScript中的wanren角色数据
+const roles = [
+          { name: "萧辞", gender: "male", desc: "双向救赎爱情线、兄弟情、母亲线、师徒线、友情线、被救赎。" },
+          { name: "棠月", gender: "female", desc: "双向救赎爱情线、类母亲、阿婆线、被救赎、宠物线。" },
+          { name: "李知行", gender: "male", desc: "顶峰相见爱情线、极致反转、师徒、愧疚线、苍生。" },
+          { name: "阿沅", gender: "female", desc: "顶峰相见爱情线、极致反转、阿婆、姐妹、苍生。" },
+          { name: "沈初一", gender: "male", desc: "青梅竹马爱情线、爷爷、同门手足情、团宠。" },
+          { name: "赵小西", gender: "female", desc: "青梅竹马爱情线、父母、阿婆、姐妹、团宠、族人线。" },
+        ]
+# 更新 梦灵祈念时 的简介
+replace_in_file(filePath, "<p>梦灵祈念时.*?</p>", "<p>《梦灵祈念时》设定在神秘灵幻世界，人灵共存，一场离奇梦境杀人案打破平静。六位调查者进入梦境探案，在虚实交织中揭开隐藏的秘密与真相</p>", flags=re.DOTALL)
+
+# 移除 梦灵祈念时 的角色简介按钮（如果存在）
+# 需要查找并移除 onclick="showRoleModal('mengling')" 的按钮
+# 更新 窃云台 的简介
+replace_in_file(filePath, "<p>窃云台.*?</p>", "<p>明朝为背景，六名角色卷入"窃国为私谓之为贼，窃国为公谓之为君"的权谋漩涡，在君臣忠义、师徒传承与小人物觉醒中，体验双恋陪互动与极致反转</p>", flags=re.DOTALL)
+
+# 移除 窃云台 的角色简介按钮（如果存在）
+# 需要查找并移除 onclick="showRoleModal('qieyuntai')" 的按钮
+# 更新 壁上观 的简介
+replace_in_file(filePath, "<p>壁上观.*?</p>", "<p>六名身负宿命的角色因东行之旅交织，在神佛妖鬼的棋局中挣扎求存。当浮光撕裂倒悬的天河，三千年的月光凝结成冰冷的舍利，这一次东行不为取经，只为取回那被诸天神佛嚼碎又吐出的爱的残骸</p>", flags=re.DOTALL)
+
+# 移除 壁上观 的角色简介按钮（如果存在）
+# 需要查找并移除 onclick="showRoleModal('bishangguan')" 的按钮
+# 更新 同归 的简介
+replace_in_file(filePath, "<p>同归.*?</p>", "<p>在"女子为尊"的架空曌国，六名角色卷入皇权传承的漩涡，在女帝大女主的威压下，蚍蜉撼树，相爱之人能否同去同归</p>", flags=re.DOTALL)
+
+# 移除 同归 的角色简介按钮（如果存在）
+# 需要查找并移除 onclick="showRoleModal('tonggui')" 的按钮
+# 更新 大宴之上 的简介
+replace_in_file(filePath, "<p>大宴之上.*?</p>", "<p>大宴之上的详细剧情简介</p>", flags=re.DOTALL)

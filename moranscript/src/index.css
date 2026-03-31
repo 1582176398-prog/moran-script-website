@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  body {
+    @apply bg-ink-950 text-white font-sans;
+    background-image: 
+      radial-gradient(ellipse at 20% 20%, rgba(188, 70, 224, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #1a0520;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(188, 70, 224, 0.4);
+    border-radius: 3px;
+  }
+}
+
+@layer components {
+  .card-glass {
+    @apply bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  
+  .card-glass:hover {
+    @apply border-ink-500/40;
+    box-shadow: 0 8px 32px rgba(188, 70, 224, 0.15), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .tag-style {
+    @apply text-xs px-2 py-0.5 rounded-full font-medium;
+  }
+  
+  .btn-primary {
+    @apply px-4 py-2 bg-gradient-to-r from-ink-600 to-ink-500 text-white text-sm font-medium rounded-lg 
+           transition-all duration-200 hover:from-ink-500 hover:to-ink-400 
+           hover:shadow-lg hover:shadow-ink-500/30 cursor-pointer active:scale-95;
+  }
+
+  .btn-gold {
+    @apply px-4 py-2 bg-gradient-to-r from-gold-700 to-gold-500 text-ink-950 text-sm font-semibold rounded-lg 
+           transition-all duration-200 hover:from-gold-600 hover:to-gold-400 
+           hover:shadow-lg hover:shadow-gold-500/30 cursor-pointer active:scale-95;
+  }
+
+  .section-title {
+    @apply text-2xl font-serif font-bold text-white;
+  }
+
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4;
+  }
+
+  .modal-content {
+    @apply bg-ink-900 border border-ink-700/50 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.6), 0 0 60px rgba(188, 70, 224, 0.1);
+  }
+}

@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墨染剧本杀 - 城限剧本库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif; 
+            background: #f8f9fa;
+            color: #2c3e50; /* 深蓝灰色文字，更柔和易读 */
+            min-height: 100vh;
+            line-height: 1.7; /* 增加行高提高可读性 */
+            position: relative;
+        }
+        
+        /* 水墨花纹装饰 */
+        .ink-decor {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .ink-decor-1 {
+            position: absolute;
+            top: 10%;
+            left: 5%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+        
+        .ink-decor-2 {
+            position: absolute;
+            bottom: 15%;
+            right: 8%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, rgba(106, 90, 205, 0.07) 0%, transparent 70%);
+            filter: blur(50px);
+        }
+        
+        /* 古典边框花纹 */
+        .frame-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            border: 30px solid transparent;
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0,20 Q10,0 20,0 L80,0 Q90,0 90,10 L90,90 Q90,100 80,100 L20,100 Q10,100 10,90 L10,10 Q10,0 20,0" fill="none" stroke="rgba(212, 175, 55, 0.1)" stroke-width="2"/><path d="M25,25 Q30,15 35,15 L65,15 Q70,15 75,25 L75,75 Q70,85 65,85 L35,85 Q30,85 25,75 Z" fill="none" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/></svg>') 30 stretch;
+            z-index: -1;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(rgba(248, 249, 250, 0.95), rgba(240, 241, 242, 0.9));
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #e0e6ed;
+        }
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #8b7500 0%, #666666 50%, #8b7500 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(139, 117, 0, 0.2);
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666666;
+            margin-bottom: 1.5rem;
+        }
+        .tagline {
+            color: #8b7500; /* 深金色 */
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        .script-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin: 2rem 0;
+        }
+        .script-card {
+            background: #ffffff;
+            border: 1px solid #e0e6ed;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .script-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(100, 100, 100, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .script-card:hover::before {
+            opacity: 1;
+        }
+        
+        /* 确保按钮可以点击 */
+        .btn, .btn-dm {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* 确保图标不阻挡点击 */
+        .script-card > div[style*="position: absolute"] {
+            pointer-events: none;
+        }
+        .script-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border-color: #b0b0b0;
+        }
+        .script-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 8px;
+            margin-right: 20px; /* 减小右边距 */
+        }
+        .script-subtitle {
+            color: #666666;
+            font-size: 1rem;
+            margin-bottom: 16px;
+        }
+        .script-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+        }
+        .tag {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: rgba(0, 0, 0, 0.08);
+            color: #444444;
+        }
+        .tag.古风 { background: rgba(76, 175, 80, 0.2); border-left: 3px solid #4CAF50; }
+        .tag.情感 { background: rgba(233, 30, 99, 0.2); border-left: 3px solid #E91E63; }
+        .tag.推理 { background: rgba(33, 150, 243, 0.2); border-left: 3px solid #2196F3; }
+        .tag.家国 { background: rgba(255, 152, 0, 0.2); border-left: 3px solid #FF9800; }
+        .tag.阵营 { background: rgba(156, 39, 176, 0.2); border-left: 3px solid #9C27B0; }
+        .tag.硬核 { background: rgba(13, 71, 161, 0.2); border-left: 3px solid #0D47A1; }
+        .tag.江湖 { background: rgba(0, 150, 136, 0.2); border-left: 3px solid #009688; }
+        .tag.恩怨 { background: rgba(183, 28, 28, 0.2); border-left: 3px solid #B71C1C; }
+        .script-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+            font-size: 0.95rem;
+        }
+        .detail-item {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 10px 14px;
+            border-radius: 10px;
+        }
+        .detail-label {
+            color: #777777;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+        .detail-value {
+            color: #f8f9fa;
+            font-weight: 500;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #8b7500 0%, #666666 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(139, 117, 0, 0.4);
+        }
+        .btn-dm {
+            background: linear-gradient(90deg, #6c63ff 0%, #4a43d6 100%);
+            color: white;
+        }
+        
+        /* 角色简介按钮 */
+        .btn-role {
+            background: linear-gradient(90deg, #00b894 0%, #00a085 100%);
+            color: white;
+            margin-left: 10px;
+        }
+        
+        /* 弹窗遮罩层 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* 弹窗内容 */
+        .modal-content {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(30px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        /* 弹窗标题和关闭按钮 */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e6ed;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            background: #f5f7fa;
+            color: #e74c3c;
+        }
+        
+        /* 角色列表 */
+        .role-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .role-item {
+            flex: 1 1 calc(50% - 10px);
+            min-width: 250px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .role-item:nth-child(odd) {
+            border-left-color: #e74c3c;
+        }
+        
+        .role-item:nth-child(even) {
+            border-left-color: #2ecc71;
+        }
+        
+        .role-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .role-gender {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .role-gender.male {
+            background: rgba(52, 152, 219, 0.1);
+            color: #2980b9;
+        }
+        
+        .role-gender.female {
+            background: rgba(231, 76, 60, 0.1);
+            color: #c0392b;
+        }
+        
+        .role-desc {
+            color: #546e7a;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        /* 剧本简介 */
+        .script-intro {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            border-left: 4px solid #9b59b6;
+        }
+        
+        .script-intro h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid #e0e0e0;
+            color: #777777;
+            font-size: 0.95rem;
+        }
+        .difficulty {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 2; /* 确保难度标签在图标上层 */
+        }
+        .difficulty.新手 { background: rgba(46, 125, 50, 0.3); color: #81C784; }
+        .difficulty.标准 { background: rgba(251, 192, 45, 0.3); color: #FDD835; }
+        .difficulty.进阶 { background: rgba(244, 67, 54, 0.3); color: #EF5350; }
+        .difficulty.高阶 { background: rgba(123, 31, 162, 0.3); color: #BA68C8; }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0 40px;
+            text-align: center;
+        }
+        .stat-item {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            min-width: 140px;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #8b7500;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            color: #777777;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .script-grid { grid-template-columns: 1fr; }
+            .stats { flex-direction: column; align-items: center; gap: 15px; }
+            .logo {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #8b7500 0%, #666666 50%, #8b7500 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(139, 117, 0, 0.2);
+            margin-bottom: 0.5rem;
+        }
+            .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(245, 245, 245, 0.95);
+            border: 1px solid rgba(139, 117, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            transition: transform 0.3s ease;
+        }
+            .sound-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(245, 245, 245, 0.95);
+            border: 1px solid rgba(139, 117, 0, 0.3);
+            border-radius: 12px;
+            padding: 10px 15px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        }
+        
+        /* 水墨风格分割线 */
+        .ink-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(139, 117, 0, 0.2), transparent);
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .ink-divider::before, .ink-divider::after {
+            content: "〰";
+            position: absolute;
+            top: -10px;
+            color: rgba(139, 117, 0, 0.4);
+            font-size: 1.2rem;
+        }
+        
+        .ink-divider::before {
+            left: 50px;
+        }
+        
+        .ink-divider::after {
+            right: 50px;
+        }
+        
+        /* 水墨风格文字装饰 */
+        .ink-text {
+            position: relative;
+            display: inline-block;
+            z-index: 1;
+        }
+        
+        .ink-text::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #666666, transparent);
+            z-index: -1;
+        }
+        
+        /* 音乐播放器样式（简化版）- 隐藏UI */
+        .music-player {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            padding: 0;
+            z-index: 9999;
+            backdrop-filter: none;
+            box-shadow: none;
+            min-width: 0;
+            max-width: 0;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .music-player:hover {
+            transform: translateY(-3px);
+        }
+        
+        .music-header {
+            text-align: center;
+            padding: 0 0 8px 0;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(139, 117, 0, 0.1);
+            font-size: 0.9rem;
+            color: #555555;
+        }
+        
+        .music-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .music-btn {
+            background: rgba(139, 117, 0, 0.2);
+            border: 1px solid rgba(139, 117, 0, 0.2);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8b7500;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        
+        .music-btn:hover {
+            background: rgba(139, 117, 0, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .music-btn.active {
+            background: rgba(139, 117, 0, 0.4);
+            color: #666666;
+        }
+        
+        .volume-slider {
+            flex: 1;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        
+        .volume-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(to right, #8b7500, #666666);
+            border-radius: 3px;
+        }
+        
+        .music-info {
+            font-size: 0.75rem;
+            color: #666666;
+            text-align: center;
+            margin-top: 3px;
+        }
+        
+        /* 音效开关 */
+        .sound-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(245, 245, 245, 0.95);
+            border: 1px solid rgba(139, 117, 0, 0.3);
+            border-radius: 12px;
+            padding: 10px 15px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .sound-toggle:hover {
+            background: rgba(45, 27, 70, 0.95);
+        }
+        
+        .sound-label {
+            color: #777777;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .sound-icon {
+            color: #8b7500;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    
+    
+    <!-- 音乐播放器 -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-header">
+            <span>🎵</span> 背景音乐
+        </div>
+        <div class="music-controls">
+            <div class="music-btn" id="playBtn">▶️</div>
+            <div class="volume-slider" id="volumeSlider">
+                <div class="volume-fill" id="volumeFill"></div>
+            </div>
+        </div>
+        <div class="music-info" id="musicInfo">《盗墓笔记·张起灵·不朽》伴奏</div>
+    </div>
+    
+    <!-- 音效开关 -->
+    <div class="sound-toggle" id="soundToggle">
+        <div class="sound-icon">🔊</div>
+        <div class="sound-label">开/关音效</div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <img src="web-pdfs/微信图片_2026-04-01_030024_844.jpg" alt="墨染剧本杀Logo" style="width: 120px; height: 120px; border-radius: 12px; border: 3px solid rgba(212, 175, 55, 0.5); box-shadow: 0 8px 25px rgba(139, 117, 0, 0.3); object-fit: cover;">
+                    <h1 class="logo">墨染剧本杀</h1>
+                </div>
+                <p class="subtitle">重庆城限剧本精品店 · 沉浸式体验</p>
+                <p class="tagline">✨ 精选十部城限剧本，专业DM带您进入沉浸世界</p>
+            </div>
+        </header>
+
+        <div class="stats">
+<div class="stat-item">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">部城限剧本</div>
+                </div>
+            <div class="stat-item">
+                <div class="stat-number">54+</div>
+                <div class="stat-label">总游戏时长</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">专业DM</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">好评率</div>
+            </div>
+        </div>
+
+        <div class="script-grid">
+            <!-- 大宴之上（主版） -->
+            <div class="script-card">
+                <span class="difficulty 进阶">进阶</span>
+                <div style="position: absolute; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(100, 100, 100, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(100, 100, 100, 0.2); z-index: 1; opacity: 0.5; pointer-events: none;">
+                    <span style="font-size: 0.85rem;">🏯</span>
+                </div>
+                <h2 class="script-title">大宴之上</h2>
+                <p class="script-subtitle">主版 · 6人古风权谋情感本</p>
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女 · 2DM+2NPC</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">10h+</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 古风">古风</span>
+                    <span class="tag 情感">情感</span>
+                    <span class="tag 阵营">阵营</span>
+                    <span class="tag 家国">家国</span>
+                </div>
+<p>盛唐宴会，权谋巅峰。安史之乱前夕的长安夜宴，六位角色各怀心思，家国情怀与个人命运交织。多重结局设定，角色抉择将改变历史走向。</p>
+		<div style="display: flex; gap: 10px; margin-top: 20px;">
+			<a href="web-pdfs/dayan_zhuban.pdf" class="btn btn-dm" download>📄 DM手册</a>
+			<button class="btn btn-role" onclick="showRoleModal('dayan')">👥 角色简介</button>
+		</div>
+            </div>
+
+            <!-- 万仞青山听水寒 -->
+            <div class="script-card">
+                <span class="difficulty 标准">标准</span>
+                <div style="position: absolute; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(100, 100, 100, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(100, 100, 100, 0.2); z-index: 1; opacity: 0.5; pointer-events: none;">
+                    <span style="font-size: 0.85rem;">🗡️</span>
+                </div>
+                <h2 class="script-title">万仞青山听水寒</h2>
+                <p class="script-subtitle">6人古风仙侠情感本</p>
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">5-6h</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 古风">古风</span>
+                    <span class="tag 仙侠">仙侠</span>
+                    <span class="tag 情感">情感</span>
+                </div>
+                <p>[^<]*</p>
+		<div style="display: flex; gap: 10px; margin-top: 20px;">
+			<a href="web-pdfs/wanren.pdf" class="btn btn-dm" download>📄 DM手册</a>
+			<button class="btn btn-role" onclick="showRoleModal(\'wanren\')">👥 角色简介</button>
+		</div>
+            </div>
+
+            <!-- 流芳 -->
+            <div class="script-card">
+                <span class="difficulty 进阶">进阶</span>
+                <div style="position: absolute; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(100, 100, 100, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(100, 100, 100, 0.2); z-index: 1; opacity: 0.5; pointer-events: none;">
+                    <span style="font-size: 0.85rem;">📜</span>
+                </div>
+                <h2 class="script-title">流芳</h2>
+                <p class="script-subtitle">历史改编 · 江阴八十一日</p>
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">5-6h</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 历史">历史</span>
+                    <span class="tag 家国">家国</span>
+                    <span class="tag 情感">情感</span>
+                </div>
+                <p>[^<]*</p>
+		<div style="display: flex; gap: 10px; margin-top: 20px;">
+			<a href="web-pdfs/liufang.pdf" class="btn btn-dm" download>📄 DM手册</a>
+			<button class="btn btn-role" onclick="showRoleModal(\'liufang\')">👥 角色简介</button>
+		</div>
+            </div>
+
+            <!-- 梦灵祈念时 -->
+            <div class="script-card">
+                <span class="difficulty 进阶">进阶</span>
+                <div style="position: absolute; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(100, 100, 100, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(100, 100, 100, 0.2); z-index: 1; opacity: 0.5; pointer-events: none;">
+                    <span style="font-size: 0.85rem;">🎭</span>
+                </div>
+                <h2 class="script-title">梦灵祈念时</h2>
+                <p class="script-subtitle">奇幻推理 · 灵媒世界观</p>
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">5-6h</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 奇幻">奇幻</span>
+                    <span class="tag 推理">推理</span>
+                    <span class="tag 情感">情感</span>
+                </div>
+                <p>[^<]*</p>
+		<div style="display: flex; gap: 10px; margin-top: 20px;">
+			<a href="web-pdfs/mengling.pdf" class="btn btn-dm" download>📄 DM手册</a>
+			<button class="btn btn-role" onclick="showRoleModal(\'mengling\')">👥 角色简介</button>
+		</div>
+            </div>
+
+            <!-- 窃云台 -->
+            <div class="script-card">
+                <span class="difficulty 进阶">进阶</span>
+                <div style="position: absolute; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(100, 100, 100, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(100, 100, 100, 0.2); z-index: 1; opacity: 0.5; pointer-events: none;">
+                    <span style="font-size: 0.85rem;">👑</span>
+                </div>
+                <h2 class="script-title">窃云台</h2>
+                <p class="script-subtitle">仰止作品 · 正剧权谋</p>
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">6-7h</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 权谋">权谋</span>
+                    <span class="tag 家国">家国</span>
+                    <span class="tag 古风">古风</span>
+                </div>
+                <p>[^<]*</p>
+		<div style="display: flex; gap: 10px; margin-top: 20px;">
+			<a href="web-pdfs/qieyuntai.pdf" class="btn btn-dm" download>📄 DM手册</a>
+			<button class="btn btn-role" onclick="showRoleModal(\'qieyuntai\')">👥 角色简介</button>
+		</div>
+            </div>
+
+            <!-- 请君入瓮 -->
+            <div class="script-card">
+                <span class="difficulty 进阶">进阶</span>
+                <div style="position: absolute; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(100, 100, 100, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(100, 100, 100, 0.2); z-index: 1; opacity: 0.5; pointer-events: none;">
+                    <span style="font-size: 0.85rem;">📖</span>
+                </div>
+                <h2 class="script-title">请君入瓮</h2>
+                <p class="script-subtitle">古风穿书 · 情感架空</p>
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">5-6h</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 穿书">穿书</span>
+                    <span class="tag 情感">情感</span>
+                    <span class="tag 古风">古风</span>
+                </div>
+<p>[^<]*</p>
+		<div style="display: flex; gap: 10px; margin-top: 20px;">
+			<a href="web-pdfs/qingjunruweng.pdf" class="btn btn-dm" download>📄 DM手册</a>
+			<button class="btn btn-role" onclick="showRoleModal(\'qingjunruweng\')">👥 角色简介</button>
+		</div>
+            </div>
+
+            <!-- 三体·阙落 -->
+            <div class="script-card">
+                <span class="difficulty 高阶">高阶</span>
+                <div style="position: absolute; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(100, 100, 100, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(100, 100, 100, 0.2); z-index: 1; opacity: 0.5; pointer-events: none;">
+                    <span style="font-size: 0.85rem;">🌌</span>
+                </div>
+                <h2 class="script-title">阙落</h2>
+                <p class="script-subtitle">三体系列 · 科幻硬核</p>
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">4男2女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">6-7h</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 科幻">科幻</span>
+                    <span class="tag 硬核">硬核</span>
+                    <span class="tag 推理">推理</span>
+                </div>
+                <p>《三体》改编系列历史向作品，标准版配置。以北齐历史为蓝本的厚重文笔，玩家间激烈冲突与情感拉扯。三位NPC配置（主DM郑述祖+子慎+和士开），主持人需要深度揣摩人物心理。</p>
+                <a href="web-pdfs/santi_queluo.pdf" class="btn btn-dm" download>📄 DM手册</a>
+            </div>
+
+            <!-- 三体·如故 -->
+            <div class="script-card">
+                <span class="difficulty 进阶">进阶</span>
+                <div style="position: absolute; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(100, 100, 100, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(100, 100, 100, 0.2); z-index: 1; opacity: 0.5; pointer-events: none;">
+                    <span style="font-size: 0.85rem;">🌠</span>
+                </div>
+                <h2 class="script-title">如故</h2>
+                <p class="script-subtitle">三体系列 · 古风情感</p>
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">5-6h</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 古风">古风</span>
+                    <span class="tag 情感">情感</span>
+                    <span class="tag 人设">人设</span>
+                </div>
+                <p>《三体》系列古风情感改编，东方剧制出品。如果黑暗森林法则发生在架空古代文明，会是怎样的情感纠葛？文明存亡与个人情感的终极抉择。</p>
+                <a href="web-pdfs/santi_rugu.pdf" class="btn btn-dm" download>📄 DM手册</a>
+            </div>
+
+            <!-- 壁上观 -->
+            <div class="script-card">
+                <span class="difficulty 进阶">进阶</span>
+                <div style="position: absolute; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(100, 100, 100, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(100, 100, 100, 0.2); z-index: 1; opacity: 0.5; pointer-events: none;">
+                    <span style="font-size: 0.85rem;">🧱</span>
+                </div>
+                <h2 class="script-title">壁上观</h2>
+                <p class="script-subtitle">古风权谋 · 阵营对抗</p>
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">5-6h</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 古风">古风</span>
+                    <span class="tag 权谋">权谋</span>
+                    <span class="tag 阵营">阵营</span>
+                    <span class="tag 推理">推理</span>
+                </div>
+                <p>[^<]*</p>
+		<div style="display: flex; gap: 10px; margin-top: 20px;">
+			<a href="web-pdfs/bishangguan.pdf" class="btn btn-dm" download>📄 DM手册</a>
+			<button class="btn btn-role" onclick="showRoleModal(\'bishangguan\')">👥 角色简介</button>
+		</div>
+            </div>
+
+            <!-- 同归 -->
+            <div class="script-card">
+                <span class="difficulty 标准">标准</span>
+                <div style="position: absolute; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(100, 100, 100, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(100, 100, 100, 0.2); z-index: 1; opacity: 0.5; pointer-events: none;">
+                    <span style="font-size: 0.85rem;">🧭</span>
+                </div>
+                <h2 class="script-title">同归</h2>
+                <p class="script-subtitle">古风情感 · 江湖恩怨</p>
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">4-5h</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 古风">古风</span>
+                    <span class="tag 情感">情感</span>
+                    <span class="tag 江湖">江湖</span>
+                    <span class="tag 恩怨">恩怨</span>
+                </div>
+                <p>[^<]*</p>
+		<div style="display: flex; gap: 10px; margin-top: 20px;">
+			<a href="web-pdfs/tonggui.pdf" class="btn btn-dm" download>📄 DM手册</a>
+			<button class="btn btn-role" onclick="showRoleModal(\'tonggui\')">👥 角色简介</button>
+		</div>
+            </div>
+        </div>
+        
+        <!-- 水墨分隔线 -->
+        <div class="ink-divider"></div>
+
+        <div style="text-align: center; margin: 40px 0;">
+            <h2 style="color: #8b7500; margin-bottom: 20px; position: relative; padding-bottom: 10px;">
+                <span class="ink-text">📱 预约与联系</span>
+            </h2>
+            <div style="display: inline-flex; gap: 15px;">
+                <a href="tel:18602368863" class="btn">📞 电话预约</a>
+                <a href="#" class="btn">📍 地址导航</a>
+                <a href="javascript:void(0);" onclick="alert('添加微信: Moran18602368836\\n\\n请截图保存，我们将很快与您联系！')" class="btn">💬 在线咨询</a>
+            </div>
+            <p style="margin-top: 20px; color: #777777; font-size: 0.95rem;">
+                地址：重庆市沙坪坝区大学城熙街2栋22-5 · 营业时间：14:00-24:00
+            </p>
+        </div>
+
+        <div style="background: rgba(100, 100, 100, 0.1); border: 1px solid rgba(139, 117, 0, 0.2); border-radius: 12px; padding: 20px; margin: 30px auto; max-width: 800px; text-align: center;">
+            <h3 style="color: #8b7500; margin-bottom: 10px;">📚 下载说明</h3>
+            <p style="color: #777777; margin-bottom: 15px;">
+                ✨ <strong>DM手册现已支持一键下载！</strong><br>
+                点击任何剧本的"📄 DM手册"按钮，即可下载对应的PDF文件到本地。
+            </p>
+            <div style="display: flex; justify-content: center; gap: 15px;">
+                <div style="text-align: left; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; min-width: 200px;">
+                    <div style="color: #81C784;">✅ 支持功能</div>
+                    <div style="font-size: 0.9rem; color: #777777; margin-top: 5px;">
+                        • 直接下载PDF文件<br>
+                        • 11部剧本完整手册<br>
+                        • 适配所有浏览器<br>
+                        • 保持原始格式
+                    </div>
+                </div>
+                <div style="text-align: left; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; min-width: 200px;">
+                    <div style="color: #4FC3F7;">💡 使用建议</div>
+                    <div style="font-size: 0.9rem; color: #777777; margin-top: 5px;">
+                        • 建议在电脑端下载<br>
+                        • 保存到固定文件夹<br>
+                        • 可打印或分享<br>
+                        • 定期更新维护
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 墨染剧本杀 · 重庆城限剧本精品店</p>
+            <p style="margin-top: 8px; font-size: 0.9rem; color: #a396b9;">
+                本网站为墨染剧本杀内部剧本库展示页面，所有剧本仅供店内使用 · 数据更新时间：2026年4月1日
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        function showPDFInfo() {
+            alert('📖 DM手册已设置为直接下载功能\n\n✅ 点击"📄 DM手册"按钮将直接下载PDF文件\n✅ 支持所有现代浏览器\n✅ 文件保存在本地后即可查看\n\n📂 默认下载位置：浏览器下载文件夹');
+            return false;
+        }
+        
+        // 页面加载时显示欢迎提示
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                console.log('墨染剧本杀网站已加载完成 ✅');
+                console.log('DM手册PDF文件可点击下载 📥');
+            }, 1000);
+});
+
+        // 简单的标签筛选功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.script-card');
+            document.querySelectorAll('.tag').forEach(tag => {
+                tag.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const tagText = this.textContent.trim();
+                    cards.forEach(card => {
+                        const tags = Array.from(card.querySelectorAll('.tag')).map(t => t.textContent.trim());
+                        card.style.display = tags.includes(tagText) ? 'block' : 'none';
+                    });
+                    setTimeout(() => {
+                        cards.forEach(card => card.style.display = 'block');
+                    }, 2000);
+                });
+            });
+            
+            // 初始化音乐播放器
+            initMusicPlayer();
+            // 初始化音效开关
+            initSoundToggle();
+        });
+        
+        // 背景音乐播放器功能（优化版）- 自动播放爱你.mp3
+        function initMusicPlayer() {
+            // 使用指定的爱你.mp3音乐文件
+            const musicList = [
+                { 
+                    name: "陈芳语 - 爱你", 
+                    src: "web-pdfs/bgmusic.mp3"
+                }
+            ];
+            
+            let currentMusicIndex = 0;
+            let isPlaying = false;
+            let volume = 0.3; // 降低默认音量，避免刺耳
+            let audio = null;
+            
+            const playBtn = document.getElementById('playBtn');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const volumeFill = document.getElementById('volumeFill');
+            const musicInfo = document.getElementById('musicInfo');
+            const soundToggle = document.getElementById('soundToggle');
+            
+            // 创建并预加载音频（优化加载速度和自动播放）
+            function createAudio() {
+                if (audio) return audio;
+                
+                audio = new Audio();
+                audio.preload = "auto"; // 自动预加载
+                audio.src = musicList[currentMusicIndex].src;
+                audio.volume = volume;
+                audio.loop = true; // 单曲循环
+                
+                // 立即开始播放，自动播放由延迟触发
+                audio.load();
+                
+                return audio;
+            }
+            
+            // 更新音量显示
+            function updateVolumeDisplay() {
+                volumeFill.style.width = `${volume * 100}%`;
+            }
+            
+            // 更新播放状态显示
+            function updatePlayState() {
+                if (isPlaying) {
+                    playBtn.innerHTML = '⏸️';
+                    playBtn.classList.add('active');
+                    musicInfo.textContent = `${musicList[currentMusicIndex].name} · 播放中`;
+                } else {
+                    playBtn.innerHTML = '▶️';
+                    playBtn.classList.remove('active');
+                    musicInfo.textContent = musicList[currentMusicIndex].name;
+                }
+            }
+            
+            // 播放音乐（优化版）
+            function playMusic() {
+                if (!audio) {
+                    createAudio();
+                }
+                
+                // 确保音量设置正确
+                audio.volume = volume;
+                
+                // 立即设置播放状态为true，避免延迟感
+                isPlaying = true;
+                updatePlayState();
+                
+                // 尝试播放
+                audio.play().then(() => {
+                    console.log('音乐开始播放');
+                }).catch(err => {
+                    console.log('播放失败，可能是用户交互限制:', err);
+                    isPlaying = false;
+                    updatePlayState();
+                    musicInfo.textContent = `${musicList[currentMusicIndex].name} · 点击播放`;
+                });
+            }
+            
+            // 暂停音乐
+            function pauseMusic() {
+                if (audio) {
+                    audio.pause();
+                }
+                isPlaying = false;
+                updatePlayState();
+            }
+            
+            // 设置音量
+            function setVolume(value) {
+                volume = Math.max(0, Math.min(1, value));
+                if (audio) {
+                    audio.volume = volume;
+                }
+                updateVolumeDisplay();
+                
+                // 保存音量到localStorage
+                localStorage.setItem('musicVolume', volume);
+            }
+            
+            // 事件监听
+            playBtn.addEventListener('click', () => {
+                if (isPlaying) {
+                    pauseMusic();
+                } else {
+                    playMusic();
+                }
+            });
+            
+            // 音量控制
+            volumeSlider.addEventListener('click', (e) => {
+                const rect = volumeSlider.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                setVolume(pos);
+            });
+            
+            // 从localStorage恢复设置
+            const savedVolume = localStorage.getItem('musicVolume');
+            if (savedVolume) {
+                volume = parseFloat(savedVolume);
+                updateVolumeDisplay();
+            }
+            
+            // 静音/取消静音
+            soundToggle.addEventListener('click', () => {
+                if (audio) {
+                    if (audio.muted) {
+                        audio.muted = false;
+                        soundToggle.querySelector('.sound-icon').textContent = '🔊';
+                        soundToggle.querySelector('.sound-label').textContent = '开/关音效';
+                    } else {
+                        audio.muted = true;
+                        soundToggle.querySelector('.sound-icon').textContent = '🔇';
+                        soundToggle.querySelector('.sound-label').textContent = '已静音';
+                    }
+                } else {
+                    // 如果音频还没创建，显示提示
+                    musicInfo.textContent = '音频正在加载中...';
+                }
+            });
+            
+            // 页面加载完成后立即创建音频并自动播放
+            document.addEventListener('DOMContentLoaded', function() {
+                // 立即创建音频对象但不显示界面
+                const bgAudio = new Audio();
+                bgAudio.preload = "auto";
+                bgAudio.src = musicList[currentMusicIndex].src;
+                bgAudio.volume = volume;
+                bgAudio.loop = true;
+                
+                // 加载音频并准备自动播放
+                bgAudio.load();
+                
+                // 音频可以播放时自动开始播放
+                bgAudio.addEventListener('canplaythrough', function() {
+                    console.log('背景音乐准备就绪，正在自动播放...');
+                    isPlaying = true;
+                    bgAudio.play().catch(function(e) {
+                        console.log('自动播放被阻止，需要用户交互:', e);
+                        // 创建隐藏的播放按钮，用户第一次点击页面时触发播放
+                        const playTrigger = document.createElement('div');
+                        playTrigger.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;z-index:99999;cursor:default;';
+                        playTrigger.addEventListener('click', function() {
+                            bgAudio.play().then(() => {
+                                console.log('通过用户交互开始播放音乐');
+                                isPlaying = true;
+                                this.remove();
+                            }).catch(console.error);
+                        }, { once: true });
+                        document.body.appendChild(playTrigger);
+                    });
+                }, { once: true });
+                
+                // 保存音频对象到全局变量
+                audio = bgAudio;
+            });
+            
+            // 页面可见性变化时暂停/恢复播放
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    if (isPlaying && audio) {
+                        audio.pause();
+                    }
+                } else if (isPlaying && audio) {
+                    audio.play().catch(console.error);
+                }
+            });
+            
+            // 初始化显示
+            updateVolumeDisplay();
+            musicInfo.textContent = musicList[currentMusicIndex].name;
+        }
+        
+        // 角色简介弹窗数据
+        const roleData = {
+            dayan: {
+                title: "大宴之上 - 角色介绍",
+                roles: [
+                    { name: "李靖", gender: "male", desc: "大唐名将，安西都护府副都护。忠诚勇猛，但心中对朝廷的重文轻武政策有所不满。" },
+                    { name: "长孙无忌", gender: "male", desc: "当朝宰相，文官领袖。权倾朝野，深谙朝堂权术，为保家族利益不惜一切。" },
+                    { name: "房玄龄", gender: "male", desc: "吏部尚书，科举出身的清流官员。正直清廉，试图在党争中保持中立。" },
+                    { name: "长孙皇后", gender: "female", desc: "皇后之妹，才貌双全。表面温婉，实则在后宫与朝堂间运筹帷幄。" },
+                    { name: "李婉", gender: "female", desc: "李靖之女，剑术高超。为探父兄安危潜入长安，身负家族重任。" },
+                    { name: "苏小小", gender: "female", desc: "江南才女，书画双绝。被卷入政治漩涡，需要在情感与生存间抉择。" }
+                ],
+                intro: "盛唐安史之乱前夕，长安城中暗流涌动。六位来自不同阶层的角色在大宴之上汇聚，每个人的选择都将影响大唐国运。权谋、家国、情感交织，多重结局等待开启。"
+            },
+            wanren: {
+                title: "万仞青山听水寒 - 角色介绍", 
+                roles: [
+                    { name: "剑尘", gender: "male", desc: "青城剑派大弟子，剑术超群。为寻找失踪的师妹踏上旅程。" },
+                    { name: "云逸", gender: "male", desc: "逍遥派传人，潇洒不羁。隐藏着门派世代守护的秘密。" },
+                    { name: "玄冥", gender: "male", desc: "幽冥教少教主，身负诅咒。在正邪之间挣扎求生。" },
+                    { name: "雪影", gender: "female", desc: "玉女宫圣女，冰清玉洁。身世成谜，背负着宫主重任。" },
+                    { name: "琉璃", gender: "female", desc: "万花谷传人，医术精湛。寻找治愈奇症的秘方。" },
+                    { name: "月华", gender: "female", desc: "玄天宗掌门之女，阵法天才。为守护宗门秘密而战。" }
+                ],
+                intro: "三年前，青城剑派一夜覆灭。如今，六位各怀心事的仙门子弟因一卷上古密卷重逢。仙魔大战的真相、失落的传承、跨越三世的恩怨情仇，都在万仞青山间徐徐展开。"
+            },
+            liufang: {
+                title: "流芳 - 角色介绍",
+                roles: [
+                    { name: "江澄", gender: "male", desc: "江阴知县，文弱书生。在战火中坚守职责，面临生死抉择。" },
+                    { name: "阎应元", gender: "male", desc: "义军首领，铁血硬汉。率领百姓抵抗清军，誓死不降。" },
+                    { name: "陈明遇", gender: "male", desc: "富商之子，纨绔子弟。在家国危难中迅速成长。" },
+                    { name: "王氏", gender: "female", desc: "江澄之妻，大家闺秀。用柔弱的肩膀支撑起破碎的家园。" },
+                    { name: "柳如是", gender: "female", desc: "秦淮名妓，才情出众。以特殊身份传递情报，智勇双全。" },
+                    { name: "小翠", gender: "female", desc: "农家女，朴实善良。在战火中失去一切，却从未放弃希望。" }
+                ],
+                intro: "明末清初，清军铁蹄南下。江阴这座小城在知县阎应元的率领下，八十一日宁死不降。六位普通人在家国存亡之际，用血肉之躯书写了一段悲壮史诗。"
+            },
+            mengling: {
+                title: "梦灵祈念时 - 角色介绍",
+                roles: [
+                    { name: "米田三利", gender: "male", desc: "神社继承人，灵力强大。能看见常人看不见的东西。" },
+                    { name: "藤原翔", gender: "male", desc: "侦探，理性主义者。不相信超自然现象，坚持科学推理。" },
+                    { name: "山口健", gender: "male", desc: "记者，好奇心旺盛。为追查真相不惜涉险。" },
+                    { name: "铃木绫", gender: "female", desc: "灵媒，感知敏锐。能与灵界沟通，但身体虚弱。" },
+                    { name: "佐藤美咲", gender: "female", desc: "民俗学者，知识渊博。研究古代祭祀仪式与传说。" },
+                    { name: "高桥百合", gender: "female", desc: "大学生，普通女孩。被卷入灵异事件，逐渐觉醒特殊能力。" }
+                ],
+                intro: "偏远山村的古老神社，每隔百年会举行一次神秘的'梦灵祭'。六位身份各异的调查者来到此地，却发现祭典背后隐藏着惊天秘密。梦境与现实的界限逐渐模糊..."
+            },
+            qieyuntai: {
+                title: "窃云台 - 角色介绍", 
+                roles: [
+                    { name: "朱祁镇", gender: "male", desc: "明英宗，被俘归来的皇帝。在皇权与亲情间痛苦抉择。" },
+                    { name: "朱祁钰", gender: "male", desc: "明代宗，临危受命的皇帝。兄长的回归让他陷入两难。" },
+                    { name: "于谦", gender: "male", desc: "兵部尚书，民族英雄。为国家利益不惜牺牲个人。" },
+                    { name: "钱皇后", gender: "female", desc: "英宗皇后，坚韧聪慧。为营救丈夫费尽心机。" },
+                    { name: "孙太后", gender: "female", desc: "皇太后，后宫之主。在儿子们的权力斗争中斡旋。" },
+                    { name: "王振遗孤", gender: "female", desc: "宦官之女，身份尴尬。为父报仇还是选择宽恕？" }
+                ],
+                intro: "土木堡之变后，明英宗被俘，其弟朱祁钰即位。一年后英宗归来，两位皇帝共处一宫。窃云台上，君臣、父子、兄弟之间的权力博弈与家国情怀激烈碰撞。"
+            },
+            qingjunruweng: {
+                title: "请君入瓮 - 角色介绍",
+                roles: [
+                    { name: "慕容白", gender: "male", desc: "江湖侠客，潇洒不羁。意外穿越到书中世界。" },
+                    { name: "夜无痕", gender: "male", desc: "魔教少主，邪魅狂狷。试图改变自己的'反派'命运。" },
+                    { name: "苏慕言", gender: "male", desc: "书生才子，文弱善良。发现自己成了'炮灰'角色。" },
+                    { name: "沈清欢", gender: "female", desc: "相府千金，聪慧机智。知道剧情发展，试图自救。" },
+                    { name: "林婉儿", gender: "female", desc: "江湖医女，温柔善良。她的选择将影响多条故事线。" },
+                    { name: "月无双", gender: "female", desc: "神秘女侠，身手不凡。真实身份是书中世界的守护者。" }
+                ],
+                intro: "六位现代读者意外穿越到一本古风小说中，成为其中的角色。他们拥有'上帝视角'，知道原著剧情，但每一次选择都会引发蝴蝶效应。甜蜜的恋爱线中暗藏致命杀机，谁能在结局中存活？"
+            },
+            queluo: {
+                title: "阙落 - 角色介绍",
+                roles: [
+                    { name: "罗辑", gender: "male", desc: "面壁者，执剑人。手握文明生死存亡的按钮。" },
+                    { name: "章北海", gender: "male", desc: "太空军政委，坚定的胜利主义者。为人类文明延续不择手段。" },
+                    { name: "云天明", gender: "male", desc: "癌症患者，三体世界间谍。为爱出卖灵魂，又为爱赎罪。" },
+                    { name: "程心", gender: "female", desc: "执剑人继任者，以爱为名的毁灭者。" },
+                    { name: "叶文洁", gender: "female", desc: "eto统帅，第一个联系三体的人。在绝望中寻求希望。" },
+                    { name: "庄颜", gender: "female", desc: "罗辑想象中的完美女性，成为面壁计划的关键。" }
+                ],
+                intro: "危机纪元，三体舰队正向地球驶来。六位身处不同时间线的角色，面对文明存亡的终极抉择。黑暗森林法则下，人类的道德、理性与情感经历着最严酷的考验。"
+            },
+            rugu: {
+                title: "如故 - 角色介绍", 
+                roles: [
+                    { name: "扶苏", gender: "male", desc: "秦始皇长子，仁德宽厚。在皇位争夺与百姓福祉间挣扎。" },
+                    { name: "蒙恬", gender: "male", desc: "大将军，忠诚勇猛。奉命监军却陷入两难抉择。" },
+                    { name: "赵高", gender: "male", desc: "宦官首领，阴险狡诈。为权力不择手段的野心家。" },
+                    { name: "芈月", gender: "female", desc: "楚国公主，政治联姻的牺牲品。在深宫中寻求生存之道。" },
+                    { name: "虞姬", gender: "female", desc: "项羽之妻，刚烈痴情。为爱追随，为义赴死。" },
+                    { name: "吕雉", gender: "female", desc: "刘邦之妻，未来皇后。展现出政治智慧与狠辣手腕。" }
+                ],
+                intro: "秦末乱世，楚汉争霸。六位历史人物在巨鹿之战的阴影下相遇。如果历史可以重来，他们的选择会改变什么？如故，如初，还是如新？文明存亡的十字路口，每个决定都至关重要。"
+            },
+            bishangguan: {
+                title: "壁上观 - 角色介绍",
+                roles: [
+                    { name: "司马懿", gender: "male", desc: "魏国太傅，老谋深算。表面示弱，实则运筹帷幄。" },
+                    { name: "曹爽", gender: "male", desc: "大将军，权倾朝野。张扬跋扈，树敌无数。" },
+                    { name: "司马师", gender: "male", desc: "司马懿长子，沉稳内敛。协助父亲策划高平陵之变。" },
+                    { name: "郭太后", gender: "female", desc: "魏国太后，政治棋子。在曹爽与司马氏间艰难周旋。" },
+                    { name: "夏侯徽", gender: "female", desc: "司马师之妻，夏侯渊孙女。夹在夫君与家族间痛苦挣扎。" },
+                    { name: "辛宪英", gender: "female", desc: "名士之女，聪慧过人。洞悉时局却无力改变。" }
+                ],
+                intro: "三国后期，魏国权臣曹爽与司马懿明争暗斗。高平陵政变前夕，六位身处不同阵营的角色各怀心思。壁上观火，还是入局博弈？每一步都关系到家族存亡与王朝更迭。"
+            },
+            tonggui: {
+                title: "同归 - 角色介绍",
+                roles: [
+                    { name: "萧寒", gender: "male", desc: "江湖浪子，剑术高超。为寻找失踪的师兄踏入险境。" },
+                    { name: "慕容云", gender: "male", desc: "慕容世家少主，武功卓绝。背负家族复兴重任。" },
+                    { name: "南宫夜", gender: "male", desc: "魔教护法，神秘莫测。身负血海深仇，亦正亦邪。" },
+                    { name: "柳如烟", gender: "female", desc: "神医传人，医术精湛。为救治师父寻找稀世药材。" },
+                    { name: "冷月心", gender: "female", desc: "冷月宫主，冷艳孤傲。为报杀父之仇精心布局。" },
+                    { name: "花解语", gender: "female", desc: "青楼花魁，才情出众。真实身份是朝廷密探。" }
+                ],
+                intro: "十年前，江湖第一大门派'青云宗'一夜灭门。如今，六位各怀目的的高手因一本失传的武林秘籍重聚。恩怨情仇，江湖纷争，每个人都在寻找自己的'归处'。最后的秘密揭开时，他们能否殊途同归？"
+            }
+        };
+
+        // 显示角色简介弹窗
+        function showRoleModal(scriptId) {
+            const data = roleData[scriptId];
+            if (!data) {
+                alert('未找到相关角色信息');
+                return;
+            }
+            
+            // 创建弹窗HTML
+            const modalHtml = `
+                <div class="modal-overlay active" id="roleModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">${data.title}</h2>
+                            <button class="modal-close" onclick="closeRoleModal()">✕</button>
+                        </div>
+                        
+                        <div class="role-list">
+                            ${data.roles.map(role => `
+                                <div class="role-item">
+                                    <h3 class="role-name">${role.name}</h3>
+                                    <span class="role-gender ${role.gender}">${role.gender === 'male' ? '👨 男' : '👩 女'}</span>
+                                    <p class="role-desc">${role.desc}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="script-intro">
+                            <h3>剧本简介</h3>
+                            <p>${data.intro}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 添加到页面
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer.firstElementChild);
+            
+            // 添加ESC键关闭功能
+            document.addEventListener('keydown', function escHandler(e) {
+                if (e.key === 'Escape') {
+                    closeRoleModal();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            });
+            
+            // 点击遮罩层关闭
+            document.getElementById('roleModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeRoleModal();
+                }
+            });
+        }
+        
+        // 关闭角色简介弹窗
+        function closeRoleModal() {
+            const modal = document.getElementById('roleModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            }
+        }
+
+        function initSoundToggle() {
+            // 音效开关初始化（已经在音乐播放器中处理）
+        }
+    </script>
+</body>
+</html>
