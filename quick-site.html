@@ -74,8 +74,10 @@
             .tagline { font-size: 0.8rem; }
             
             /* 统计卡片更紧凑 */
-            .stats { gap: 6px; margin: 10px 0 15px; }
-            .stat-item { padding: 8px 10px; }
+            .stats { gap: 6px; margin: 10px 0 15px; flex-wrap: wrap; }
+            .stats .stat-item { flex: 0 0 calc(50% - 6px); padding: 8px 10px; }
+            .stats .stat-number { font-size: 1.2rem; }
+            .stats .stat-label { font-size: 0.7rem; }
             .stat-number { font-size: 1.2rem; }
             .stat-label { font-size: 0.7rem; }
             
