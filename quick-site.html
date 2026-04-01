@@ -2745,13 +2745,13 @@
         
         // DM列表
         const dmList = [
-            { name: '木星', avatar: '🪐', contact: '15723530701' },
-            { name: '吴琊', avatar: '👤', contact: 'wuya9299' },
-            { name: '170', avatar: '📏', contact: 'shosakurai125' },
-            { name: '谨言', avatar: '🎤', contact: 'lxh18763281836' },
-            { name: '虹猫', avatar: '🐱', contact: 'L7777777sxy' },
-            { name: '橙子', avatar: '🍊', contact: 'lyl11080921' },
-            { name: '萱萱', avatar: '🌸', contact: 'yx_kkwang0519' }
+            { name: '木星', avatar: 'web-pdfs/木星.jpg', contact: '15723530701' },
+            { name: '吴琊', avatar: 'web-pdfs/吴琊.jpg', contact: 'wuya9299' },
+            { name: '170', avatar: 'web-pdfs/170.jpg', contact: 'shosakurai125' },
+            { name: '谨言', avatar: 'web-pdfs/谨言.jpg', contact: 'lxh18763281836' },
+            { name: '虹猫', avatar: 'web-pdfs/虹猫.jpg', contact: 'L7777777sxy' },
+            { name: '橙子', avatar: 'web-pdfs/橙子.jpg', contact: 'lyl11080921' },
+            { name: '萱萱', avatar: 'web-pdfs/萱萱.jpg', contact: 'yx_kkwang0519' }
         ];
         
         async function showDMList() {
@@ -2771,7 +2771,7 @@
                             ${dmList.map(dm => `
                                 <div style="background: linear-gradient(135deg, #f8f9fa, #fff); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px;" class="dm-card" data-dm="${dm.name}">
                                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                                        <span style="font-size: 2rem;">${dm.avatar}</span>
+                                        <img src="${dm.avatar}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(139, 117, 0, 0.3);" onerror="this.style.display='none'">
                                         <div style="flex: 1;">
                                             <div style="font-weight: bold; color: #2c3e50; font-size: 1rem;">${dm.name}</div>
                                             <div style="font-size: 0.75rem; color: #888; margin-top: 2px;">${dm.contact}</div>
