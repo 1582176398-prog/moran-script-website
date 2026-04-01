@@ -40,6 +40,17 @@
 9. 壁上观 → bishangguan.pdf (🧱) [新增剧本]
 10. 同归 → tonggui.pdf (🧭) [新增剧本]
 
+## 弹幕功能（2026-04-01 07:50新增，10:28升级）
+- 已集成到 `quick-site.html` 中
+- **特性**：14px小字体、15s慢速飘动、Supabase云端永久保存（多设备共享）
+- **交互**：右下角💬按钮唤出发送面板，5种颜色可选，点击暂停右键删除
+- **无演示弹幕**：已去掉自动演示弹幕和底部提示文字
+- **Supabase配置**：已配置完成并验证（读写均正常）
+  - URL: https://nidgmnajrirgiurtnggu.supabase.co
+  - 表名: danmu，字段：id, text, color, created_at
+- **降级处理**：未配置Supabase时，弹幕仅本机展示（发送正常，不保存云端）
+- **管理员功能**：右下角⚙️按钮，输入密码228377登录后可查看/删除/清空弹幕
+
 ## 门店信息更新（2026-04-01）
 - 新地址：重庆市沙坪坝区大学城熙街2栋22-5
 - 营业时间：14:00-24:00
@@ -70,6 +81,39 @@
 - **联系方式统一**：
   - 电话咨询：18602368863
   - 微信咨询：Moran18602368863
+
+## 2026-04-01 增强可点击提示
+- **按钮悬停效果**：DM手册和角色简介按钮悬停时显示👆图标，添加亮度提升
+- **统计卡片效果**：剧本和DM统计卡片悬停时上浮+阴影+边框变色+显示"👆 点击"提示
+- 两个文件已同步更新
+
+## 2026-04-01 取名评论功能
+- **取名弹窗**：首次进入网站时弹出取名弹窗，用户可输入2-10字昵称
+- **评论权限**：未取名用户无法评论，点击评论按钮会提示去取名
+- **用户名显示**：评论显示发布者的昵称
+- **修改昵称**：右下角👤按钮可查看/修改昵称
+- **localStorage存储**：用户名存储在浏览器本地
+
+## 编辑角色功能升级（2026-04-01 18:10）
+- **密码时效**：输入050701后5分钟内免密（需点击"直接进入编辑"确认）
+- **弹窗优化**：
+  - 左边：选择DM + 显示当前角色（黄色背景）
+  - 右边：剧本下拉框 + 角色名输入 + 添加按钮 + 编辑列表（黄色背景）
+- **手机适配**：500px以下变成单列布局
+- **出演角色样式**：黑色字体 + 黄色背景，去掉emoji改用✦
+- **云端同步**：dm_roles 表保存角色数据，刷新后不丢失
+- **新增函数**：addRoleToEditList、removeRoleFromEdit、renderEditRolesList、isPasswordValid、markPasswordVerified、skipPasswordAndEnter、resetPasswordEntry、saveDMRolesToCloud、loadDMRolesFromCloud
+
+## 按钮点击失效修复（2026-04-01 18:00）
+- **根本原因**：JavaScript 语法错误导致脚本无法正确执行
+  - `showDMRoles` 和 `showEditDMRoles` 函数使用了普通字符串而非模板字符串
+- **修复**：将普通字符串改为模板字符串（反引号）
+- **同步**：两个文件已同步
+
+## 按钮z-index修复（2026-04-01 17:50）
+- .script-card `overflow: hidden` → `overflow: visible`
+- 添加 `.script-card { z-index: 1 }` 建立堆叠上下文
+- 按钮 z-index 提升到 100001
 
 ## 角色信息完整更新（2026-04-01 04:56）
 - **角色简介功能已完成全面升级**：
@@ -134,3 +178,44 @@
   - 免费方案：Vercel免费版 + 无域名
   - 低成本方案：Vercel + .cn域名（35元/年）
   - 企业方案：腾讯云COS + .com域名（约205元/年）
+
+## 打本历程功能更新（2026-04-01 16:58）
+- **剧本列表**：包含网站10个剧本 + "自定义"选项
+- **日期格式**：显示为中文格式"2026年04月01日"
+- **恋陪位选项**：新增是/否选择，选择"是"后显示NPC名字输入框
+- **Supabase数据库表**：my_plays 表需要添加字段
+  - `has_lianpei` (TEXT)：是否需要恋陪（默认"否"）
+  - `lianpei_name` (TEXT)：恋陪NPC名字
+- **需要手动操作**：登录 Supabase Dashboard → SQL Editor 执行：
+  ```sql
+  ALTER TABLE my_plays 
+  ADD COLUMN IF NOT EXISTS has_lianpei TEXT DEFAULT '否',
+  ADD COLUMN IF NOT EXISTS lianpei_name TEXT;
+  ```
+
+## DM头像标签功能（2026-04-01 19:11更新）
+- **点击DM头像**：弹出标签浮云弹窗，显示该DM的所有标签
+- **标签数量**：最多10个标签
+- **标签长度**：每个标签最多6个汉字或12个字母
+- **飘动动画（2026-04-01 19:11，19:19更新）**：
+  - 标签从右向左或从左向右飘动，飘出边界后等待2-2.5秒再从另一侧重新出现
+  - 每个标签有独立的速度（0.15-0.35px/帧，非常缓慢）
+  - 每个标签有独立的等待时间（2-2.5秒随机）
+  - 每个DM有独特配色（金/红/绿/蓝/紫/橙/青/深灰8种）
+  - 完全避开头像区域，不遮挡头像
+  - 使用 requestAnimationFrame 实现流畅60fps动画
+- **编辑功能**：在编辑角色弹窗中可添加/删除标签
+- **云端同步**：dm_roles 表新增 `tags` 字段，保存为JSON数组
+- **数据存储**：`dmTagsMap` 本地映射
+- **核心函数**：
+  - `tagAnimations` - 存储每个DM的动画状态
+  - `TAG_TRACKS` - 4条轨道配置
+  - `startTagAnimation(dmName)` - 启动标签动画
+  - `stopTagAnimation(dmName)` - 停止标签动画
+  - `updateTagPositions(dmName, speed)` - 更新标签位置
+  - `restoreAllTagAnimations()` - 恢复所有DM的动画
+- **数据库需要手动添加**：
+  ```sql
+  ALTER TABLE dm_roles ADD COLUMN IF NOT EXISTS tags TEXT DEFAULT '[]';
+  ```
+
