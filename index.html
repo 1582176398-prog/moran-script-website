@@ -2392,7 +2392,7 @@
             const isWeChatBrowser = /MicroMessenger/i.test(navigator.userAgent);
             
             // 生成微信添加好友的URL（适用于手机端）
-            const wechatAddLink = `weixin://dl/addfriend?nickName=${wechatNumber}`;
+            const wechatAddLink = `weixin://dl/addfriend?nickName=Moran18602368863`;
             
             // 显示微信信息弹窗
             const modal = document.createElement('div');
@@ -2745,13 +2745,13 @@
         
         // DM列表
         const dmList = [
-            { name: '木星', avatar: '🪐' },
-            { name: '吴琊', avatar: '👤' },
-            { name: '170', avatar: '📏' },
-            { name: '谨言', avatar: '🎤' },
-            { name: '虹猫', avatar: '🐱' },
-            { name: '橙子', avatar: '🍊' },
-            { name: '萱萱', avatar: '🌸' }
+            { name: '木星', avatar: 'web-pdfs/木星.jpg', contact: '15723530701' },
+            { name: '吴琊', avatar: 'web-pdfs/吴琊.jpg', contact: 'wuya9299' },
+            { name: '170', avatar: 'web-pdfs/170.jpg', contact: 'shosakurai125' },
+            { name: '谨言', avatar: 'web-pdfs/谨言.jpg', contact: 'lxh18763281836' },
+            { name: '虹猫', avatar: 'web-pdfs/虹猫.jpg', contact: 'L7777777sxy' },
+            { name: '橙子', avatar: 'web-pdfs/橙子.jpg', contact: 'lyl11080921' },
+            { name: '萱萱', avatar: 'web-pdfs/萱萱.jpg', contact: 'yx_kkwang0519' }
         ];
         
         async function showDMList() {
@@ -2771,9 +2771,10 @@
                             ${dmList.map(dm => `
                                 <div style="background: linear-gradient(135deg, #f8f9fa, #fff); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px;" class="dm-card" data-dm="${dm.name}">
                                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                                        <span style="font-size: 2rem;">${dm.avatar}</span>
+                                        <img src="${dm.avatar}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(139, 117, 0, 0.3);" onerror="this.style.display='none'">
                                         <div style="flex: 1;">
                                             <div style="font-weight: bold; color: #2c3e50; font-size: 1rem;">${dm.name}</div>
+                                            <div style="font-size: 0.75rem; color: #888; margin-top: 2px;">${dm.contact}</div>
                                         </div>
                                         <div style="display: flex; flex-direction: column; gap: 5px;">
                                             <button onclick="event.stopPropagation(); toggleLike('${dm.name}', this)" class="like-btn" data-dm="${dm.name}" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666; transition: all 0.2s;">👍 赞 <span class="like-count">...</span></button>
