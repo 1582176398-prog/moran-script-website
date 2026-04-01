@@ -983,6 +983,19 @@
         <source src="web-pdfs/bgmusic.mp3" type="audio/mp3">
     </audio>
     
+    <!-- 取名弹窗 -->
+    <div id="username-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100001;">
+        <div style="background: white; border-radius: 20px; max-width: 400px; width: 90%; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;">
+            <h3 style="margin: 0 0 20px 0; color: #8b7500; font-size: 1.5rem;">🎮 欢迎来到墨染剧本杀</h3>
+            <p style="color: #666; margin-bottom: 20px; font-size: 0.95rem;">给自己取个昵称吧～取名后可参与评论</p>
+            <input type="text" id="username-input" placeholder="输入你的昵称（2-10字）" maxlength="10" style="width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 12px; font-size: 1rem; margin-bottom: 15px; box-sizing: border-box;">
+            <div style="display: flex; gap: 10px;">
+                <button onclick="skipUsername()" style="flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 12px; background: white; color: #666; font-size: 1rem; cursor: pointer;">跳过</button>
+                <button onclick="saveUsername()" style="flex: 1; padding: 12px; border: none; border-radius: 12px; background: linear-gradient(90deg, #8b7500, #666); color: white; font-size: 1rem; cursor: pointer;">保存</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 弹幕容器 -->
     <div id="danmu-container"></div>
     
@@ -1390,6 +1403,9 @@
                 本网站为墨染剧本杀内部剧本库展示页面，所有剧本仅供店内使用 · 数据更新时间：2026年4月1日
             </p>
         </footer>
+        
+        <!-- 用户名设置按钮 -->
+        <button id="username-btn" onclick="showUsernameModal()" style="position: fixed; bottom: 20px; right: 130px; width: 48px; height: 48px; background: linear-gradient(135deg, #e67e22, #d35400); color: white; border: none; border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 9999; box-shadow: 0 4px 16px rgba(230, 126, 34, 0.35); transition: all 0.3s; display: flex; align-items: center; justify-content: center;" title="设置昵称">👤</button>
     </div>
 
     <script>
@@ -1632,7 +1648,68 @@
             initSoundToggle();
             // 初始化弹幕系统
             danmu.init();
+            // 检查是否需要显示取名弹窗
+            checkUsername();
         });
+        
+        // ===== 用户名系统 =====
+        function checkUsername() {
+            const savedUsername = localStorage.getItem('moran_username');
+            const modal = document.getElementById('username-modal');
+            if (!savedUsername && modal) {
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    const input = document.getElementById('username-input');
+                    if (input) input.focus();
+                }, 100);
+            }
+        }
+        
+        function saveUsername() {
+            const input = document.getElementById('username-input');
+            const username = input.value.trim();
+            if (username.length < 2) {
+                alert('昵称至少需要2个字符哦～');
+                return;
+            }
+            localStorage.setItem('moran_username', username);
+            document.getElementById('username-modal').style.display = 'none';
+            // 显示欢迎消息
+            setTimeout(() => {
+                alert(`🎉 欢迎，${username}！现在你可以参与评论啦～`);
+            }, 300);
+        }
+        
+        function skipUsername() {
+            document.getElementById('username-modal').style.display = 'none';
+        }
+        
+        function getUsername() {
+            return localStorage.getItem('moran_username') || '';
+        }
+        
+        function hasUsername() {
+            return !!localStorage.getItem('moran_username');
+        }
+        
+        function showUsernameModal() {
+            const modal = document.getElementById('username-modal');
+            if (hasUsername()) {
+                // 已设置过昵称，提示可修改
+                const currentUsername = getUsername();
+                const newUsername = prompt(`当前昵称：${currentUsername}\n\n请输入新昵称（2-10字）：`, currentUsername);
+                if (newUsername !== null && newUsername.trim().length >= 2) {
+                    localStorage.setItem('moran_username', newUsername.trim());
+                    alert(`✅ 昵称已更新为：${newUsername.trim()}`);
+                }
+            } else {
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    const input = document.getElementById('username-input');
+                    if (input) input.focus();
+                }, 100);
+            }
+        }
         
         // ===== 管理员弹幕管理 =====
         const ADMIN_PWD = '228377';
@@ -3111,7 +3188,7 @@
             } catch(e) { return []; }
         }
 
-        async function addCommentToCloud(dmName, text) {
+        async function addCommentToCloud(dmName, text, username) {
             const userId = await getUserId();
             try {
                 await fetch(`${SUPABASE_URL}/rest/v1/dm_comments`, {
@@ -3122,7 +3199,7 @@
                         'Authorization': `Bearer ${SUPABASE_KEY}`,
                         'Prefer': 'return=minimal'
                     },
-                    body: JSON.stringify({ dm_name: dmName, comment_text: text, user_id: userId, created_at: new Date().toISOString() })
+                    body: JSON.stringify({ dm_name: dmName, comment_text: text, user_id: userId, username: username, created_at: new Date().toISOString() })
                 });
                 return true;
             } catch(e) { return false; }
@@ -3133,9 +3210,9 @@
             return JSON.parse(localStorage.getItem(key) || '[]');
         }
 
-        function saveComment(dmName, comment) {
+        function saveComment(dmName, comment, username) {
             const comments = getComments(dmName);
-            comments.push({ text: comment, date: new Date().toLocaleString() });
+            comments.push({ text: comment, username: username, date: new Date().toLocaleString() });
             localStorage.setItem(`dm_comments_${dmName}`, JSON.stringify(comments));
         }
 
@@ -3146,7 +3223,7 @@
             if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
                 comments = await getCommentsFromCloud(dmName);
             } else {
-                comments = getComments(dmName).map(c => ({ comment_text: c.text, created_at: c.date }));
+                comments = getComments(dmName).map(c => ({ comment_text: c.text, username: c.username, created_at: c.date }));
             }
             
             // 更新评论数量显示
@@ -3160,6 +3237,7 @@
             } else {
                 list.innerHTML = comments.map(c => `
                     <div style="background: #f9f9f9; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px;">
+                        <div style="font-size: 0.8rem; color: #8b7500; font-weight: bold; margin-bottom: 4px;">${c.username || '匿名用户'}</div>
                         <div style="font-size: 0.85rem; color: #333;">${c.comment_text}</div>
                         <div style="font-size: 0.75rem; color: #999; margin-top: 4px;">${new Date(c.created_at).toLocaleString()}</div>
                     </div>
@@ -3168,13 +3246,21 @@
         }
 
         async function addComment(dmName) {
+            // 检查是否已取名
+            if (!hasUsername()) {
+                alert('请先取个昵称再评论哦～点击右上角或下方按钮取名');
+                document.getElementById('username-modal').style.display = 'flex';
+                return;
+            }
+            
             const input = document.getElementById(`comment-input-${dmName}`);
             const text = input.value.trim();
             if (text) {
+                const username = getUsername();
                 if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-                    await addCommentToCloud(dmName, text);
+                    await addCommentToCloud(dmName, text, username);
                 } else {
-                    saveComment(dmName, text);
+                    saveComment(dmName, text, username);
                 }
                 input.value = '';
                 await renderComments(dmName);
