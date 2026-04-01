@@ -2392,7 +2392,7 @@
             const isWeChatBrowser = /MicroMessenger/i.test(navigator.userAgent);
             
             // 生成微信添加好友的URL（适用于手机端）
-            const wechatAddLink = `weixin://dl/addfriend?nickName=${wechatNumber}`;
+            const wechatAddLink = `weixin://dl/addfriend?nickName=Moran18602368863`;
             
             // 显示微信信息弹窗
             const modal = document.createElement('div');
@@ -2745,13 +2745,13 @@
         
         // DM列表
         const dmList = [
-            { name: '木星', avatar: '🪐' },
-            { name: '吴琊', avatar: '👤' },
-            { name: '170', avatar: '📏' },
-            { name: '谨言', avatar: '🎤' },
-            { name: '虹猫', avatar: '🐱' },
-            { name: '橙子', avatar: '🍊' },
-            { name: '萱萱', avatar: '🌸' }
+            { name: '木星', avatar: '🪐', contact: '15723530701' },
+            { name: '吴琊', avatar: '👤', contact: 'wuya9299' },
+            { name: '170', avatar: '📏', contact: 'shosakurai125' },
+            { name: '谨言', avatar: '🎤', contact: 'lxh18763281836' },
+            { name: '虹猫', avatar: '🐱', contact: 'L7777777sxy' },
+            { name: '橙子', avatar: '🍊', contact: 'lyl11080921' },
+            { name: '萱萱', avatar: '🌸', contact: 'yx_kkwang0519' }
         ];
         
         async function showDMList() {
@@ -2774,6 +2774,7 @@
                                         <span style="font-size: 2rem;">${dm.avatar}</span>
                                         <div style="flex: 1;">
                                             <div style="font-weight: bold; color: #2c3e50; font-size: 1rem;">${dm.name}</div>
+                                            <div style="font-size: 0.75rem; color: #888; margin-top: 2px;">${dm.contact}</div>
                                         </div>
                                         <div style="display: flex; flex-direction: column; gap: 5px;">
                                             <button onclick="event.stopPropagation(); toggleLike('${dm.name}', this)" class="like-btn" data-dm="${dm.name}" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666; transition: all 0.2s;">👍 赞 <span class="like-count">...</span></button>
