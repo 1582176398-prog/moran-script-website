@@ -1376,10 +1376,11 @@
             <h2 style="color: #8b7500; margin-bottom: 20px; position: relative; padding-bottom: 10px;">
                 <span class="ink-text">📱 预约与联系</span>
             </h2>
-            <div style="display: inline-flex; gap: 15px;">
+            <div style="display: inline-flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
                 <a href="tel:18602368863" class="btn">📞 电话预约</a>
-                <a href="#" class="btn">📍 地址导航</a>
+                <a href="https://map.baidu.com/search/%E5%A2%A8%E6%9F%93%E5%89%A7%E6%9C%AC%E6%9D%80/@11834412.325,3432501.96,19z?querytype=s&da_src=shareurl&wd=%E5%A2%A8%E6%9F%93%E5%89%A7%E6%9C%AC%E6%9D%80&c=132&src=0&wd2=%E9%87%8D%E5%BA%86%E5%B8%82%E6%B2%99%E5%9D%AA%E5%9D%9D%E5%8C%BA&pn=0&sug=1&l=12&b=(11801346.46,3395404.19;11922690.46,3459084.19)&from=webmap&biz_forward=%7B%22scaler%22:1,%22styles%22:%22pl%22%7D&sug_forward=aa3a3b48038332df3a04b192&device_ratio=1" target="_blank" class="btn">📍 地址导航</a>
                 <a href="weixin://" onclick="showWeChatInfo()" class="btn">💬 在线咨询</a>
+                <button onclick="showMyPlaysModal()" class="btn">📖 打本历程</button>
             </div>
             <p style="margin-top: 20px; color: #777777; font-size: 0.95rem;">
                 地址：重庆市沙坪坝区大学城熙街2栋22-5 · 营业时间：14:00-24:00
@@ -2377,6 +2378,115 @@
             document.body.appendChild(alertDiv);
             setTimeout(() => alertDiv.remove(), 2300);
         }
+        
+        // ========== 打本历程功能 ==========
+        const PLAYS_TABLE = 'my_plays';
+        
+        const scriptNames = ['大宴之上', '万仞青山听水寒', '流芳', '梦灵祈念时', '窃云台', '请君入瓮', '阙落', '如故', '壁上观', '同归'];
+        
+        function initScriptSelect() {
+            const select = document.getElementById('scriptSelect');
+            if (select && select.children.length <= 1) {
+                scriptNames.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    select.appendChild(option);
+                });
+            }
+        }
+        
+        function showMyPlaysModal() {
+            const modal = document.getElementById('myPlaysModal');
+            if (modal) {
+                initScriptSelect();
+                modal.classList.add('active');
+                loadMyPlays();
+            }
+        }
+        
+        function closeMyPlaysModal() {
+            const modal = document.getElementById('myPlaysModal');
+            if (modal) modal.classList.remove('active');
+        }
+        
+        async function addMyPlay() {
+            const playerName = document.getElementById('playerName').value.trim();
+            const playDate = document.getElementById('playDate').value;
+            const scriptName = document.getElementById('scriptSelect').value;
+            
+            if (!playerName || !playDate || !scriptName) {
+                showSuccessAlert('请填写完整信息');
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${PLAYS_TABLE}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=minimal' },
+                    body: JSON.stringify({ player_name: playerName, play_date: playDate, script_name: scriptName })
+                });
+                
+                if (res.ok) {
+                    showSuccessAlert('打本记录添加成功！');
+                    document.getElementById('playerName').value = '';
+                    document.getElementById('playDate').value = '';
+                    document.getElementById('scriptSelect').value = '';
+                    loadMyPlays();
+                } else {
+                    showSuccessAlert('添加失败，请重试');
+                }
+            } catch (e) {
+                showSuccessAlert('添加失败：' + e.message);
+            }
+        }
+        
+        async function loadMyPlays(searchName = '') {
+            const listEl = document.getElementById('myPlaysList');
+            if (!listEl) return;
+            
+            try {
+                let url = `${SUPABASE_URL}/rest/v1/${PLAYS_TABLE}?order=play_date.desc&limit=50`;
+                if (searchName) url += `&player_name=ilike.%25${encodeURIComponent(searchName)}%25`;
+                
+                const res = await fetch(url, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
+                
+                if (!res.ok) {
+                    listEl.innerHTML = '<p style="text-align: center; color: #999;">暂无记录</p>';
+                    return;
+                }
+                
+                const plays = await res.json();
+                if (!plays || plays.length === 0) {
+                    listEl.innerHTML = searchName ? `<p style="text-align: center; color: #999;">未找到"${searchName}"的记录</p>` : '<p style="text-align: center; color: #999;">暂无记录</p>';
+                    return;
+                }
+                
+                const grouped = {};
+                plays.forEach(play => {
+                    const name = play.player_name || '匿名';
+                    if (!grouped[name]) grouped[name] = [];
+                    grouped[name].push(play);
+                });
+                
+                let html = '';
+                for (const [name, group] of Object.entries(grouped)) {
+                    html += `<div style="background: #f8f9fa; border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                        <h4 style="margin: 0 0 10px 0; color: #8b7500; font-size: 1.1rem;">👤 ${name}</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            ${group.map(play => `<span style="background: white; padding: 8px 12px; border-radius: 20px; font-size: 0.9rem; border: 1px solid #e0e0e0;">📅 ${play.play_date} · 📖 ${play.script_name}</span>`).join('')}
+                        </div></div>`;
+                }
+                listEl.innerHTML = html;
+            } catch (e) {
+                listEl.innerHTML = '<p style="text-align: center; color: #999;">加载失败</p>';
+            }
+        }
+        
+        function searchMyPlays() {
+            const searchName = document.getElementById('searchPlayerName').value.trim();
+            loadMyPlays(searchName);
+        }
 
         function initSoundToggle() {
             // 音效开关初始化（已经在音乐播放器中处理）
@@ -3175,6 +3285,60 @@
             0% { transform: translateY(-30px) scale(0.95); opacity: 0; }
             100% { transform: translateY(0) scale(1); opacity: 1; }
         }
+        
+        /* 打本历程样式 */
+        .my-plays-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100000;
+        }
+        .my-plays-modal.active {
+            display: flex;
+        }
+        .my-plays-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
     </style>
+    <!-- 打本历程弹窗 -->
+    <div id="myPlaysModal" class="my-plays-modal">
+        <div class="my-plays-content" onclick="event.stopPropagation()">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; border-bottom: 1px solid #eee;">
+                <h3 style="margin: 0; color: #8b7500;">📖 我的打本历程</h3>
+                <button onclick="closeMyPlaysModal()" style="background: none; border: none; font-size: 24px; color: #999; cursor: pointer;">&times;</button>
+            </div>
+            <div style="padding: 20px;">
+                <!-- 添加打本记录表单 -->
+                <div style="background: #f8f9fa; border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 12px 0; color: #2c3e50; font-size: 1rem;">➕ 添加打本记录</h4>
+                    <input type="text" id="playerName" placeholder="你的名字" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box;">
+                    <input type="date" id="playDate" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box;">
+                    <select id="scriptSelect" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box;">
+                        <option value="">选择剧本</option>
+                    </select>
+                    <button onclick="addMyPlay()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #8b7500, #a08000); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">提交记录</button>
+                </div>
+                <!-- 搜索功能 -->
+                <div style="margin-bottom: 20px;">
+                    <input type="text" id="searchPlayerName" placeholder="搜索用户名查看打本历程" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+                    <button onclick="searchMyPlays()" style="width: 100%; padding: 10px; margin-top: 10px; background: #2c3e50; color: white; border: none; border-radius: 8px; cursor: pointer;">🔍 搜索</button>
+                </div>
+                <!-- 打本记录列表 -->
+                <div id="myPlaysList"></div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
