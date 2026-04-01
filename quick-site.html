@@ -2993,18 +2993,6 @@
             } catch(e) { return []; }
         }
         
-function toggleCommentSection(dmName) {
-            const section = document.getElementById(`comment-section-${dmName}`);
-            section.style.display = section.style.display === 'none' ? 'block' : 'none';
-            if (section.style.display === 'block') {
-                renderComments(dmName);
-            }
-        }
-
-        // Supabase 表名
-        const DM_LIKES_TABLE = 'dm_likes';
-        const DM_COMMENTS_TABLE = 'dm_comments';
-
         // 获取用户标识（使用IP地址）- 缓存避免重复请求
         let cachedUserId = null;
         async function getUserId() {
@@ -3068,10 +3056,10 @@ function toggleCommentSection(dmName) {
         
         // 本地评论获取
         function getComments(dmName) {
-            const key = `dm_comments_${dmName}`;
-            return JSON.parse(localStorage.getItem(key) || '[]');
+            const stored = localStorage.getItem(`dm_comments_${dmName}`);
+            return stored ? JSON.parse(stored) : [];
         }
-        
+
         async function toggleLikeFromCloud(dmName, btn) {
             const userId = await getUserId();
             const isLiked = await isLikedFromCloud(dmName, userId);
@@ -3190,6 +3178,14 @@ function toggleCommentSection(dmName) {
                 }
                 input.value = '';
                 await renderComments(dmName);
+            }
+        }
+
+        function toggleCommentSection(dmName) {
+            const section = document.getElementById(`comment-section-${dmName}`);
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+            if (section.style.display === 'block') {
+                renderComments(dmName);
             }
         }
 
