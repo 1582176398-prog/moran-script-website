@@ -59,6 +59,34 @@
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         
+        /* 标签飘动相关样式 */
+        .dm-tags-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: visible;
+        }
+        
+        .dm-tag {
+            position: absolute;
+            background: linear-gradient(135deg, #8b7500, #d4af37);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.6rem;
+            white-space: nowrap;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            z-index: 1;
+            opacity: 1;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        /* DM卡片标签不超出边界 */
+        .dm-card { overflow: visible; }
+        
         /* 响应式布局 */
         @media (max-width: 1024px) {
             .container { padding: 15px; }
@@ -163,8 +191,9 @@
             padding: 24px;
             transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            z-index: 1;
         }
         
         .script-card::before {
@@ -177,6 +206,8 @@
             background: radial-gradient(circle, rgba(100, 100, 100, 0.05) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.5s ease;
+            pointer-events: none;
+            z-index: 0;
         }
         
         .script-card:hover::before {
@@ -184,12 +215,16 @@
         }
         
         /* 确保按钮可以点击 */
-        .btn, .btn-dm {
+        .btn, .btn-dm, .btn-role {
             position: relative;
-            z-index: 10;
+            z-index: 100001;
+            pointer-events: auto;
         }
         
         /* 确保图标不阻挡点击 */
+        .btn::before {
+            pointer-events: none;
+        }
         .script-card > div[style*="position: absolute"] {
             pointer-events: none;
         }
@@ -707,6 +742,57 @@
             max-height: 320px;
             overflow-y: auto;
         }
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .admin-tab {
+            flex: 1;
+            padding: 10px 15px;
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .admin-tab.active {
+            background: #9b59b6;
+            color: white;
+        }
+        .admin-tab:hover:not(.active) {
+            background: #e0e0e0;
+        }
+        .admin-tag-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .admin-tag-item span {
+            color: #333;
+            font-size: 14px;
+        }
+        .admin-tag-del {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .admin-tag-del:hover {
+            background: #c0392b;
+        }
         .admin-item {
             display: flex;
             justify-content: space-between;
@@ -1015,18 +1101,34 @@
     <div id="admin-panel">
         <div class="admin-panel-inner">
             <div id="admin-login">
-                <div class="admin-title">弹幕管理</div>
+                <div class="admin-title">管理面板</div>
                 <input type="password" id="admin-password" placeholder="请输入管理员密码" maxlength="20" onkeydown="if(event.key==='Enter')adminLogin()">
                 <button id="admin-login-btn" onclick="adminLogin()">确认</button>
                 <p id="admin-msg"></p>
             </div>
             <div id="admin-main" style="display:none;">
-                <div class="admin-title">弹幕管理</div>
-                <div class="admin-toolbar">
-                    <button onclick="refreshAdminList()">刷新</button>
-                    <button onclick="deleteAllDanmu()" style="background:#e74c3c;">清空全部</button>
+                <div class="admin-title">管理面板</div>
+                <div class="admin-tabs">
+                    <button class="admin-tab active" onclick="switchAdminTab('danmu')">弹幕管理</button>
+                    <button class="admin-tab" onclick="switchAdminTab('tags')">标签管理</button>
                 </div>
-                <div id="admin-list"></div>
+                <!-- 弹幕管理 -->
+                <div id="admin-danmu-section">
+                    <div class="admin-toolbar">
+                        <button onclick="refreshAdminList()">刷新</button>
+                        <button onclick="deleteAllDanmu()" style="background:#e74c3c;">清空全部</button>
+                    </div>
+                    <div id="admin-list"></div>
+                </div>
+                <!-- 标签管理 -->
+                <div id="admin-tags-section" style="display:none;">
+                    <div style="margin-bottom:15px;">
+                        <label style="display:block;margin-bottom:8px;color:#555;font-weight:bold;">选择DM</label>
+                        <select id="adminTagDMSelect" onchange="loadDMTagsForAdmin()" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;"></select>
+                    </div>
+                    <div id="adminTagsDisplay" style="background:#f8f9fa;padding:15px;border-radius:10px;min-height:150px;max-height:300px;overflow-y:auto;"></div>
+                    <p style="color:#999;font-size:0.8rem;margin-top:10px;">💡 点击标签右侧的×按钮可删除该标签</p>
+                </div>
             </div>
         </div>
     </div>
@@ -1054,6 +1156,7 @@
                     <input type="text" id="script-search" placeholder="搜索剧本..." onkeyup="filterScripts()" style="padding: 8px 15px; border: 2px solid rgba(139, 117, 0, 0.3); border-radius: 20px; font-size: 14px; width: 180px; outline: none; transition: all 0.3s;">
                     <button onclick="goToFirstResult()" style="padding: 8px 12px; background: linear-gradient(135deg, #3498db, #2980b9); color: #fff; border: none; border-radius: 20px; cursor: pointer; font-size: 14px;">➔</button>
                     <button onclick="toggleAllCards()" id="toggle-all-btn" style="padding: 8px 16px; background: linear-gradient(135deg, #8b7500, #6b5a00); color: #fff; border: none; border-radius: 20px; cursor: pointer; font-size: 14px;">📂 折叠全部</button>
+                    <button onclick="showMyPlaysModal()" style="padding: 8px 16px; background: linear-gradient(135deg, #e67e22, #d35400); color: #fff; border: none; border-radius: 20px; cursor: pointer; font-size: 14px;">📖 打本历程</button>
                 </div>
             </div>
         </header>
@@ -1380,7 +1483,6 @@
                 <a href="tel:18602368863" class="btn">📞 电话预约</a>
                 <a href="https://map.baidu.com/search/%E5%A2%A8%E6%9F%93%E5%89%A7%E6%9C%AC%E6%9D%80/@11834412.325,3432501.96,19z?querytype=s&da_src=shareurl&wd=%E5%A2%A8%E6%9F%93%E5%89%A7%E6%9C%AC%E6%9D%80&c=132&src=0&wd2=%E9%87%8D%E5%BA%86%E5%B8%82%E6%B2%99%E5%9D%AA%E5%9D%9D%E5%8C%BA&pn=0&sug=1&l=12&b=(11801346.46,3395404.19;11922690.46,3459084.19)&from=webmap&biz_forward=%7B%22scaler%22:1,%22styles%22:%22pl%22%7D&sug_forward=aa3a3b48038332df3a04b192&device_ratio=1" target="_blank" class="btn">📍 地址导航</a>
                 <a href="weixin://" onclick="showWeChatInfo()" class="btn">💬 在线咨询</a>
-                <button onclick="showMyPlaysModal()" class="btn">📖 打本历程</button>
             </div>
             <p style="margin-top: 20px; color: #777777; font-size: 0.95rem;">
                 地址：重庆市沙坪坝区大学城熙街2栋22-5 · 营业时间：14:00-24:00
@@ -1638,6 +1740,8 @@
             initSoundToggle();
             // 初始化弹幕系统
             danmu.init();
+            // 从云端加载DM角色数据
+            loadDMRolesFromCloud();
             // 不自动弹窗，等待用户点击头像按钮
         });
         
@@ -1671,10 +1775,80 @@
             if (pwd === ADMIN_PWD) {
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-main').style.display = 'block';
+                // 初始化标签管理下拉框
+                initAdminTagSelect();
                 refreshAdminList();
             } else {
                 document.getElementById('admin-msg').textContent = '密码错误，请重试';
             }
+        }
+        
+        // 切换管理面板标签页
+        function switchAdminTab(tab) {
+            const danmuSection = document.getElementById('admin-danmu-section');
+            const tagsSection = document.getElementById('admin-tags-section');
+            const tabs = document.querySelectorAll('.admin-tab');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'danmu') {
+                danmuSection.style.display = 'block';
+                tagsSection.style.display = 'none';
+                tabs[0].classList.add('active');
+            } else {
+                danmuSection.style.display = 'none';
+                tagsSection.style.display = 'block';
+                tabs[1].classList.add('active');
+                loadDMTagsForAdmin();
+            }
+        }
+        
+        // 初始化标签管理下拉框
+        function initAdminTagSelect() {
+            const select = document.getElementById('adminTagDMSelect');
+            if (!select) return;
+            const options = dmList.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
+            select.innerHTML = options;
+        }
+        
+        // 加载DM标签用于管理
+        function loadDMTagsForAdmin() {
+            const dmName = document.getElementById('adminTagDMSelect').value;
+            const container = document.getElementById('adminTagsDisplay');
+            const tags = dmTagsMap[dmName] || [];
+            
+            if (tags.length === 0) {
+                container.innerHTML = '<p style="color:#999;text-align:center;padding:40px;">该DM暂无标签</p>';
+                return;
+            }
+            
+            container.innerHTML = tags.map((tag, i) => `
+                <div class="admin-tag-item">
+                    <span>🏷️ ${tag}</span>
+                    <button class="admin-tag-del" onclick="deleteDMTagAdmin('${dmName}', ${i})">× 删除</button>
+                </div>
+            `).join('');
+        }
+        
+        // 管理员删除标签
+        function deleteDMTagAdmin(dmName, index) {
+            if (!confirm('确定删除该标签？')) return;
+            
+            let tags = dmTagsMap[dmName] || [];
+            tags.splice(index, 1);
+            dmTagsMap[dmName] = tags;
+            
+            // 保存到云端
+            const roles = dmRolesMap[dmName] || [];
+            const bio = dmBioMap[dmName] || '';
+            saveDMRolesToCloud(dmName, roles, bio, tags);
+            
+            // 更新DM界面标签显示
+            updateDMCardTags(dmName);
+            
+            // 刷新列表
+            loadDMTagsForAdmin();
+            alert('✅ 标签已删除');
         }
         
         async function refreshAdminList() {
@@ -2759,6 +2933,532 @@
             { name: '萱萱', avatar: 'web-pdfs/萱萱.jpg', contact: 'yx_kkwang0519' }
         ];
         
+        // DM角色映射（初始为空，用户自行添加）
+        const dmRolesMap = {};
+        
+        // DM自我介绍映射
+        const dmBioMap = {};
+        
+        // DM头像标签映射
+        const dmTagsMap = {};
+        
+        // 验证标签长度（6个汉字或12个字母）
+        function validateTagLength(tag) {
+            if (!tag) return false;
+            const chineseChars = (tag.match(/[\u4e00-\u9fa5]/g) || []).length;
+            const otherChars = tag.length - chineseChars;
+            return chineseChars <= 6 && (chineseChars * 2 + otherChars) <= 12;
+        }
+        
+        // 显示DM头像标签弹窗（可直接编辑）
+        function showDMTags(dmName, event) {
+            event.stopPropagation();
+            document.getElementById('dmTagsModal')?.remove();
+            const tags = dmTagsMap[dmName] || [];
+            const dm = dmList.find(d => d.name === dmName);
+            const avatar = dm ? dm.avatar : '';
+            
+            // 生成漂浮标签的位置
+            const positions = [
+                { top: -45, left: -35 }, { top: -45, left: 15 }, { top: -45, left: 65 },
+                { top: 5, left: -55 }, { top: 5, left: 85 },
+                { top: 55, left: -35 }, { top: 55, left: 15 }, { top: 55, left: 65 },
+                { top: 95, left: -15 }, { top: 95, left: 45 }
+            ];
+            
+            const modal = document.createElement('div');
+            modal.id = 'dmTagsModal';
+            const avatarImg = avatar ? `<img src="${avatar}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid white;box-shadow:0 2px 10px rgba(0,0,0,0.2);" onerror="this.style.display='none'">` : '';
+            modal.innerHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:100002;" onclick="closeDMTagsModal('${dmName}')">
+                <div style="background:white;border-radius:20px;padding:25px;max-width:320px;width:90%;box-shadow:0 10px 40px rgba(0,0,0,0.3);position:relative;" onclick="event.stopPropagation()">
+                    <button onclick="closeDMTagsModal('${dmName}')" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:20px;color:#999;cursor:pointer;">×</button>
+                    <h4 style="text-align:center;margin:0 0 15px;color:#8b7500;">🏷️ ${dmName}的标签</h4>
+                    <div style="position:relative;width:140px;height:140px;margin:0 auto 15px;">
+                        ${tags.length > 0 ? tags.map((tag, i) => {
+                            const pos = positions[i % positions.length];
+                            const randomOffset = Math.random() * 10 - 5;
+                            return `<div style="position:absolute;top:${pos.top}px;left:${pos.left + randomOffset}px;background:linear-gradient(135deg,#8b7500,#d4af37);color:white;padding:4px 10px;border-radius:15px;font-size:0.75rem;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.2);animation:floatTag 2s ease-in-out infinite;animation-delay:${i * 0.15}s;transform-origin:center;">${tag}</div>`;
+                        }).join('') : '<div style="text-align:center;color:#999;font-size:0.85rem;line-height:140px;">暂无标签</div>'}
+                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#8b7500,#d4af37);display:flex;align-items:center;justify-content:center;color:white;font-size:1.5rem;box-shadow:0 4px 15px rgba(139,117,0,0.4);">${avatarImg || '👤'}</div>
+                    </div>
+                    <div style="margin-top:10px;cursor:pointer;" onclick="document.getElementById('newDMTagInput').focus()">
+                        <div style="display:flex;gap:8px;pointer-events:none;">
+                            <input type="text" id="newDMTagInput" placeholder="输入标签（6汉字/12字母）" maxlength="12" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:10px;font-size:0.85rem;pointer-events:auto;" onkeypress="if(event.key==='Enter')addDMTag('${dmName}')">
+                            <button onclick="addDMTag('${dmName}')" style="padding:10px 15px;background:#8b7500;color:white;border:none;border-radius:10px;cursor:pointer;font-size:0.85rem;pointer-events:auto;">添加</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <style>@keyframes floatTag{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}</style>`;
+            document.body.appendChild(modal);
+        }
+        
+        // 关闭标签弹窗并保存
+        function closeDMTagsModal(dmName) {
+            document.getElementById('dmTagsModal')?.remove();
+        }
+        
+        // 添加标签
+        function addDMTag(dmName) {
+            const input = document.getElementById('newDMTagInput');
+            const tag = input.value.trim();
+            
+            if (!tag) return;
+            
+            if (!validateTagLength(tag)) {
+                alert('标签过长！最多6个汉字或12个字母');
+                return;
+            }
+            
+            let tags = dmTagsMap[dmName] || [];
+            
+            if (tags.length >= 10) {
+                alert('标签已达上限（最多10个）');
+                return;
+            }
+            
+            if (tags.includes(tag)) {
+                alert('该标签已存在');
+                return;
+            }
+            
+            tags.push(tag);
+            dmTagsMap[dmName] = tags;
+            
+            // 保存到云端
+            const roles = dmRolesMap[dmName] || [];
+            const bio = dmBioMap[dmName] || '';
+            saveDMRolesToCloud(dmName, roles, bio, tags);
+            
+            // 更新DM界面标签显示
+            updateDMCardTags(dmName);
+            
+            // 刷新弹窗
+            showDMTags(dmName, { stopPropagation: () => {} });
+        }
+        
+        // 删除标签
+        function deleteDMTag(dmName, index) {
+            let tags = dmTagsMap[dmName] || [];
+            tags.splice(index, 1);
+            dmTagsMap[dmName] = tags;
+            
+            // 保存到云端
+            const roles = dmRolesMap[dmName] || [];
+            const bio = dmBioMap[dmName] || '';
+            saveDMRolesToCloud(dmName, roles, bio, tags);
+            
+            // 更新DM界面标签显示
+            updateDMCardTags(dmName);
+            
+            // 刷新弹窗
+            showDMTags(dmName, { stopPropagation: () => {} });
+        }
+        
+        // 标签飘动系统
+        const tagAnimations = {}; // 存储每个DM的标签动画状态
+        
+        // 每个DM的独特颜色（预定义一组好看的颜色组合）
+        const DM_TAG_COLORS = [
+            ['#8b7500', '#d4af37'], // 金色系
+            ['#c0392b', '#e74c3c'], // 红色系
+            ['#27ae60', '#2ecc71'], // 绿色系
+            ['#2980b9', '#3498db'], // 蓝色系
+            ['#8e44ad', '#9b59b6'], // 紫色系
+            ['#d35400', '#e67e22'], // 橙色系
+            ['#16a085', '#1abc9c'], // 青色系
+            ['#2c3e50', '#34495e'], // 深灰系
+        ];
+        
+        function getDMColorIndex(dmName) {
+            // 根据DM名称生成稳定的颜色索引
+            let hash = 0;
+            for (let i = 0; i < dmName.length; i++) {
+                hash = ((hash << 5) - hash) + dmName.charCodeAt(i);
+                hash = hash & hash;
+            }
+            return Math.abs(hash) % DM_TAG_COLORS.length;
+        }
+        
+        function startTagAnimation(dmName) {
+            if (tagAnimations[dmName]) {
+                cancelAnimationFrame(tagAnimations[dmName].frameId);
+            }
+            
+            const dmCard = document.querySelector(`.dm-card[data-dm="${dmName}"]`);
+            if (!dmCard) return;
+            
+            const dmTags = dmTagsMap[dmName] || [];
+            if (dmTags.length === 0) return;
+            
+            // 获取该DM的独特颜色
+            const colorIndex = getDMColorIndex(dmName);
+            const [colorStart, colorEnd] = DM_TAG_COLORS[colorIndex];
+            
+            // 可用的Y轴轨道范围（避开头像区域：X:30-90, Y:20-80）
+            // 头像高度60px，中心在Y=50，所以头像范围是Y=20到Y=80
+            const availableYRanges = [
+                [0, 18],    // 上方区域
+                [82, 98]    // 下方区域
+            ];
+            
+            // 为每个标签分配独立状态
+            const tagStates = dmTags.map((tag, i) => {
+                // 随机选择上下区域
+                const rangeIndex = i % 2;
+                const [yMin, yMax] = availableYRanges[rangeIndex];
+                const y = yMin + Math.random() * (yMax - yMin);
+                
+                // 随机方向：-1向左，1向右
+                const direction = Math.random() > 0.5 ? -1 : 1;
+                
+                // 随机速度：0.15-0.35（很慢）
+                const speed = 0.15 + Math.random() * 0.2;
+                
+                // 随机初始X位置（从右侧或左侧开始）
+                const startFromRight = direction === -1;
+                const x = startFromRight ? (125 + Math.random() * 20) : (-60 - Math.random() * 20);
+                
+                return {
+                    text: tag,
+                    y: y,
+                    x: x,
+                    direction: direction,
+                    speed: speed,
+                    colorStart: colorStart,
+                    colorEnd: colorEnd,
+                    waitTime: 0, // 等待时间（毫秒）
+                    visible: true // 是否可见
+                };
+            });
+            
+            tagAnimations[dmName] = {
+                tags: tagStates,
+                container: dmCard.querySelector('.dm-tags-container'),
+                frameId: null
+            };
+            
+            // 创建标签DOM元素
+            renderAnimatedTags(dmName);
+            
+            // 启动动画
+            let lastTime = 0;
+            
+            function animate(currentTime) {
+                if (!lastTime) lastTime = currentTime;
+                const delta = currentTime - lastTime;
+                
+                if (delta > 16) { // 约60fps
+                    lastTime = currentTime;
+                    updateTagPositions(dmName, delta);
+                }
+                
+                const state = tagAnimations[dmName];
+                if (state) {
+                    tagAnimations[dmName].frameId = requestAnimationFrame(animate);
+                }
+            }
+            
+            tagAnimations[dmName].frameId = requestAnimationFrame(animate);
+        }
+        
+        function renderAnimatedTags(dmName) {
+            const state = tagAnimations[dmName];
+            if (!state) return;
+            
+            state.container.innerHTML = state.tags.map((tag, i) => 
+                `<div class="dm-tag" data-tag-index="${i}" style="top:${tag.y}px;left:${tag.x}px;background:linear-gradient(135deg,${tag.colorStart},${tag.colorEnd});"></div>`
+            ).join('');
+            
+            // 更新文本内容
+            updateTagTexts(dmName);
+        }
+        
+        function updateTagTexts(dmName) {
+            const state = tagAnimations[dmName];
+            if (!state) return;
+            
+            state.tags.forEach((tag, i) => {
+                const el = state.container.querySelector(`[data-tag-index="${i}"]`);
+                if (el) el.textContent = tag.text;
+            });
+        }
+        
+        function updateTagPositions(dmName, deltaMs) {
+            const state = tagAnimations[dmName];
+            if (!state) return;
+            
+            state.tags.forEach((tag, i) => {
+                const el = state.container.querySelector(`[data-tag-index="${i}"]`);
+                if (!el) return;
+                
+                // 如果在等待中，淡出隐藏
+                if (tag.waitTime > 0) {
+                    tag.waitTime -= deltaMs;
+                    el.style.opacity = '0';
+                    el.style.transform = 'scale(0.8)';
+                    return;
+                }
+                
+                // 等待结束，淡入显示（带轻微缩放弹入效果）
+                el.style.opacity = '1';
+                el.style.transform = 'scale(1)';
+                
+                // 根据方向移动
+                tag.x += tag.direction * tag.speed;
+                
+                // 如果飘出边界，进入等待状态
+                if (tag.direction === -1 && tag.x < -60) {
+                    // 向左飘出左边界，等待2秒后从右边重新出现
+                    tag.waitTime = 2000 + Math.random() * 500; // 2-2.5秒
+                    tag.y = Math.random() > 0.5 ? 
+                        (2 + Math.random() * 16) : 
+                        (82 + Math.random() * 16);
+                    tag.x = 125 + Math.random() * 10;
+                } else if (tag.direction === 1 && tag.x > 125) {
+                    // 向右飘出右边界，等待2秒后从左边重新出现
+                    tag.waitTime = 2000 + Math.random() * 500; // 2-2.5秒
+                    tag.y = Math.random() > 0.5 ? 
+                        (2 + Math.random() * 16) : 
+                        (82 + Math.random() * 16);
+                    tag.x = -60 - Math.random() * 10;
+                }
+                
+                el.style.left = tag.x + 'px';
+                el.style.top = tag.y + 'px';
+            });
+        }
+        
+        function stopTagAnimation(dmName) {
+            if (tagAnimations[dmName]) {
+                cancelAnimationFrame(tagAnimations[dmName].frameId);
+                delete tagAnimations[dmName];
+            }
+        }
+        
+        // 更新DM界面卡片中的标签显示
+        function updateDMCardTags(dmName) {
+            const dmCard = document.querySelector(`.dm-card[data-dm="${dmName}"]`);
+            if (!dmCard) return;
+            
+            const dmTags = dmTagsMap[dmName] || [];
+            const container = dmCard.querySelector('.dm-tags-container');
+            if (!container) return;
+            
+            if (dmTags.length > 0) {
+                // 停止旧动画
+                stopTagAnimation(dmName);
+                // 启动新动画
+                startTagAnimation(dmName);
+            } else {
+                stopTagAnimation(dmName);
+                container.innerHTML = '';
+            }
+        }
+        
+        // 页面加载时恢复所有DM的标签动画
+        function restoreAllTagAnimations() {
+            dmList.forEach(dm => {
+                const dmTags = dmTagsMap[dm.name] || [];
+                if (dmTags.length > 0) {
+                    // 延迟启动，等待DOM渲染
+                    setTimeout(() => {
+                        startTagAnimation(dm.name);
+                    }, 100);
+                }
+            });
+        }
+        
+        function showDMRoles(dmName) {
+            document.getElementById('dmRolesModal')?.remove();
+            const roles = dmRolesMap[dmName] || [];
+            const bio = dmBioMap[dmName] || '这个人很懒~';
+            const modal = document.createElement('div');
+            modal.id = 'dmRolesModal';
+            modal.innerHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:100001;" onclick="document.getElementById('dmRolesModal').remove()"><div style="background:white;border-radius:20px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);padding:20px;" onclick="event.stopPropagation()"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;"><h3 style="margin:0;color:#333;">❤️ ${dmName} 出演角色</h3><button onclick="document.getElementById('dmRolesModal').remove()" style="background:none;border:none;font-size:24px;color:#999;cursor:pointer;">×</button></div><div style="background:#f5f5f5;padding:10px 15px;border-radius:10px;margin-bottom:15px;font-size:0.85rem;color:#666;text-align:center;border:1px solid #eee;">💬 ${bio}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;min-height:50px;">${roles.length>0?roles.map((r,i)=>`<div style="background:#f0f0f0;color:#000;font-weight:bold;padding:10px 15px;font-size:0.9rem;text-align:center;border:2px solid #ccc;border-radius:20px;position:relative;"><span style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:12px;">❤️</span>${r} <span style="font-size:0.7rem;color:#888;">#${i+1}</span></div>`).join(''):'<p style="color:#999;text-align:center;width:100%;padding:20px;">暂无角色信息</p>'}</div><button onclick="openEditFromRoles('${dmName}')" style="width:100%;margin-top:15px;padding:10px;background:transparent;color:#000;border:2px solid #ccc;border-radius:8px;cursor:pointer;font-size:0.9rem;font-weight:bold;">✏️ 编辑角色</button></div></div>`;
+            document.body.appendChild(modal);
+        }
+        
+        function openEditFromRoles(dmName) {
+            document.getElementById('dmRolesModal')?.remove();
+            showEditDMRoles(dmName);
+        }
+        
+        // 剧本列表（用于编辑角色）
+        const editScriptNames = ['大宴之上', '万仞青山听水寒', '流芳', '梦灵祈念时', '窃云台', '请君入瓮', '阙落', '如故', '壁上观', '同归'];
+        
+        // 密码验证时效（5分钟）
+        const PASSWORD_VALID_MINUTES = 5;
+        
+        function isPasswordValid() {
+            const lastVerified = localStorage.getItem('dmEditPasswordTime');
+            if (!lastVerified) return false;
+            const elapsed = (Date.now() - parseInt(lastVerified)) / 1000 / 60;
+            return elapsed < PASSWORD_VALID_MINUTES;
+        }
+        
+        function markPasswordVerified() {
+            localStorage.setItem('dmEditPasswordTime', Date.now().toString());
+        }
+        
+        function showEditDMRoles(presetDM) {
+            document.getElementById('dmRolesModal')?.remove();
+            document.getElementById('editDMRolesModal')?.remove();
+            
+            const dmOptions = dmList.map(d=>`<option value="${d.name}"${presetDM===d.name?' selected':''}>${d.name}</option>`).join('');
+            const scriptOptions = editScriptNames.map(s=>`<option value="${s}">${s}</option>`).join('');
+            
+            const modal = document.createElement('div');
+            modal.id = 'editDMRolesModal';
+            modal.innerHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:100001;"><div style="background:white;border-radius:20px;max-width:700px;width:95%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);"><div style="display:flex;justify-content:space-between;align-items:center;padding:20px 25px;border-bottom:1px solid #eee;"><h3 style="margin:0;color:#e67e22;">✏️ 编辑DM角色</h3><button onclick="document.getElementById('editDMRolesModal').remove()" style="background:none;border:none;font-size:24px;color:#999;cursor:pointer;">×</button></div><div style="padding:20px;"><div id="editPasswordSection" style="text-align:center;"><p style="color:#666;margin-bottom:15px;">请输入管理密码</p><input type="password" id="editPasswordInput" placeholder="输入密码" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:15px;font-size:1rem;text-align:center;"><button onclick="verifyEditPassword()" style="width:100%;padding:12px;background:#e67e22;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;">验证</button><p id="passwordError" style="color:#e74c3c;margin-top:10px;display:none;">密码错误</p></div><div id="editContentSection" style="display:none;"><div class="edit-roles-container"><div class="edit-left-panel"><div style="margin-bottom:20px;"><label style="display:block;margin-bottom:8px;color:#555;font-weight:bold;">选择DM</label><select id="editDMSelect" onchange="loadDMRolesForEdit()" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">${dmOptions}</select></div><div style="margin-bottom:15px;"><label style="display:block;margin-bottom:8px;color:#555;font-weight:bold;">自我介绍</label><input type="text" id="editDMBio" placeholder="这个人很懒~" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:0.85rem;"></div><div style="margin-bottom:15px;"><label style="display:block;margin-bottom:8px;color:#555;font-weight:bold;">当前角色</label><div id="currentRolesDisplay" style="background:#fff3cd;padding:10px;border-radius:8px;min-height:100px;max-height:200px;overflow-y:auto;font-size:0.85rem;color:#333;white-space:pre-wrap;border:1px solid #ffc107;"></div></div></div><div class="edit-right-panel"><div style="margin-bottom:15px;"><label style="display:block;margin-bottom:8px;color:#555;font-weight:bold;">添加角色（先选剧本，再输角色名）</label></div><div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;"><select id="editScriptSelect" style="flex:1;min-width:120px;padding:10px;border:1px solid #ddd;border-radius:8px;">${scriptOptions}</select><input type="text" id="editRoleName" placeholder="输入角色名" style="flex:1;min-width:100px;padding:10px;border:1px solid #ddd;border-radius:8px;"></div><button onclick="addRoleToEditList()" style="width:100%;padding:10px;background:#27ae60;color:white;border:none;border-radius:8px;cursor:pointer;margin-bottom:15px;">➕ 添加角色</button><div style="margin-bottom:15px;"><label style="display:block;margin-bottom:8px;color:#555;font-weight:bold;">编辑列表（可删除）</label><div id="editRolesList" style="background:#fff3cd;padding:10px;border-radius:8px;min-height:120px;max-height:200px;overflow-y:auto;border:1px solid #ffc107;"></div></div><button onclick="saveDMRoles()" style="width:100%;padding:12px;background:#e67e22;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;">💾 保存</button></div></div></div></div></div><style>#editDMRolesModal .edit-roles-container{display:grid;grid-template-columns:200px 1fr;gap:20px;min-height:300px}#editDMRolesModal .edit-left-panel{border-right:1px solid #eee;padding-right:20px}#editDMRolesModal .edit-right-panel{display:flex;flex-direction:column}@media(max-width:500px){#editDMRolesModal .edit-roles-container{grid-template-columns:1fr!important;gap:15px}#editDMRolesModal .edit-left-panel{border-right:none!important;border-bottom:1px solid #eee;padding-right:0;padding-bottom:15px}}</style>`;
+            document.body.appendChild(modal);
+            
+            // 每次打开都需要输入密码
+            // 如果在5分钟时效内，显示快捷进入按钮
+            if (isPasswordValid()) {
+                document.getElementById('editPasswordSection').innerHTML = `
+                    <p style="color:#27ae60;margin-bottom:15px;">✅ 密码有效中（5分钟内）</p>
+                    <button onclick="skipPasswordAndEnter()" style="width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;">直接进入编辑</button>
+                    <button onclick="resetPasswordEntry()" style="width:100%;padding:12px;background:#e0e0e0;color:#666;border:none;border-radius:8px;cursor:pointer;font-size:1rem;margin-top:10px;">重新输入密码</button>
+                `;
+            }
+        }
+        
+        function skipPasswordAndEnter() {
+            document.getElementById('editPasswordSection').style.display='none';
+            document.getElementById('editContentSection').style.display='block';
+            loadDMRolesForEdit();
+        }
+        
+        function resetPasswordEntry() {
+            document.getElementById('editPasswordSection').innerHTML = `
+                <p style="color:#666;margin-bottom:15px;">请输入管理密码</p>
+                <input type="password" id="editPasswordInput" placeholder="输入密码" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:15px;font-size:1rem;text-align:center;">
+                <button onclick="verifyEditPassword()" style="width:100%;padding:12px;background:#e67e22;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;">验证</button>
+                <p id="passwordError" style="color:#e74c3c;margin-top:10px;display:none;">密码错误</p>
+            `;
+        }
+        
+        // 待编辑的角色列表（编辑区）
+        let editTempRoles = [];
+        
+        function addRoleToEditList() {
+            const scriptName = document.getElementById('editScriptSelect').value;
+            const roleName = document.getElementById('editRoleName').value.trim();
+            if (!roleName) {
+                alert('请输入角色名');
+                return;
+            }
+            const fullRole = `${scriptName}-${roleName}`;
+            if (editTempRoles.includes(fullRole)) {
+                alert('该角色已添加');
+                return;
+            }
+            editTempRoles.push(fullRole);
+            document.getElementById('editRoleName').value = '';
+            renderEditRolesList();
+        }
+        
+        function removeRoleFromEdit(index) {
+            editTempRoles.splice(index, 1);
+            renderEditRolesList();
+        }
+        
+        function renderEditRolesList() {
+            const container = document.getElementById('editRolesList');
+            if (!container) return;
+            if (editTempRoles.length === 0) {
+                container.innerHTML = '<span style="color:#999;">暂无角色，点击上方按钮添加</span>';
+                return;
+            }
+            container.innerHTML = editTempRoles.map((r, i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:white;border-radius:6px;margin-bottom:5px;"><span>🎭 ${r}</span><button onclick="removeRoleFromEdit(${i})" style="background:#e74c3c;color:white;border:none;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:0.75rem;">×</button></div>`).join('');
+        }
+        
+        function verifyEditPassword() {
+            if(document.getElementById('editPasswordInput').value==='050701'){
+                markPasswordVerified(); // 记录验证时间
+                document.getElementById('editPasswordSection').style.display='none';
+                document.getElementById('editContentSection').style.display='block';
+                loadDMRolesForEdit();
+            } else {
+                document.getElementById('passwordError').style.display='block';
+            }
+        }
+        
+        function loadDMRolesForEdit() {
+            const dmName=document.getElementById('editDMSelect').value;
+            const roles=dmRolesMap[dmName]||[];
+            const bio=dmBioMap[dmName]||'';
+            // 显示自我介绍
+            const bioInput=document.getElementById('editDMBio');
+            if(bioInput){bioInput.value=bio;}
+            // 显示当前角色
+            const display = document.getElementById('currentRolesDisplay');
+            if (display) {
+                display.textContent = roles.length > 0 ? roles.map(r => '🎭 ' + r).join('\n') : '暂无角色';
+            }
+            // 加载到编辑列表
+            editTempRoles = [...roles];
+            renderEditRolesList();
+        }
+        
+        function saveDMRoles() {
+            const dmName=document.getElementById('editDMSelect').value;
+            dmRolesMap[dmName]=editTempRoles;
+            const bio=document.getElementById('editDMBio').value.trim();
+            dmBioMap[dmName]=bio||'';
+            // 同步到云端
+            saveDMRolesToCloud(dmName, editTempRoles, bio||'');
+            alert('✅ 保存成功！');
+            document.getElementById('editDMRolesModal').remove();
+        }
+        
+        // 云端同步：保存单个DM的角色到云端
+        async function saveDMRolesToCloud(dmName, roles, bio, tags) {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
+            tags = tags || dmTagsMap[dmName] || [];
+            try {
+                // 先删除旧数据
+                await fetch(`${SUPABASE_URL}/rest/v1/dm_roles?dm_name=eq.${encodeURIComponent(dmName)}`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                // 插入新数据
+                if (roles.length > 0 || bio || tags.length > 0) {
+                    await fetch(`${SUPABASE_URL}/rest/v1/dm_roles`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({ dm_name: dmName, roles: JSON.stringify(roles), bio: bio, tags: JSON.stringify(tags), updated_at: new Date().toISOString() })
+                    });
+                }
+            } catch(e) { console.error('保存角色到云端失败', e); }
+        }
+        
+        // 云端同步：从云端加载所有DM角色
+        async function loadDMRolesFromCloud() {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_roles`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    data.forEach(item => {
+                        try {
+                            dmRolesMap[item.dm_name] = JSON.parse(item.roles);
+                            if(item.bio){dmBioMap[item.dm_name]=item.bio;}
+                            if(item.tags){dmTagsMap[item.dm_name]=JSON.parse(item.tags);}
+                        } catch(e) {}
+                    });
+                }
+            } catch(e) { console.error('加载角色失败', e); }
+        }
+        
         async function showDMList() {
             document.getElementById('dmListModal')?.remove();
             
@@ -2773,18 +3473,24 @@
                             <button onclick="closeDMList()" style="background: none; border: none; font-size: 24px; color: #999; cursor: pointer;">&times;</button>
                         </div>
                         <div style="padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
-                            ${dmList.map(dm => `
-                                <div style="background: linear-gradient(135deg, #f8f9fa, #fff); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px;" class="dm-card" data-dm="${dm.name}">
-                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                                        <img src="${dm.avatar}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(139, 117, 0, 0.3);" onerror="this.style.display='none'">
-                                        <div style="flex: 1;">
-                                            <div style="font-weight: bold; color: #2c3e50; font-size: 1rem;">${dm.name}</div>
-                                            <div style="font-size: 0.75rem; color: #888; margin-top: 2px;">${dm.contact}</div>
+                            ${dmList.map(dm => {
+                                // 标签容器为空，由动画系统接管
+                                return `
+                                <div style="background: linear-gradient(135deg, #f8f9fa, #fff); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px; overflow:visible;" class="dm-card" data-dm="${dm.name}">
+                                    <div style="text-align: center; margin-bottom: 12px;">
+                                        <div style="position:relative;width:120px;height:100px;margin:0 auto;overflow:visible;">
+                                            <div class="dm-tags-container"></div>
+                                            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+                                                <img src="${dm.avatar}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(139, 117, 0, 0.3); cursor: pointer; transition: all 0.3s; position:relative; z-index:2;" onerror="this.style.display='none'" onclick="showDMTags('${dm.name}', event)" onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 4px 15px rgba(139,117,0,0.3)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none'">
+                                            </div>
                                         </div>
-                                        <div style="display: flex; flex-direction: column; gap: 5px;">
-                                            <button onclick="event.stopPropagation(); toggleLike('${dm.name}', this)" class="like-btn" data-dm="${dm.name}" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666; transition: all 0.2s;">👍 赞 <span class="like-count">...</span></button>
-                                            <button onclick="event.stopPropagation(); toggleCommentSection('${dm.name}')" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666; transition: all 0.2s;" onmouseover="this.style.background='#f0f0f0';this.style.borderColor='#8b7500';this.style.color='#8b7500';" onmouseout="this.style.background='none';this.style.borderColor='#ddd';this.style.color='#666';">💬 评论 <span class="comment-count" data-dm="${dm.name}">(加载中)</span></button>
-                                        </div>
+                                        <div style="font-weight: bold; color: #2c3e50; font-size: 1rem; margin-bottom: 4px;">${dm.name}</div>
+                                        <div style="font-size: 0.75rem; color: #888; margin-bottom: 10px;">${dm.contact}</div>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                                        <button onclick="event.stopPropagation(); showDMRoles('${dm.name}')" style="width: 100%; padding: 5px 10px; background: none; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 0.8rem; color: #666; transition: all 0.2s;" onmouseover="this.style.background='#f0f0f0';this.style.borderColor='#8b7500';this.style.color='#8b7500';" onmouseout="this.style.background='none';this.style.borderColor='#ddd';this.style.color='#666';">👥 角色</button>
+                                        <button onclick="event.stopPropagation(); toggleLike('${dm.name}', this)" class="like-btn" data-dm="${dm.name}" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666; transition: all 0.2s; width: 100%;">👍 赞 <span class="like-count">...</span></button>
+                                        <button onclick="event.stopPropagation(); toggleCommentSection('${dm.name}')" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666; transition: all 0.2s; width: 100%;" onmouseover="this.style.background='#f0f0f0';this.style.borderColor='#8b7500';this.style.color='#8b7500';" onmouseout="this.style.background='none';this.style.borderColor='#ddd';this.style.color='#666';">💬 评论 <span class="comment-count" data-dm="${dm.name}">(加载中)</span></button>
                                     </div>
                                     <div id="comment-section-${dm.name}" style="display: none; border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
                                         <div id="comment-list-${dm.name}" style="max-height: 150px; overflow-y: auto; margin-bottom: 10px;"></div>
@@ -2793,13 +3499,18 @@
                                             <button onclick="addComment('${dm.name}')" style="background: #8b7500; color: white; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 0.8rem;">发布</button>
                                         </div>
                                     </div>
-                                </div>
-                            `).join('')}
+                                </div>`;
+                            }).join('')}
                         </div>
                     </div>
                 </div>
             `;
             document.body.appendChild(modal);
+            
+            // 启动标签飘动动画
+            setTimeout(() => {
+                restoreAllTagAnimations();
+            }, 100);
             
             // 后台异步加载数据（不阻塞UI）
             loadDMLikesInBackground();
@@ -3124,6 +3835,10 @@
         }
 
         function closeDMList() {
+            // 停止所有标签动画
+            Object.keys(tagAnimations).forEach(dmName => {
+                stopTagAnimation(dmName);
+            });
             document.getElementById('dmListModal')?.remove();
         }
 
