@@ -995,6 +995,21 @@
             </div>
         </div>
     </div>
+    
+    <!-- 修改昵称弹窗 -->
+    <div id="edit-username-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100001;">
+        <div style="background: white; border-radius: 20px; max-width: 400px; width: 90%; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">✏️</div>
+            <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 1.4rem;">修改昵称</h3>
+            <p style="color: #8b7500; margin-bottom: 20px; font-size: 0.95rem;">当前昵称：<span id="current-username-display" style="font-weight: bold;"></span></p>
+            <input type="text" id="edit-username-input" placeholder="输入新昵称（2-10字）" maxlength="10" style="width: 100%; padding: 12px 15px; border: 2px solid #8b7500; border-radius: 12px; font-size: 1rem; margin-bottom: 15px; box-sizing: border-box;">
+            <p style="color: #999; font-size: 0.8rem; margin-bottom: 20px;">⚠️ 昵称不可重复，若被占用需更换</p>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeEditUsernameModal()" style="flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 12px; background: white; color: #666; font-size: 1rem; cursor: pointer;">取消</button>
+                <button onclick="confirmEditUsername()" style="flex: 1; padding: 12px; border: none; border-radius: 12px; background: linear-gradient(90deg, #8b7500, #666); color: white; font-size: 1rem; cursor: pointer;">确认修改</button>
+            </div>
+        </div>
+    </div>
 
     <!-- 弹幕容器 -->
     <div id="danmu-container"></div>
@@ -1666,7 +1681,19 @@
             } catch(e) { return null; }
         }
 
-        // 保存用户名到云端
+        // 检查昵称是否已被使用
+        async function isUsernameTaken(checkUsername) {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return false;
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?username=eq.${encodeURIComponent(checkUsername)}&limit=1`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                const data = res.ok ? await res.json() : [];
+                return data.length > 0;
+            } catch(e) { return false; }
+        }
+
+        // 保存用户名到云端（带重复检查）
         async function saveUsernameToCloud(username) {
             if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
             try {
@@ -1753,6 +1780,11 @@
                 alert('昵称至少需要2个字符哦～');
                 return;
             }
+            // 检查昵称是否已被使用
+            if (await isUsernameTaken(username)) {
+                alert('❌ 该昵称已被使用，请换个名字吧～');
+                return;
+            }
             // 保存到本地
             localStorage.setItem('moran_username', username);
             // 保存到云端
@@ -1776,24 +1808,43 @@
             return !!localStorage.getItem('moran_username');
         }
         
+        // 显示修改昵称弹窗
         async function showUsernameModal() {
-            const modal = document.getElementById('username-modal');
-            if (hasUsername()) {
-                const currentUsername = getUsername();
-                const newUsername = prompt(`当前昵称：${currentUsername}\n\n请输入新昵称（2-10字）：`, currentUsername);
-                if (newUsername !== null && newUsername.trim().length >= 2) {
-                    const name = newUsername.trim();
-                    localStorage.setItem('moran_username', name);
-                    await saveUsernameToCloud(name);
-                    alert(`✅ 昵称已更新为：${name}`);
-                }
-            } else {
-                modal.style.display = 'flex';
-                setTimeout(() => {
-                    const input = document.getElementById('username-input');
-                    if (input) input.focus();
-                }, 100);
+            const modal = document.getElementById('edit-username-modal');
+            const currentUsername = getUsername();
+            document.getElementById('current-username-display').textContent = currentUsername;
+            document.getElementById('edit-username-input').value = currentUsername;
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('edit-username-input').focus();
+                document.getElementById('edit-username-input').select();
+            }, 100);
+        }
+        
+        function closeEditUsernameModal() {
+            document.getElementById('edit-username-modal').style.display = 'none';
+        }
+        
+        async function confirmEditUsername() {
+            const newUsername = document.getElementById('edit-username-input').value.trim();
+            if (newUsername.length < 2) {
+                alert('昵称至少需要2个字符哦～');
+                return;
             }
+            const currentUsername = getUsername();
+            if (newUsername === currentUsername) {
+                closeEditUsernameModal();
+                return;
+            }
+            // 检查是否被占用
+            if (await isUsernameTaken(newUsername)) {
+                alert('❌ 该昵称已被使用，请换个名字吧～');
+                return;
+            }
+            localStorage.setItem('moran_username', newUsername);
+            await saveUsernameToCloud(newUsername);
+            closeEditUsernameModal();
+            alert(`✅ 昵称已更新为：${newUsername}`);
         }
         
         // ===== 管理员弹幕管理 =====
@@ -3042,10 +3093,27 @@
             } catch(e) { return []; }
         }
         
-        // 获取用户标识（使用IP地址）- 缓存避免重复请求
+        // 获取用户标识（优先使用本地存储的设备ID，回退到IP或其他方式）
         let cachedUserId = null;
+        
+        // 生成或获取设备唯一ID
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('moran_device_id');
+            if (!deviceId) {
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('moran_device_id', deviceId);
+            }
+            return deviceId;
+        }
+        
         async function getUserId() {
             if (cachedUserId) return cachedUserId;
+            // 优先使用设备ID（更稳定）
+            cachedUserId = getDeviceId();
+            return cachedUserId;
+            
+            // 旧代码：尝试获取IP（可能被阻止）
+            /*
             try {
                 const res = await fetch('https://api.ipify.org?format=json');
                 const data = await res.json();
@@ -3055,6 +3123,7 @@
                 cachedUserId = 'user_' + Math.random().toString(36).substr(2, 9);
                 return cachedUserId;
             }
+            */
         }
 
         // ========== DM点赞云端功能 ==========
