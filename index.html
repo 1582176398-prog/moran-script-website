@@ -270,6 +270,7 @@
         .btn:hover {
             transform: scale(1.05);
             box-shadow: 0 8px 20px rgba(139, 117, 0, 0.4);
+            filter: brightness(1.1);
         }
         .btn-dm {
             background: linear-gradient(90deg, #6c63ff 0%, #4a43d6 100%);
@@ -281,6 +282,27 @@
             background: linear-gradient(90deg, #00b894 0%, #00a085 100%);
             color: white;
             margin-left: 10px;
+        }
+        
+        /* 增强按钮可点击提示 */
+        .btn::before {
+            content: '👆';
+            font-size: 12px;
+            margin-right: 4px;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        .btn:hover::before {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        
+        /* 移动端按钮提示 - 始终显示 */
+        @media (max-width: 768px) {
+            .btn::before {
+                opacity: 0.9;
+                font-size: 14px;
+            }
         }
         
         /* 弹窗遮罩层 */
@@ -742,6 +764,37 @@
             border-radius: 12px;
             min-width: 120px;
             border: 2px solid rgba(139, 117, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .stat-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 117, 0, 0.3);
+            border-color: #8b7500;
+            background: rgba(139, 117, 0, 0.1);
+        }
+        .stat-item::after {
+            content: '👆 点击';
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            font-size: 10px;
+            color: #8b7500;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        /* 移动端统计卡片提示 - 始终显示 */
+        @media (max-width: 768px) {
+            .stat-item::after {
+                opacity: 0.8;
+                font-size: 12px;
+            }
+        }
+        
+        .stat-item:hover::after {
+            opacity: 1;
         }
         .stat-number {
             font-size: 2rem;
