@@ -1648,11 +1648,92 @@
             initSoundToggle();
             // 初始化弹幕系统
             danmu.init();
-            // 检查是否需要显示取名弹窗
-            checkUsername();
+            // 检查是否需要显示取名弹窗（云端优先）
+            checkUsernameAsync();
         });
         
-        // ===== 用户名系统 =====
+        // ===== 用户名系统（云端+本地双存储）=====
+        // 获取云端用户名
+        async function getUsernameFromCloud() {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return null;
+            try {
+                const userId = await getUserId();
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?user_id=eq.${userId}&limit=1`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                const data = res.ok ? await res.json() : [];
+                return data.length > 0 ? data[0].username : null;
+            } catch(e) { return null; }
+        }
+
+        // 保存用户名到云端
+        async function saveUsernameToCloud(username) {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
+            try {
+                const userId = await getUserId();
+                // 先查询是否存在
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?user_id=eq.${userId}&limit=1`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                const data = res.ok ? await res.json() : [];
+                
+                if (data.length > 0) {
+                    // 更新
+                    await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?user_id=eq.${userId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({ username: username })
+                    });
+                } else {
+                    // 新增
+                    await fetch(`${SUPABASE_URL}/rest/v1/user_profiles`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({ user_id: userId, username: username })
+                    });
+                }
+            } catch(e) { console.error('保存用户名到云端失败', e); }
+        }
+
+        // 异步检查用户名（云端优先）
+        async function checkUsernameAsync() {
+            const modal = document.getElementById('username-modal');
+            if (!modal) return;
+            
+            // 先检查本地
+            let localUsername = localStorage.getItem('moran_username');
+            if (localUsername) {
+                // 尝试同步到云端
+                await saveUsernameToCloud(localUsername);
+                return; // 本地有则不弹窗
+            }
+            
+            // 检查云端
+            const cloudUsername = await getUsernameFromCloud();
+            if (cloudUsername) {
+                localStorage.setItem('moran_username', cloudUsername);
+                return; // 云端有则不弹窗
+            }
+            
+            // 都没有，显示弹窗
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                const input = document.getElementById('username-input');
+                if (input) input.focus();
+            }, 100);
+        }
+
+        // 兼容旧代码（同步版本，仅检查本地）
         function checkUsername() {
             const savedUsername = localStorage.getItem('moran_username');
             const modal = document.getElementById('username-modal');
@@ -1665,16 +1746,19 @@
             }
         }
         
-        function saveUsername() {
+        async function saveUsername() {
             const input = document.getElementById('username-input');
             const username = input.value.trim();
             if (username.length < 2) {
                 alert('昵称至少需要2个字符哦～');
                 return;
             }
+            // 保存到本地
             localStorage.setItem('moran_username', username);
+            // 保存到云端
+            await saveUsernameToCloud(username);
+            
             document.getElementById('username-modal').style.display = 'none';
-            // 显示欢迎消息
             setTimeout(() => {
                 alert(`🎉 欢迎，${username}！现在你可以参与评论啦～`);
             }, 300);
@@ -1692,15 +1776,16 @@
             return !!localStorage.getItem('moran_username');
         }
         
-        function showUsernameModal() {
+        async function showUsernameModal() {
             const modal = document.getElementById('username-modal');
             if (hasUsername()) {
-                // 已设置过昵称，提示可修改
                 const currentUsername = getUsername();
                 const newUsername = prompt(`当前昵称：${currentUsername}\n\n请输入新昵称（2-10字）：`, currentUsername);
                 if (newUsername !== null && newUsername.trim().length >= 2) {
-                    localStorage.setItem('moran_username', newUsername.trim());
-                    alert(`✅ 昵称已更新为：${newUsername.trim()}`);
+                    const name = newUsername.trim();
+                    localStorage.setItem('moran_username', name);
+                    await saveUsernameToCloud(name);
+                    alert(`✅ 昵称已更新为：${name}`);
                 }
             } else {
                 modal.style.display = 'flex';
