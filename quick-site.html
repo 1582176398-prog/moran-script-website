@@ -512,10 +512,10 @@
         .danmu-close-btn {
             background: none;
             border: none;
-            font-size: 18px;
+            font-size: 14px;
             color: #777;
-            width: 28px;
-            height: 28px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -525,7 +525,7 @@
         }
         
         .danmu-close-btn:hover {
-            background: rgba(139, 117, 0, 0.1);
+            background: transparent;
             color: #8b7500;
         }
         
@@ -933,7 +933,7 @@
     
     <!-- 弹幕发送悬浮按钮 -->
     <button id="danmu-fab" title="发送弹幕" onclick="toggleDanmuPanel()">💬</button>
-    <button id="admin-fab" title="弹幕管理" onclick="openAdminPanel()" style="position:fixed;bottom:20px;right:75px;width:48px;height:48px;background:linear-gradient(135deg,#9b59b6,#8e44ad);color:white;border:none;border-radius:50%;font-size:20px;cursor:pointer;z-index:9999;box-shadow:0 4px 16px rgba(155,89,182,0.35);transition:all 0.3s;display:flex;align-items:center;justify-content:center;">⚙️</button>
+    <button id="admin-fab" title="弹幕管理" onclick="toggleAdminPanel()" style="position:fixed;bottom:20px;right:75px;width:48px;height:48px;background:linear-gradient(135deg,#9b59b6,#8e44ad);color:white;border:none;border-radius:50%;font-size:20px;cursor:pointer;z-index:9999;box-shadow:0 4px 16px rgba(155,89,182,0.35);transition:all 0.3s;display:flex;align-items:center;justify-content:center;">⚙️</button>
     
     <!-- 弹幕发送面板 -->
     <div id="danmu-panel">
@@ -958,19 +958,13 @@
     <div id="admin-panel">
         <div class="admin-panel-inner">
             <div id="admin-login">
-                <div class="admin-title">
-                    <span>弹幕管理</span>
-                    <button class="danmu-close-btn" onclick="closeAdminPanel()">×</button>
-                </div>
+                <div class="admin-title">弹幕管理</div>
                 <input type="password" id="admin-password" placeholder="请输入管理员密码" maxlength="20" onkeydown="if(event.key==='Enter')adminLogin()">
                 <button id="admin-login-btn" onclick="adminLogin()">确认</button>
                 <p id="admin-msg"></p>
             </div>
             <div id="admin-main" style="display:none;">
-                <div class="admin-title">
-                    <span>弹幕管理</span>
-                    <button class="danmu-close-btn" onclick="closeAdminPanel()">×</button>
-                </div>
+                <div class="admin-title">弹幕管理</div>
                 <div class="admin-toolbar">
                     <button onclick="refreshAdminList()">刷新</button>
                     <button onclick="deleteAllDanmu()" style="background:#e74c3c;">清空全部</button>
@@ -1589,6 +1583,15 @@
             document.getElementById('admin-main').style.display = 'none';
             document.getElementById('admin-password').value = '';
             document.getElementById('admin-msg').textContent = '';
+        }
+        
+        function toggleAdminPanel() {
+            const panel = document.getElementById('admin-panel');
+            if (panel.classList.contains('open')) {
+                panel.classList.remove('open');
+            } else {
+                openAdminPanel();
+            }
         }
         
         function closeAdminPanel() {
