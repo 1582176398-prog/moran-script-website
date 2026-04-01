@@ -66,33 +66,39 @@
         }
         
         @media (max-width: 768px) {
-            .container { padding: 12px; }
-            .script-grid { grid-template-columns: 1fr; gap: 16px; }
-            .stats { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 15px 0 25px; }
-            .stat-item { flex: 0 0 calc(50% - 10px); max-width: calc(50% - 10px); padding: 10px 12px; min-width: unset; }
-            .stat-number { font-size: 1.4rem; }
-            .stat-label { font-size: 0.8rem; }
-            .logo { font-size: 2.8rem; }
-            .subtitle { font-size: 1rem; }
-            .tagline { font-size: 0.9rem; }
-            header { padding: 2rem 1rem; }
-            .script-card { padding: 16px; }
-            .script-title { font-size: 1.3rem; }
-            .script-subtitle { font-size: 0.9rem; }
-            .detail-item { font-size: 0.85rem; }
-            .script-details { gap: 8px; }
+            /* 大幅减少各区域间距和尺寸 */
+            .container { padding: 10px; }
+            header { padding: 1.2rem 0.8rem; margin-bottom: 1.2rem; }
+            .logo { font-size: 2rem; margin-bottom: 0.3rem; }
+            .subtitle { font-size: 0.85rem; margin-bottom: 0.8rem; }
+            .tagline { font-size: 0.8rem; }
+            
+            /* 统计卡片更紧凑 */
+            .stats { gap: 6px; margin: 10px 0 15px; }
+            .stat-item { padding: 8px 10px; }
+            .stat-number { font-size: 1.2rem; }
+            .stat-label { font-size: 0.7rem; }
+            
+            /* 剧本卡片更大间距 */
+            .script-grid { grid-template-columns: 1fr; gap: 14px; }
+            .script-card { padding: 14px; border-radius: 12px; }
+            .script-title { font-size: 1.15rem; }
+            .script-subtitle { font-size: 0.8rem; margin-bottom: 10px; }
+            .script-details { gap: 6px; margin-top: 10px; }
+            .detail-item { font-size: 0.75rem; padding: 4px 0; }
+            .difficulty { font-size: 0.7rem; padding: 3px 8px; top: 12px; right: 12px; }
+            .script-btn { font-size: 0.8rem; padding: 6px 12px; }
+            
+            /* footer更紧凑 */
+            footer { padding: 1.2rem; font-size: 0.8rem; }
         }
         
         @media (max-width: 480px) {
-            .container { padding: 10px; }
-            .logo { font-size: 2.2rem; }
-            .subtitle { font-size: 0.9rem; }
-            .stats { gap: 8px; }
-            .stat-number { font-size: 1.8rem; }
+            .container { padding: 8px; }
+            .logo { font-size: 1.8rem; }
             .script-grid { gap: 12px; }
-            .script-card { padding: 14px; border-radius: 14px; }
-            .difficulty { font-size: 0.75rem; padding: 4px 10px; }
-            footer { padding: 1.5rem; font-size: 0.85rem; }
+            .script-card { padding: 12px; }
+            .script-title { font-size: 1.05rem; }
         }
         
         /* 平滑滚动 */
