@@ -367,6 +367,202 @@
             margin-bottom: 10px;
             color: #2c3e50;
         }
+        /* ===== 弹幕系统样式 ===== */
+        
+        /* 弹幕容器 */
+        #danmu-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9000;
+            overflow: hidden;
+        }
+        
+        /* 弹幕单条样式 */
+        .danmu-item {
+            position: absolute;
+            font-size: 14px;           /* 小字体 */
+            white-space: nowrap;
+            pointer-events: auto;
+            user-select: none;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            padding: 4px 12px;
+            border-radius: 15px;
+            opacity: 0.85;
+            cursor: pointer;
+            animation: danmuSlide 15s linear both;  /* 慢速：15秒 */
+        }
+        
+        @keyframes danmuSlide {
+            0% { transform: translateX(0); opacity: 0.85; }
+            90% { opacity: 0.85; }
+            100% { transform: translateX(calc(-100vw - 100%)); opacity: 0; }
+        }
+        
+        /* 弹幕颜色主题 */
+        .danmu-c1 { background: rgba(106, 90, 205, 0.82); color: white; }  /* 石板蓝 */
+        .danmu-c2 { background: rgba(212, 175, 55, 0.82); color: #2c3e50; } /* 金色 */
+        .danmu-c3 { background: rgba(60, 179, 113, 0.82); color: white; }  /* 绿色 */
+        .danmu-c4 { background: rgba(205, 92, 92, 0.82); color: white; }   /* 红色 */
+        .danmu-c5 { background: rgba(163, 150, 185, 0.82); color: white; } /* 淡紫 */
+        
+        /* 弹幕发送面板 */
+        #danmu-panel {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.18);
+            z-index: 10000;
+            pointer-events: auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            display: none;
+        }
+        
+        #danmu-panel.open {
+            opacity: 0.97;
+            transform: translateY(0);
+            display: block;
+        }
+        
+        .danmu-panel-inner {
+            padding: 18px;
+        }
+        
+        .danmu-panel-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #8b7500;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .danmu-close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            line-height: 1;
+        }
+        
+        .danmu-close-btn:hover {
+            background: rgba(139, 117, 0, 0.1);
+            color: #8b7500;
+        }
+        
+        #danmu-input-field {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #2c3e50;
+            outline: none;
+            transition: border-color 0.3s;
+            margin-bottom: 10px;
+        }
+        
+        #danmu-input-field:focus {
+            border-color: #8b7500;
+            box-shadow: 0 0 0 2px rgba(139, 117, 0, 0.12);
+        }
+        
+        /* 颜色选择 */
+        .danmu-colors {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        
+        .danmu-colors span {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .danmu-color-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .danmu-color-dot.active {
+            border-color: #2c3e50;
+            transform: scale(1.2);
+        }
+        
+        /* 弹幕发送按钮 */
+        #danmu-send-btn {
+            width: 100%;
+            padding: 9px;
+            background: linear-gradient(90deg, #8b7500, #a396b9);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        
+        #danmu-send-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .danmu-footer-tip {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        /* 弹幕唤出按钮 */
+        #danmu-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #FF5722, #E91E63);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 4px 16px rgba(255, 87, 34, 0.35);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #danmu-fab:hover {
+            transform: scale(1.1) rotate(8deg);
+            box-shadow: 0 6px 22px rgba(255, 87, 34, 0.45);
+        }
+        
+        /* ===== 弹幕系统样式结束 ===== */
+        
         footer {
             text-align: center;
             padding: 2rem;
@@ -632,6 +828,32 @@
     <audio id="bgMusic" loop preload="auto" style="display: none;">
         <source src="web-pdfs/bgmusic.mp3" type="audio/mp3">
     </audio>
+    
+    <!-- 弹幕容器 -->
+    <div id="danmu-container"></div>
+    
+    <!-- 弹幕发送悬浮按钮 -->
+    <button id="danmu-fab" title="发送弹幕" onclick="toggleDanmuPanel()">💬</button>
+    
+    <!-- 弹幕发送面板 -->
+    <div id="danmu-panel">
+        <div class="danmu-panel-inner">
+            <div class="danmu-panel-title">
+                <span>💬 发送弹幕</span>
+                <button class="danmu-close-btn" onclick="toggleDanmuPanel()">×</button>
+            </div>
+            <input type="text" id="danmu-input-field" placeholder="输入弹幕内容（最多50字）..." maxlength="50">
+            <div class="danmu-colors">
+                <span>颜色：</span>
+                <div class="danmu-color-dot active" style="background:rgba(106,90,205,0.85)" data-idx="1" onclick="selectDanmuColor(this,1)"></div>
+                <div class="danmu-color-dot" style="background:rgba(212,175,55,0.85)" data-idx="2" onclick="selectDanmuColor(this,2)"></div>
+                <div class="danmu-color-dot" style="background:rgba(60,179,113,0.85)" data-idx="3" onclick="selectDanmuColor(this,3)"></div>
+                <div class="danmu-color-dot" style="background:rgba(205,92,92,0.85)" data-idx="4" onclick="selectDanmuColor(this,4)"></div>
+                <div class="danmu-color-dot" style="background:rgba(163,150,185,0.85)" data-idx="5" onclick="selectDanmuColor(this,5)"></div>
+            </div>
+            <button id="danmu-send-btn" onclick="sendDanmu()">🚀 发送弹幕</button>
+        </div>
+    </div>
     
     <!-- 音效开关 -->
     <div class="sound-toggle" id="soundToggle">
@@ -1020,6 +1242,209 @@
     </div>
 
     <script>
+        /* ========== 弹幕系统 ========== */
+        /* ===== Supabase 配置 =====
+         * 请将下面两行替换为你自己的 Supabase 项目信息
+         * 注册地址：https://supabase.com
+         * 创建项目后在 Project Settings > API 中找到 URL 和 anon key
+         * ========================= */
+        const SUPABASE_URL = 'https://nidgmnajrirgiurtnggu.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pZGdtbmFqcmlyZ2l1cnRuZ2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMDE4OTEsImV4cCI6MjA5MDU3Nzg5MX0.JrVIE5Dsy2Ui7U3PKCFFc-92OZjoYJBY9lptqpOwxds';
+        const SUPABASE_TABLE = 'danmu';  // 弹幕表名
+        
+        // ---- Supabase 轻量 REST 封装 ----
+        const sb = {
+            async insert(text, color) {
+                if (!SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL') return null;
+                try {
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({ text, color, created_at: new Date().toISOString() })
+                    });
+                    return res.ok;
+                } catch(e) { return null; }
+            },
+            async fetchRecent(limit = 30) {
+                if (!SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL') return [];
+                try {
+                    const res = await fetch(
+                        `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?order=created_at.desc&limit=${limit}`,
+                        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+                    );
+                    return res.ok ? await res.json() : [];
+                } catch(e) { return []; }
+            }
+        };
+
+        const danmu = {
+            container: null,
+            idCounter: 0,
+            colorIdx: 1,        // 当前选中颜色
+            isOpen: false,      // 面板是否打开
+            
+            // 初始化
+            async init() {
+                this.container = document.getElementById('danmu-container');
+                if (!this.container) return;
+                
+                // Enter键发送弹幕
+                const input = document.getElementById('danmu-input-field');
+                if (input) {
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') this.send();
+                    });
+                }
+                
+                // 从云端加载历史弹幕（未配置则跳过）
+                if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                    this.loadFromCloud();
+                    // 每30秒拉取一次新弹幕（实时感）
+                    setInterval(() => this.loadFromCloud(), 30000);
+                }
+            },
+            
+            // 打开/关闭面板
+            toggle() {
+                const panel = document.getElementById('danmu-panel');
+                const fab = document.getElementById('danmu-fab');
+                this.isOpen = !this.isOpen;
+                if (this.isOpen) {
+                    panel.classList.add('open');
+                    fab.style.background = 'linear-gradient(135deg, #4CAF50, #2196F3)';
+                    fab.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        const input = document.getElementById('danmu-input-field');
+                        if (input) input.focus();
+                    }, 100);
+                } else {
+                    panel.classList.remove('open');
+                    fab.style.background = 'linear-gradient(135deg, #FF5722, #E91E63)';
+                    fab.style.transform = '';
+                }
+            },
+            
+            // 选择颜色
+            selectColor(el, idx) {
+                this.colorIdx = idx;
+                document.querySelectorAll('.danmu-color-dot').forEach(d => d.classList.remove('active'));
+                el.classList.add('active');
+            },
+            
+            // 发送弹幕
+            async send() {
+                const input = document.getElementById('danmu-input-field');
+                if (!input) return;
+                const text = input.value.trim();
+                if (!text) {
+                    input.style.borderColor = '#f44336';
+                    input.focus();
+                    setTimeout(() => input.style.borderColor = '', 1500);
+                    return;
+                }
+                if (text.length > 50) {
+                    this.showTip('弹幕最多50个字哦！', 'warn');
+                    return;
+                }
+                
+                // 立即展示在本机
+                this.create(text, this.colorIdx);
+                
+                // 清空输入框
+                input.value = '';
+                input.focus();
+                
+                // 云端保存
+                if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                    const ok = await sb.insert(text, this.colorIdx);
+                    this.showTip(ok ? '弹幕已发送！✨' : '已发送（云端暂时不可用）', ok ? 'ok' : 'warn');
+                } else {
+                    this.showTip('弹幕已发送！✨', 'ok');
+                }
+            },
+            
+            // 从云端加载最近弹幕并随机展示
+            async loadFromCloud() {
+                const list = await sb.fetchRecent(30);
+                if (!list.length) return;
+                // 随机打乱后每隔2s展示一条
+                const shuffled = list.sort(() => Math.random() - 0.5).slice(0, 15);
+                shuffled.forEach((item, i) => {
+                    setTimeout(() => this.create(item.text, item.color || 1), i * 2000);
+                });
+            },
+            
+            // 创建一条弹幕
+            create(text, colorIdx) {
+                if (!this.container) return;
+                
+                this.idCounter++;
+                const el = document.createElement('div');
+                el.id = 'dm-' + this.idCounter;
+                el.className = `danmu-item danmu-c${colorIdx || 1}`;
+                el.textContent = text;
+                el.title = '点击暂停/继续 · 右键删除';
+                
+                // 随机垂直位置
+                const topPx = 20 + Math.random() * (window.innerHeight - 70);
+                el.style.top = topPx + 'px';
+                el.style.left = (window.innerWidth + 10) + 'px';
+                
+                // 慢速动画：15s
+                el.style.animationDuration = '15s';
+                
+                this.container.appendChild(el);
+                
+                // 点击暂停/继续
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (el.style.animationPlayState === 'paused') {
+                        el.style.animationPlayState = 'running';
+                        el.style.opacity = '0.85';
+                    } else {
+                        el.style.animationPlayState = 'paused';
+                        el.style.opacity = '1';
+                    }
+                });
+                
+                // 右键删除
+                el.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    el.remove();
+                });
+                
+                // 动画结束后删除
+                setTimeout(() => { if (el.parentNode) el.remove(); }, 15500);
+            },
+            
+            // 显示提示
+            showTip(msg, type) {
+                const tip = document.createElement('div');
+                tip.textContent = msg;
+                tip.style.cssText = `
+                    position: fixed; bottom: 160px; right: 22px;
+                    background: ${type === 'ok' ? '#28a745' : type === 'warn' ? '#ff9800' : '#555'};
+                    color: white; padding: 9px 16px; border-radius: 8px;
+                    box-shadow: 0 3px 12px rgba(0,0,0,0.2); z-index: 10001;
+                    pointer-events: none; font-size: 13px;
+                    transition: opacity 0.5s;
+                `;
+                document.body.appendChild(tip);
+                setTimeout(() => { tip.style.opacity = '0'; setTimeout(() => tip.remove(), 500); }, 2500);
+            }
+        };
+        
+        // 全局调用接口
+        function toggleDanmuPanel() { danmu.toggle(); }
+        function selectDanmuColor(el, idx) { danmu.selectColor(el, idx); }
+        function sendDanmu() { danmu.send(); }
+        /* ========== 弹幕系统结束 ========== */
+        
         function showPDFInfo() {
             alert('📖 DM手册已设置为直接下载功能\n\n✅ 点击"📄 DM手册"按钮将直接下载PDF文件\n✅ 支持所有现代浏览器\n✅ 文件保存在本地后即可查看\n\n📂 默认下载位置：浏览器下载文件夹');
             return false;
@@ -1054,6 +1479,8 @@
             initBackgroundMusic();
             // 初始化音效开关
             initSoundToggle();
+            // 初始化弹幕系统
+            danmu.init();
         });
         
         // 简化背景音乐播放器 - 自动播放背景音乐
