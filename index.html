@@ -561,6 +561,86 @@
             box-shadow: 0 6px 22px rgba(255, 87, 34, 0.45);
         }
         
+        /* 管理员面板 */
+        #admin-panel {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 380px;
+            max-height: 500px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            z-index: 10001;
+            display: none;
+            font-size: 14px;
+        }
+        #admin-panel.open { display: block; }
+        .admin-panel-inner { padding: 18px; }
+        .admin-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #admin-login { text-align: center; }
+        #admin-login input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        #admin-login button {
+            width: 100%;
+            padding: 10px;
+            background: #6a5acd;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        #admin-msg { color: #e74c3c; font-size: 13px; margin-top: 8px; }
+        .admin-toolbar { display: flex; gap: 10px; margin-bottom: 12px; }
+        .admin-toolbar button {
+            flex: 1;
+            padding: 8px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        #admin-list {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+        .admin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .admin-item-text {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .admin-item-del {
+            color: #e74c3c;
+            cursor: pointer;
+            padding: 4px 8px;
+            font-size: 13px;
+        }
+        
         /* ===== 弹幕系统样式结束 ===== */
         
         footer {
@@ -834,6 +914,7 @@
     
     <!-- 弹幕发送悬浮按钮 -->
     <button id="danmu-fab" title="发送弹幕" onclick="toggleDanmuPanel()">💬</button>
+    <button id="admin-fab" title="弹幕管理" onclick="openAdminPanel()" style="position:fixed;bottom:20px;right:75px;width:48px;height:48px;background:linear-gradient(135deg,#9b59b6,#8e44ad);color:white;border:none;border-radius:50%;font-size:20px;cursor:pointer;z-index:9999;box-shadow:0 4px 16px rgba(155,89,182,0.35);transition:all 0.3s;display:flex;align-items:center;justify-content:center;">⚙️</button>
     
     <!-- 弹幕发送面板 -->
     <div id="danmu-panel">
@@ -852,6 +933,28 @@
                 <div class="danmu-color-dot" style="background:rgba(163,150,185,0.85)" data-idx="5" onclick="selectDanmuColor(this,5)"></div>
             </div>
             <button id="danmu-send-btn" onclick="sendDanmu()">🚀 发送弹幕</button>
+        </div>
+    </div>
+    
+    <div id="admin-panel">
+        <div class="admin-panel-inner">
+            <div id="admin-login">
+                <div class="admin-title">弹幕管理</div>
+                <input type="password" id="admin-password" placeholder="请输入管理员密码" maxlength="20" onkeydown="if(event.key==='Enter')adminLogin()">
+                <button id="admin-login-btn" onclick="adminLogin()">确认</button>
+                <p id="admin-msg"></p>
+            </div>
+            <div id="admin-main" style="display:none;">
+                <div class="admin-title">
+                    <span>弹幕管理</span>
+                    <button class="danmu-close-btn" onclick="closeAdminPanel()">×</button>
+                </div>
+                <div class="admin-toolbar">
+                    <button onclick="refreshAdminList()">刷新</button>
+                    <button onclick="deleteAllDanmu()" style="background:#e74c3c;">清空全部</button>
+                </div>
+                <div id="admin-list"></div>
+            </div>
         </div>
     </div>
     
@@ -1482,6 +1585,75 @@
             // 初始化弹幕系统
             danmu.init();
         });
+        
+        // ===== 管理员弹幕管理 =====
+        const ADMIN_PWD = '228377';
+        
+        function openAdminPanel() {
+            document.getElementById('admin-panel').classList.add('open');
+            document.getElementById('admin-login').style.display = 'block';
+            document.getElementById('admin-main').style.display = 'none';
+            document.getElementById('admin-password').value = '';
+            document.getElementById('admin-msg').textContent = '';
+        }
+        
+        function closeAdminPanel() {
+            document.getElementById('admin-panel').classList.remove('open');
+        }
+        
+        function adminLogin() {
+            const pwd = document.getElementById('admin-password').value;
+            if (pwd === ADMIN_PWD) {
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-main').style.display = 'block';
+                refreshAdminList();
+            } else {
+                document.getElementById('admin-msg').textContent = '密码错误，请重试';
+            }
+        }
+        
+        async function refreshAdminList() {
+            const list = await sb.fetchRecent(100);
+            const container = document.getElementById('admin-list');
+            if (!list.length) {
+                container.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">暂无弹幕记录</p>';
+                return;
+            }
+            container.innerHTML = list.map(item => `
+                <div class="admin-item" data-id="${item.id}">
+                    <span class="admin-item-text">${escapeHtml(item.text)}</span>
+                    <span class="admin-item-del" onclick="deleteDanmu(${item.id})">删除</span>
+                </div>
+            `).join('');
+        }
+        
+        async function deleteDanmu(id) {
+            if (!confirm('确定删除这条弹幕？')) return;
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/danmu?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                refreshAdminList();
+            } catch(e) { alert('删除失败'); }
+        }
+        
+        async function deleteAllDanmu() {
+            if (!confirm('确定清空所有弹幕？此操作不可恢复！')) return;
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/danmu`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                refreshAdminList();
+            } catch(e) { alert('清空失败'); }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
         
         // 简化背景音乐播放器 - 自动播放背景音乐
         function initBackgroundMusic() {
