@@ -512,9 +512,8 @@
         .danmu-close-btn {
             background: none;
             border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #999;
+            font-size: 18px;
+            color: #777;
             width: 28px;
             height: 28px;
             display: flex;
@@ -522,6 +521,7 @@
             justify-content: center;
             border-radius: 50%;
             line-height: 1;
+            transition: all 0.2s ease;
         }
         
         .danmu-close-btn:hover {
@@ -629,8 +629,8 @@
             position: fixed;
             bottom: 80px;
             right: 20px;
-            width: 380px;
-            max-height: 500px;
+            width: 320px;
+            max-height: 420px;
             background: #fff;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.15);
@@ -958,7 +958,10 @@
     <div id="admin-panel">
         <div class="admin-panel-inner">
             <div id="admin-login">
-                <div class="admin-title">弹幕管理</div>
+                <div class="admin-title">
+                    <span>弹幕管理</span>
+                    <button class="danmu-close-btn" onclick="closeAdminPanel()">×</button>
+                </div>
                 <input type="password" id="admin-password" placeholder="请输入管理员密码" maxlength="20" onkeydown="if(event.key==='Enter')adminLogin()">
                 <button id="admin-login-btn" onclick="adminLogin()">确认</button>
                 <p id="admin-msg"></p>
