@@ -1004,21 +1004,13 @@
         </header>
 
         <div class="stats">
-<div class="stat-item">
-                    <div class="stat-number">10</div>
-                    <div class="stat-label">部城限剧本</div>
-                </div>
-            <div class="stat-item">
-                <div class="stat-number">54+</div>
-                <div class="stat-label">总游戏时长</div>
+            <div class="stat-item" onclick="showScriptList()" style="cursor: pointer;">
+                <div class="stat-number">10</div>
+                <div class="stat-label">部城限剧本</div>
             </div>
-            <div class="stat-item">
+            <div class="stat-item" onclick="showDMList()" style="cursor: pointer;">
                 <div class="stat-number">15+</div>
                 <div class="stat-label">专业DM</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">好评率</div>
             </div>
         </div>
 
@@ -2748,6 +2740,123 @@
                 card.style.display = allCollapsed ? 'none' : 'block';
             });
             document.getElementById('toggle-all-btn').textContent = allCollapsed ? '▶ 展开全部' : '📂 折叠全部';
+        }
+        
+        // 剧本列表
+        const scriptNames = ['大宴之上', '万仞青山听水寒', '流芳', '梦灵祈念时', '窃云台', '请君入瓮', '阙落', '如故', '壁上观', '同归'];
+        
+        function showScriptList() {
+            document.getElementById('scriptListModal')?.remove();
+            const modal = document.createElement('div');
+            modal.id = 'scriptListModal';
+            modal.innerHTML = `
+                <div class="modal-backdrop" onclick="closeScriptList()">
+                    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 500px;">
+                        <div class="modal-header">
+                            <h3>📚 剧本列表</h3>
+                            <button class="modal-close" onclick="closeScriptList()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                ${scriptNames.map((name, i) => `<li style="padding: 12px 15px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'" onclick="scrollToScript('${name}')">${i + 1}. ${name}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            setTimeout(() => modal.querySelector('.modal-backdrop').style.opacity = '1', 10);
+        }
+        
+        function closeScriptList() {
+            const modal = document.getElementById('scriptListModal');
+            if (modal) {
+                modal.querySelector('.modal-backdrop').style.opacity = '0';
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+        
+        function scrollToScript(name) {
+            closeScriptList();
+            const cards = document.querySelectorAll('.script-card');
+            for (const card of cards) {
+                const title = card.querySelector('.script-title')?.textContent;
+                if (title === name) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            }
+        }
+        
+        // DM列表
+        const dmList = [
+            { name: '木星', avatar: '🪐' },
+            { name: '吴琊', avatar: '👤' },
+            { name: '170', avatar: '📏' },
+            { name: '谨言', avatar: '🎤' },
+            { name: '虹猫', avatar: '🐱' },
+            { name: '橙子', avatar: '🍊' },
+            { name: '萱萱', avatar: '🌸' }
+        ];
+        
+        function showDMList() {
+            document.getElementById('dmListModal')?.remove();
+            const modal = document.createElement('div');
+            modal.id = 'dmListModal';
+            modal.innerHTML = `
+                <div class="modal-backdrop" onclick="closeDMList()">
+                    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 600px;">
+                        <div class="modal-header">
+                            <h3>🎭 DM团队</h3>
+                            <button class="modal-close" onclick="closeDMList()">&times;</button>
+                        </div>
+                        <div class="modal-body" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+                            ${dmList.map(dm => `
+                                <div style="background: linear-gradient(135deg, #f8f9fa, #fff); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 12px;">
+                                    <span style="font-size: 2rem;">${dm.avatar}</span>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: bold; color: #2c3e50; font-size: 1rem;">${dm.name}</div>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                        <button onclick="event.stopPropagation(); toggleLike(this)" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666;">👍 赞 <span class="like-count">0</span></button>
+                                        <button onclick="event.stopPropagation(); showComment('${dm.name}')" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666;">💬 评论</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            setTimeout(() => modal.querySelector('.modal-backdrop').style.opacity = '1', 10);
+        }
+        
+        function closeDMList() {
+            const modal = document.getElementById('dmListModal');
+            if (modal) {
+                modal.querySelector('.modal-backdrop').style.opacity = '0';
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+        
+        function toggleLike(btn) {
+            const countEl = btn.querySelector('.like-count');
+            if (btn.classList.contains('liked')) {
+                btn.classList.remove('liked');
+                btn.style.color = '#666';
+                countEl.textContent = parseInt(countEl.textContent) - 1;
+            } else {
+                btn.classList.add('liked');
+                btn.style.color = '#e74c3c';
+                countEl.textContent = parseInt(countEl.textContent) + 1;
+            }
+        }
+        
+        function showComment(dmName) {
+            const comment = prompt(`请输入对 ${dmName} 的评价：`);
+            if (comment) {
+                alert('评价已提交：' + comment);
+            }
         }
     </script>
     
