@@ -983,33 +983,7 @@
         <source src="web-pdfs/bgmusic.mp3" type="audio/mp3">
     </audio>
     
-    <!-- 取名弹窗 -->
-    <div id="username-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100001;">
-        <div style="background: white; border-radius: 20px; max-width: 400px; width: 90%; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;">
-            <h3 style="margin: 0 0 20px 0; color: #8b7500; font-size: 1.5rem;">🎮 欢迎来到墨染剧本杀</h3>
-            <p style="color: #666; margin-bottom: 20px; font-size: 0.95rem;">给自己取个昵称吧～取名后可参与评论</p>
-            <input type="text" id="username-input" placeholder="输入你的昵称（2-10字）" maxlength="10" style="width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 12px; font-size: 1rem; margin-bottom: 15px; box-sizing: border-box;">
-            <div style="display: flex; gap: 10px;">
-                <button onclick="skipUsername()" style="flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 12px; background: white; color: #666; font-size: 1rem; cursor: pointer;">跳过</button>
-                <button onclick="saveUsername()" style="flex: 1; padding: 12px; border: none; border-radius: 12px; background: linear-gradient(90deg, #8b7500, #666); color: white; font-size: 1rem; cursor: pointer;">保存</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 修改昵称弹窗 -->
-    <div id="edit-username-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100001;">
-        <div style="background: white; border-radius: 20px; max-width: 400px; width: 90%; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;">
-            <div style="font-size: 2.5rem; margin-bottom: 10px;">✏️</div>
-            <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 1.4rem;">修改昵称</h3>
-            <p style="color: #8b7500; margin-bottom: 20px; font-size: 0.95rem;">当前昵称：<span id="current-username-display" style="font-weight: bold;"></span></p>
-            <input type="text" id="edit-username-input" placeholder="输入新昵称（2-10字）" maxlength="10" style="width: 100%; padding: 12px 15px; border: 2px solid #8b7500; border-radius: 12px; font-size: 1rem; margin-bottom: 15px; box-sizing: border-box;">
-            <p style="color: #999; font-size: 0.8rem; margin-bottom: 20px;">⚠️ 昵称不可重复，若被占用需更换</p>
-            <div style="display: flex; gap: 10px;">
-                <button onclick="closeEditUsernameModal()" style="flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 12px; background: white; color: #666; font-size: 1rem; cursor: pointer;">取消</button>
-                <button onclick="confirmEditUsername()" style="flex: 1; padding: 12px; border: none; border-radius: 12px; background: linear-gradient(90deg, #8b7500, #666); color: white; font-size: 1rem; cursor: pointer;">确认修改</button>
-            </div>
-        </div>
-    </div>
+
 
     <!-- 弹幕容器 -->
     <div id="danmu-container"></div>
@@ -1419,8 +1393,7 @@
             </p>
         </footer>
         
-        <!-- 用户名设置按钮 -->
-        <button id="username-btn" onclick="showUsernameModal()" style="position: fixed; bottom: 20px; right: 130px; width: 48px; height: 48px; background: linear-gradient(135deg, #e67e22, #d35400); color: white; border: none; border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 9999; box-shadow: 0 4px 16px rgba(230, 126, 34, 0.35); transition: all 0.3s; display: flex; align-items: center; justify-content: center;" title="设置昵称">👤</button>
+
     </div>
 
     <script>
@@ -1663,189 +1636,9 @@
             initSoundToggle();
             // 初始化弹幕系统
             danmu.init();
-            // 检查是否需要显示取名弹窗（云端优先）
-            checkUsernameAsync();
+            // 不自动弹窗，等待用户点击头像按钮
         });
         
-        // ===== 用户名系统（云端+本地双存储）=====
-        // 获取云端用户名
-        async function getUsernameFromCloud() {
-            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return null;
-            try {
-                const userId = await getUserId();
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?user_id=eq.${userId}&limit=1`, {
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                });
-                const data = res.ok ? await res.json() : [];
-                return data.length > 0 ? data[0].username : null;
-            } catch(e) { return null; }
-        }
-
-        // 检查昵称是否已被使用
-        async function isUsernameTaken(checkUsername) {
-            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return false;
-            try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?username=eq.${encodeURIComponent(checkUsername)}&limit=1`, {
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                });
-                const data = res.ok ? await res.json() : [];
-                return data.length > 0;
-            } catch(e) { return false; }
-        }
-
-        // 保存用户名到云端（带重复检查）
-        async function saveUsernameToCloud(username) {
-            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
-            try {
-                const userId = await getUserId();
-                // 先查询是否存在
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?user_id=eq.${userId}&limit=1`, {
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                });
-                const data = res.ok ? await res.json() : [];
-                
-                if (data.length > 0) {
-                    // 更新
-                    await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?user_id=eq.${userId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Prefer': 'return=minimal'
-                        },
-                        body: JSON.stringify({ username: username })
-                    });
-                } else {
-                    // 新增
-                    await fetch(`${SUPABASE_URL}/rest/v1/user_profiles`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Prefer': 'return=minimal'
-                        },
-                        body: JSON.stringify({ user_id: userId, username: username })
-                    });
-                }
-            } catch(e) { console.error('保存用户名到云端失败', e); }
-        }
-
-        // 异步检查用户名（云端优先）
-        async function checkUsernameAsync() {
-            const modal = document.getElementById('username-modal');
-            if (!modal) return;
-            
-            // 先检查本地
-            let localUsername = localStorage.getItem('moran_username');
-            if (localUsername) {
-                // 尝试同步到云端
-                await saveUsernameToCloud(localUsername);
-                return; // 本地有则不弹窗
-            }
-            
-            // 检查云端
-            const cloudUsername = await getUsernameFromCloud();
-            if (cloudUsername) {
-                localStorage.setItem('moran_username', cloudUsername);
-                return; // 云端有则不弹窗
-            }
-            
-            // 都没有，显示弹窗
-            modal.style.display = 'flex';
-            setTimeout(() => {
-                const input = document.getElementById('username-input');
-                if (input) input.focus();
-            }, 100);
-        }
-
-        // 兼容旧代码（同步版本，仅检查本地）
-        function checkUsername() {
-            const savedUsername = localStorage.getItem('moran_username');
-            const modal = document.getElementById('username-modal');
-            if (!savedUsername && modal) {
-                modal.style.display = 'flex';
-                setTimeout(() => {
-                    const input = document.getElementById('username-input');
-                    if (input) input.focus();
-                }, 100);
-            }
-        }
-        
-        async function saveUsername() {
-            const input = document.getElementById('username-input');
-            const username = input.value.trim();
-            if (username.length < 2) {
-                alert('昵称至少需要2个字符哦～');
-                return;
-            }
-            // 检查昵称是否已被使用
-            if (await isUsernameTaken(username)) {
-                alert('❌ 该昵称已被使用，请换个名字吧～');
-                return;
-            }
-            // 保存到本地
-            localStorage.setItem('moran_username', username);
-            // 保存到云端
-            await saveUsernameToCloud(username);
-            
-            document.getElementById('username-modal').style.display = 'none';
-            setTimeout(() => {
-                alert(`🎉 欢迎，${username}！现在你可以参与评论啦～`);
-            }, 300);
-        }
-        
-        function skipUsername() {
-            document.getElementById('username-modal').style.display = 'none';
-        }
-        
-        function getUsername() {
-            return localStorage.getItem('moran_username') || '';
-        }
-        
-        function hasUsername() {
-            return !!localStorage.getItem('moran_username');
-        }
-        
-        // 显示修改昵称弹窗
-        async function showUsernameModal() {
-            const modal = document.getElementById('edit-username-modal');
-            const currentUsername = getUsername();
-            document.getElementById('current-username-display').textContent = currentUsername;
-            document.getElementById('edit-username-input').value = currentUsername;
-            modal.style.display = 'flex';
-            setTimeout(() => {
-                document.getElementById('edit-username-input').focus();
-                document.getElementById('edit-username-input').select();
-            }, 100);
-        }
-        
-        function closeEditUsernameModal() {
-            document.getElementById('edit-username-modal').style.display = 'none';
-        }
-        
-        async function confirmEditUsername() {
-            const newUsername = document.getElementById('edit-username-input').value.trim();
-            if (newUsername.length < 2) {
-                alert('昵称至少需要2个字符哦～');
-                return;
-            }
-            const currentUsername = getUsername();
-            if (newUsername === currentUsername) {
-                closeEditUsernameModal();
-                return;
-            }
-            // 检查是否被占用
-            if (await isUsernameTaken(newUsername)) {
-                alert('❌ 该昵称已被使用，请换个名字吧～');
-                return;
-            }
-            localStorage.setItem('moran_username', newUsername);
-            await saveUsernameToCloud(newUsername);
-            closeEditUsernameModal();
-            alert(`✅ 昵称已更新为：${newUsername}`);
-        }
         
         // ===== 管理员弹幕管理 =====
         const ADMIN_PWD = '228377';
@@ -3231,8 +3024,9 @@
 
         async function addCommentToCloud(dmName, text, username) {
             const userId = await getUserId();
+            console.log('addCommentToCloud called:', { dmName, text, username, userId });
             try {
-                await fetch(`${SUPABASE_URL}/rest/v1/dm_comments`, {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_comments`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -3240,10 +3034,19 @@
                         'Authorization': `Bearer ${SUPABASE_KEY}`,
                         'Prefer': 'return=minimal'
                     },
-                    body: JSON.stringify({ dm_name: dmName, comment_text: text, user_id: userId, username: username, created_at: new Date().toISOString() })
+                    body: JSON.stringify({ dm_name: dmName, comment_text: text, user_id: userId })
                 });
+                console.log('Response status:', res.status);
+                if (!res.ok) {
+                    const errText = await res.text();
+                    console.error('Error response:', errText);
+                    throw new Error('评论提交失败: ' + res.status);
+                }
                 return true;
-            } catch(e) { return false; }
+            } catch(e) { 
+                console.error('评论失败:', e);
+                throw e;
+            }
         }
 
         function getComments(dmName) {
@@ -3287,24 +3090,22 @@
         }
 
         async function addComment(dmName) {
-            // 检查是否已取名
-            if (!hasUsername()) {
-                alert('请先取个昵称再评论哦～点击右上角或下方按钮取名');
-                document.getElementById('username-modal').style.display = 'flex';
-                return;
-            }
-            
             const input = document.getElementById(`comment-input-${dmName}`);
             const text = input.value.trim();
             if (text) {
-                const username = getUsername();
-                if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-                    await addCommentToCloud(dmName, text, username);
-                } else {
-                    saveComment(dmName, text, username);
+                const username = '匿名用户';
+                try {
+                    if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                        await addCommentToCloud(dmName, text, username);
+                    } else {
+                        saveComment(dmName, text, username);
+                    }
+                    input.value = '';
+                    await renderComments(dmName);
+                } catch(e) {
+                    console.error('评论失败:', e);
+                    alert('评论失败，请稍后重试');
                 }
-                input.value = '';
-                await renderComments(dmName);
             }
         }
 
