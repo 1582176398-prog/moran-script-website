@@ -2392,7 +2392,7 @@
             const isWeChatBrowser = /MicroMessenger/i.test(navigator.userAgent);
             
             // 生成微信添加好友的URL（适用于手机端）
-            const wechatAddLink = `weixin://dl/add/${wechatNumber}`;
+            const wechatAddLink = `weixin://dl/addfriend?nickName=${wechatNumber}`;
             
             // 显示微信信息弹窗
             const modal = document.createElement('div');
@@ -2522,7 +2522,7 @@
         // 手机端确认后打开微信添加好友界面（取消自动跳转）
         function openWeChatAddConfirm() {
             const wechatNumber = "Moran18602368863";
-            const wechatAddLink = `weixin://dl/add/${wechatNumber}`;
+            const wechatAddLink = `weixin://dl/addfriend?nickName=${wechatNumber}`;
             
             // 先显示确认对话框，而不是自动跳转
             if (confirm('即将打开微信添加好友界面。\n\n请确认操作：\n1. 如果已安装微信，将跳转到微信\n2. 如未安装微信，将提示复制微信号\n\n是否继续添加好友？')) {
