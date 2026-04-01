@@ -1483,6 +1483,7 @@
                 <a href="tel:18602368863" class="btn">📞 电话预约</a>
                 <a href="https://map.baidu.com/search/%E5%A2%A8%E6%9F%93%E5%89%A7%E6%9C%AC%E6%9D%80/@11834412.325,3432501.96,19z?querytype=s&da_src=shareurl&wd=%E5%A2%A8%E6%9F%93%E5%89%A7%E6%9C%AC%E6%9D%80&c=132&src=0&wd2=%E9%87%8D%E5%BA%86%E5%B8%82%E6%B2%99%E5%9D%AA%E5%9D%9D%E5%8C%BA&pn=0&sug=1&l=12&b=(11801346.46,3395404.19;11922690.46,3459084.19)&from=webmap&biz_forward=%7B%22scaler%22:1,%22styles%22:%22pl%22%7D&sug_forward=aa3a3b48038332df3a04b192&device_ratio=1" target="_blank" class="btn">📍 地址导航</a>
                 <a href="weixin://" onclick="showWeChatInfo()" class="btn">💬 在线咨询</a>
+                <button onclick="showShareModal()" class="btn" style="background: linear-gradient(90deg, #27ae60 0%, #1e8449 100%);">🔗 分享网站</button>
             </div>
             <p style="margin-top: 20px; color: #777777; font-size: 0.95rem;">
                 地址：重庆市沙坪坝区大学城熙街2栋22-5 · 营业时间：14:00-24:00
@@ -2729,6 +2730,139 @@
             document.getElementById('wechatHint')?.remove();
         }
         
+        // 分享功能
+        function showShareModal() {
+            // 获取当前页面URL
+            const shareUrl = window.location.href;
+            const shareTitle = '墨染剧本杀 - 重庆城限剧本精品店';
+            const shareDesc = '探索精彩剧本杀，城限精品，沉浸体验！';
+            
+            // 检测是否微信浏览器
+            const isWeChatBrowser = /MicroMessenger/i.test(navigator.userAgent);
+            
+            const modal = document.createElement('div');
+            modal.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 100000;">
+                    <div style="background: white; border-radius: 20px; padding: 30px; max-width: 480px; width: 92%; text-align: center; animation: slideIn 0.3s ease;">
+                        <button onclick="closeShareModal()" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; cursor: pointer; font-size: 24px; color: #888; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 18px;">
+                            ✕
+                        </button>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #8b7500; margin: 0 0 10px 0; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                <span>🔗 分享给好友</span>
+                            </h3>
+                            <p style="color: #888; font-size: 14px; margin: 0;">将网站推荐给朋友，一起探索精彩剧本</p>
+                        </div>
+                        
+                        <!-- 分享链接展示 -->
+                        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 16px; border: 2px dashed rgba(139, 117, 0, 0.3); margin-bottom: 20px;">
+                            <div style="font-size: 13px; color: #888; margin-bottom: 10px; text-align: left;">🎯 网页链接</div>
+                            <div style="font-size: 13px; color: #2c3e50; word-break: break-all; background: white; padding: 12px; border-radius: 8px; border: 1px solid #e0e6ed; max-height: 80px; overflow-y: auto;">
+                                ${shareUrl}
+                            </div>
+                        </div>
+                        
+                        <!-- 分享方式按钮 -->
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px;">
+                            <button onclick="copyShareLink('${shareUrl}')" style="padding: 16px 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                                <span style="font-size: 24px;">📋</span>
+                                <span>复制链接</span>
+                            </button>
+                            
+                            <button onclick="shareToWeChat()" style="padding: 16px 12px; background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);">
+                                <span style="font-size: 24px;">💬</span>
+                                <span>微信分享</span>
+                            </button>
+                            
+                            <button onclick="shareToWeibo()" style="padding: 16px 12px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);">
+                                <span style="font-size: 24px;">🌐</span>
+                                <span>微博分享</span>
+                            </button>
+                            
+                            <button onclick="shareToQQ()" style="padding: 16px 12px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);">
+                                <span style="font-size: 24px;">💬</span>
+                                <span>QQ分享</span>
+                            </button>
+                        </div>
+                        
+                        <!-- 提示信息 -->
+                        ${isWeChatBrowser ? `
+                        <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 10px; padding: 15px; margin-top: 10px;">
+                            <p style="color: #856404; font-size: 13px; margin: 0; line-height: 1.5;">
+                                ⚠️ 在微信内置浏览器中，部分分享功能可能受限。<br>
+                                建议点击右上角「···」菜单，选择「分享给朋友」或「复制链接」。
+                            </p>
+                        </div>
+                        ` : ''}
+                        
+                        <button onclick="closeShareModal()" style="margin-top: 15px; padding: 12px 40px; background: #f0f0f0; color: #666; border: none; border-radius: 25px; cursor: pointer; font-size: 14px; font-weight: 500;">
+                            关闭
+                        </button>
+                    </div>
+                </div>
+            `;
+            modal.id = 'shareModal';
+            document.body.appendChild(modal);
+            
+            // 点击遮罩关闭
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeShareModal();
+            });
+        }
+        
+        // 关闭分享弹窗
+        function closeShareModal() {
+            document.getElementById('shareModal')?.remove();
+        }
+        
+        // 复制分享链接
+        function copyShareLink(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                showSuccessAlert('已复制链接，可粘贴发送给好友！');
+            }).catch(() => {
+                // 备用方案
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showSuccessAlert('已复制链接，可粘贴发送给好友！');
+                } catch (err) {
+                    showSuccessAlert('链接: ' + url);
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+        
+        // 分享到微信
+        function shareToWeChat() {
+            const isWeChatBrowser = /MicroMessenger/i.test(navigator.userAgent);
+            if (isWeChatBrowser) {
+                showSuccessAlert('请点击右上角菜单，选择"分享给朋友"');
+            } else {
+                showSuccessAlert('请截图发送给微信好友，或点击"复制链接"手动分享');
+            }
+        }
+        
+        // 分享到微博
+        function shareToWeibo() {
+            const shareUrl = encodeURIComponent(window.location.href);
+            const shareTitle = encodeURIComponent('墨染剧本杀 - 重庆城限剧本精品店');
+            window.open(`https://service.weibo.com/share/share.php?url=${shareUrl}&title=${shareTitle}`, '_blank');
+        }
+        
+        // 分享到QQ
+        function shareToQQ() {
+            const shareUrl = encodeURIComponent(window.location.href);
+            const shareTitle = encodeURIComponent('墨染剧本杀 - 重庆城限剧本精品店');
+            const shareDesc = encodeURIComponent('探索精彩剧本杀，城限精品，沉浸体验！');
+            window.open(`https://connect.qq.com/widget/shareqq/iframe_index.html?url=${shareUrl}&title=${shareTitle}&desc=${shareDesc}`, '_blank');
+        }
+        
         // 优化的复制微信号功能
         function copyWechatNumber(text) {
             const wechatNumber = text || "Moran18602368863";
@@ -2930,7 +3064,8 @@
             { name: '谨言', avatar: 'web-pdfs/谨言.jpg', contact: 'lxh18763281836' },
             { name: '虹猫', avatar: 'web-pdfs/虹猫.jpg', contact: 'L7777777sxy' },
             { name: '橙子', avatar: 'web-pdfs/橙子.jpg', contact: 'lyl11080921' },
-            { name: '萱萱', avatar: 'web-pdfs/萱萱.jpg', contact: 'yx_kkwang0519' }
+            { name: '萱萱', avatar: 'web-pdfs/萱萱.jpg', contact: 'yx_kkwang0519' },
+            { name: '倾听', avatar: 'web-pdfs/倾听.jpg', contact: 'lovx1012_' }
         ];
         
         // DM角色映射（初始为空，用户自行添加）
