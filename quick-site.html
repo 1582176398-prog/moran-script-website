@@ -270,6 +270,7 @@
         .btn:hover {
             transform: scale(1.05);
             box-shadow: 0 8px 20px rgba(139, 117, 0, 0.4);
+            filter: brightness(1.1);
         }
         .btn-dm {
             background: linear-gradient(90deg, #6c63ff 0%, #4a43d6 100%);
@@ -281,6 +282,27 @@
             background: linear-gradient(90deg, #00b894 0%, #00a085 100%);
             color: white;
             margin-left: 10px;
+        }
+        
+        /* 增强按钮可点击提示 */
+        .btn::before {
+            content: '👆';
+            font-size: 12px;
+            margin-right: 4px;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        .btn:hover::before {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        
+        /* 移动端按钮提示 - 始终显示 */
+        @media (max-width: 768px) {
+            .btn::before {
+                opacity: 0.9;
+                font-size: 14px;
+            }
         }
         
         /* 弹窗遮罩层 */
@@ -742,6 +764,37 @@
             border-radius: 12px;
             min-width: 120px;
             border: 2px solid rgba(139, 117, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .stat-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 117, 0, 0.3);
+            border-color: #8b7500;
+            background: rgba(139, 117, 0, 0.1);
+        }
+        .stat-item::after {
+            content: '👆 点击';
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            font-size: 10px;
+            color: #8b7500;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        /* 移动端统计卡片提示 - 始终显示 */
+        @media (max-width: 768px) {
+            .stat-item::after {
+                opacity: 0.8;
+                font-size: 12px;
+            }
+        }
+        
+        .stat-item:hover::after {
+            opacity: 1;
         }
         .stat-number {
             font-size: 2rem;
@@ -2273,7 +2326,9 @@
                     border-radius: 20px;
                     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
                     width: 90%;
-                    max-width: 400px;
+                    max-width: 500px;
+                    max-height: 80vh;
+                    overflow-y: auto;
                     animation: slideIn 0.4s ease;
                 }
                 .modal-header {
@@ -2292,30 +2347,31 @@
                     background: none;
                     border: none;
                     font-size: 24px;
+                    color: #999;
                     cursor: pointer;
-                    color: #777777;
+                    padding: 0;
                     width: 30px;
                     height: 30px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     border-radius: 50%;
-                    transition: all 0.2s ease;
+                    transition: all 0.2s;
                 }
                 .modal-close:hover {
-                    background: rgba(139, 117, 0, 0.1);
-                    color: #8b7500;
+                    background: #f0f0f0;
+                    color: #333;
                 }
                 .modal-body {
-                    padding: 25px;
+                    padding: 20px 25px;
                 }
                 @keyframes fadeIn {
                     from { opacity: 0; }
                     to { opacity: 1; }
                 }
                 @keyframes slideIn {
-                    from { transform: translateY(-30px) scale(0.95); opacity: 0; }
-                    to { transform: translateY(0) scale(1); opacity: 1; }
+                    from { transform: translateY(-20px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
                 }
             `;
             document.head.appendChild(style);
@@ -2743,37 +2799,43 @@
         }
         
         // 剧本列表
-        const scriptNames = ['大宴之上', '万仞青山听水寒', '流芳', '梦灵祈念时', '窃云台', '请君入瓮', '阙落', '如故', '壁上观', '同归'];
+        const scriptNames = [
+            { name: '大宴之上', id: 'dayan' },
+            { name: '万仞青山听水寒', id: 'wanren' },
+            { name: '流芳', id: 'liufang' },
+            { name: '梦灵祈念时', id: 'mengling' },
+            { name: '窃云台', id: 'qieyuntai' },
+            { name: '请君入瓮', id: 'qingjunruweng' },
+            { name: '阙落', id: 'queluo' },
+            { name: '如故', id: 'rugu' },
+            { name: '壁上观', id: 'bishangguan' },
+            { name: '同归', id: 'tonggui' }
+        ];
         
         function showScriptList() {
             document.getElementById('scriptListModal')?.remove();
             const modal = document.createElement('div');
             modal.id = 'scriptListModal';
             modal.innerHTML = `
-                <div class="modal-backdrop" onclick="closeScriptList()">
-                    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 500px;">
-                        <div class="modal-header">
-                            <h3>📚 剧本列表</h3>
-                            <button class="modal-close" onclick="closeScriptList()">&times;</button>
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100000;" onclick="closeScriptList()">
+                    <div style="background: white; border-radius: 20px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);" onclick="event.stopPropagation()">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; border-bottom: 1px solid #eee;">
+                            <h3 style="margin: 0; color: #8b7500;">📚 剧本列表</h3>
+                            <button onclick="closeScriptList()" style="background: none; border: none; font-size: 24px; color: #999; cursor: pointer;">&times;</button>
                         </div>
-                        <div class="modal-body">
+                        <div style="padding: 10px 0;">
                             <ul style="list-style: none; padding: 0; margin: 0;">
-                                ${scriptNames.map((name, i) => `<li style="padding: 12px 15px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'" onclick="scrollToScript('${name}')">${i + 1}. ${name}</li>`).join('')}
+                                ${scriptNames.map((s, i) => `<li style="padding: 12px 25px; border-bottom: 1px solid #eee; cursor: pointer;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'" onclick="closeScriptList(); showRoleModal('${s.id}')">${i + 1}. ${s.name}</li>`).join('')}
                             </ul>
                         </div>
                     </div>
                 </div>
             `;
             document.body.appendChild(modal);
-            setTimeout(() => modal.querySelector('.modal-backdrop').style.opacity = '1', 10);
         }
         
         function closeScriptList() {
-            const modal = document.getElementById('scriptListModal');
-            if (modal) {
-                modal.querySelector('.modal-backdrop').style.opacity = '0';
-                setTimeout(() => modal.remove(), 300);
-            }
+            document.getElementById('scriptListModal')?.remove();
         }
         
         function scrollToScript(name) {
@@ -2799,27 +2861,38 @@
             { name: '萱萱', avatar: '🌸' }
         ];
         
-        function showDMList() {
+        async function showDMList() {
             document.getElementById('dmListModal')?.remove();
+            
+            // 立即显示弹窗（不等待API）
             const modal = document.createElement('div');
             modal.id = 'dmListModal';
             modal.innerHTML = `
-                <div class="modal-backdrop" onclick="closeDMList()">
-                    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 600px;">
-                        <div class="modal-header">
-                            <h3>🎭 DM团队</h3>
-                            <button class="modal-close" onclick="closeDMList()">&times;</button>
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100000;" onclick="closeDMList()">
+                    <div style="background: white; border-radius: 20px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);" onclick="event.stopPropagation()">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; border-bottom: 1px solid #eee;">
+                            <h3 style="margin: 0; color: #8b7500;">🎭 DM团队</h3>
+                            <button onclick="closeDMList()" style="background: none; border: none; font-size: 24px; color: #999; cursor: pointer;">&times;</button>
                         </div>
-                        <div class="modal-body" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+                        <div style="padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
                             ${dmList.map(dm => `
-                                <div style="background: linear-gradient(135deg, #f8f9fa, #fff); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 12px;">
-                                    <span style="font-size: 2rem;">${dm.avatar}</span>
-                                    <div style="flex: 1;">
-                                        <div style="font-weight: bold; color: #2c3e50; font-size: 1rem;">${dm.name}</div>
+                                <div style="background: linear-gradient(135deg, #f8f9fa, #fff); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px;" class="dm-card" data-dm="${dm.name}">
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                        <span style="font-size: 2rem;">${dm.avatar}</span>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: bold; color: #2c3e50; font-size: 1rem;">${dm.name}</div>
+                                        </div>
+                                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                                            <button onclick="event.stopPropagation(); toggleLike('${dm.name}', this)" class="like-btn" data-dm="${dm.name}" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666; transition: all 0.2s;">👍 赞 <span class="like-count">...</span></button>
+                                            <button onclick="event.stopPropagation(); toggleCommentSection('${dm.name}')" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666; transition: all 0.2s;" onmouseover="this.style.background='#f0f0f0';this.style.borderColor='#8b7500';this.style.color='#8b7500';" onmouseout="this.style.background='none';this.style.borderColor='#ddd';this.style.color='#666';">💬 评论 <span class="comment-count" data-dm="${dm.name}">(加载中)</span></button>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                                        <button onclick="event.stopPropagation(); toggleLike(this)" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666;">👍 赞 <span class="like-count">0</span></button>
-                                        <button onclick="event.stopPropagation(); showComment('${dm.name}')" style="background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; color: #666;">💬 评论</button>
+                                    <div id="comment-section-${dm.name}" style="display: none; border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                        <div id="comment-list-${dm.name}" style="max-height: 150px; overflow-y: auto; margin-bottom: 10px;"></div>
+                                        <div style="display: flex; gap: 5px;">
+                                            <input type="text" id="comment-input-${dm.name}" placeholder="说点什么..." style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.85rem;">
+                                            <button onclick="addComment('${dm.name}')" style="background: #8b7500; color: white; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 0.8rem;">发布</button>
+                                        </div>
                                     </div>
                                 </div>
                             `).join('')}
@@ -2828,34 +2901,328 @@
                 </div>
             `;
             document.body.appendChild(modal);
-            setTimeout(() => modal.querySelector('.modal-backdrop').style.opacity = '1', 10);
+            
+            // 后台异步加载数据（不阻塞UI）
+            loadDMLikesInBackground();
         }
         
-        function closeDMList() {
-            const modal = document.getElementById('dmListModal');
-            if (modal) {
-                modal.querySelector('.modal-backdrop').style.opacity = '0';
-                setTimeout(() => modal.remove(), 300);
+        // 后台加载所有DM的点赞和评论数据 - 优化版
+        async function loadDMLikesInBackground() {
+            // 先获取用户ID（后台进行，不阻塞）
+            getUserId();
+            
+            // 并行批量获取所有点赞和评论数据
+            const [allLikes, allComments] = await Promise.all([
+                getAllLikesFromCloud(),
+                getAllCommentsFromCloud()
+            ]);
+            
+            const userId = cachedUserId || 'unknown';
+            
+            // 处理每个DM的数据
+            dmList.forEach(dm => {
+                const card = document.querySelector(`.dm-card[data-dm="${dm.name}"]`);
+                if (!card) return;
+                
+                const likeBtn = card.querySelector('.like-btn');
+                const commentSpan = card.querySelector('.comment-count');
+                const likeCountSpan = likeBtn.querySelector('.like-count');
+                
+                // 计算点赞数
+                const dmLikes = allLikes.filter(l => l.dm_name === dm.name);
+                const likeCount = dmLikes.length;
+                const isLiked = dmLikes.some(l => l.user_id === userId);
+                
+                // 计算评论数
+                const dmComments = allComments.filter(c => c.dm_name === dm.name);
+                const commentCount = dmComments.length;
+                
+                // 更新点赞按钮状态
+                if (isLiked) {
+                    likeBtn.classList.add('liked');
+                    likeBtn.style.background = '#ffeef0';
+                    likeBtn.style.borderColor = '#e74c3c';
+                    likeBtn.style.color = '#e74c3c';
+                }
+                likeCountSpan.textContent = likeCount;
+                
+                // 更新评论数
+                commentSpan.textContent = `(${commentCount})`;
+            });
+        }
+        
+        // 批量获取所有点赞
+        async function getAllLikesFromCloud() {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+                // 本地模式
+                const data = [];
+                dmList.forEach(dm => {
+                    const count = parseInt(localStorage.getItem(`dm_like_count_${dm.name}`) || '0');
+                    for (let i = 0; i < count; i++) {
+                        data.push({ dm_name: dm.name, user_id: '' });
+                    }
+                });
+                return data;
+            }
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_likes`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                return res.ok ? await res.json() : [];
+            } catch(e) { return []; }
+        }
+        
+        // 批量获取所有评论
+        async function getAllCommentsFromCloud() {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+                const data = [];
+                dmList.forEach(dm => {
+                    const stored = localStorage.getItem(`dm_comments_${dm.name}`);
+                    if (stored) {
+                        const comments = JSON.parse(stored);
+                        comments.forEach(c => data.push({ dm_name: dm.name, ...c }));
+                    }
+                });
+                return data;
+            }
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_comments?order=created_at.desc`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                return res.ok ? await res.json() : [];
+            } catch(e) { return []; }
+        }
+        
+function toggleCommentSection(dmName) {
+            const section = document.getElementById(`comment-section-${dmName}`);
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+            if (section.style.display === 'block') {
+                renderComments(dmName);
             }
         }
+
+        // Supabase 表名
+        const DM_LIKES_TABLE = 'dm_likes';
+        const DM_COMMENTS_TABLE = 'dm_comments';
+
+        // 获取用户标识（使用IP地址）- 缓存避免重复请求
+        let cachedUserId = null;
+        async function getUserId() {
+            if (cachedUserId) return cachedUserId;
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                cachedUserId = data.ip;
+                return cachedUserId;
+            } catch(e) {
+                cachedUserId = 'user_' + Math.random().toString(36).substr(2, 9);
+                return cachedUserId;
+            }
+        }
+
+        // ========== DM点赞云端功能 ==========
+        // 优化：本地存储优先，减少API调用
+        async function getLikeCount(dmName) {
+            if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                return await getLikeCountFromCloud(dmName);
+            }
+            return parseInt(localStorage.getItem(`dm_like_count_${dmName}`) || '0');
+        }
+
+        async function isLiked(dmName) {
+            if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                const userId = await getUserId();
+                return await isLikedFromCloud(dmName, userId);
+            }
+            return localStorage.getItem(`dm_liked_${dmName}`) === 'true';
+        }
+
+        // 获取云端点赞数
+        async function getLikeCountFromCloud(dmName) {
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_likes?dm_name=eq.${encodeURIComponent(dmName)}`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                return res.ok ? (await res.json()).length : 0;
+            } catch(e) { return 0; }
+        }
+
+        // 检查是否已点赞
+        async function isLikedFromCloud(dmName, userId) {
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_likes?dm_name=eq.${encodeURIComponent(dmName)}&user_id=eq.${encodeURIComponent(userId)}`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                return res.ok && (await res.json()).length > 0;
+            } catch(e) { return false; }
+        }
+
+        async function getCommentsFromCloud(dmName) {
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_comments?dm_name=eq.${encodeURIComponent(dmName)}&order=created_at.desc`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                return res.ok ? await res.json() : [];
+            } catch(e) { return []; }
+        }
         
-        function toggleLike(btn) {
-            const countEl = btn.querySelector('.like-count');
-            if (btn.classList.contains('liked')) {
+        // 本地评论获取
+        function getComments(dmName) {
+            const key = `dm_comments_${dmName}`;
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        }
+        
+        async function toggleLikeFromCloud(dmName, btn) {
+            const userId = await getUserId();
+            const isLiked = await isLikedFromCloud(dmName, userId);
+            
+            if (isLiked) {
+                // 取消点赞
+                try {
+                    await fetch(`${SUPABASE_URL}/rest/v1/dm_likes?dm_name=eq.${encodeURIComponent(dmName)}&user_id=eq.${encodeURIComponent(userId)}`, {
+                        method: 'DELETE',
+                        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                    });
+                } catch(e) {}
                 btn.classList.remove('liked');
+                btn.style.background = 'none';
+                btn.style.borderColor = '#ddd';
                 btn.style.color = '#666';
-                countEl.textContent = parseInt(countEl.textContent) - 1;
             } else {
+                // 点赞
+                try {
+                    await fetch(`${SUPABASE_URL}/rest/v1/dm_likes`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({ dm_name: dmName, user_id: userId, created_at: new Date().toISOString() })
+                    });
+                } catch(e) {}
                 btn.classList.add('liked');
+                btn.style.background = '#ffeef0';
+                btn.style.borderColor = '#e74c3c';
                 btn.style.color = '#e74c3c';
-                countEl.textContent = parseInt(countEl.textContent) + 1;
+            }
+            
+            // 更新显示的点赞数
+            const count = await getLikeCountFromCloud(dmName);
+            btn.querySelector('.like-count').textContent = count;
+        }
+
+        // ========== DM评论云端功能 ==========
+        async function getCommentsFromCloud(dmName) {
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_comments?dm_name=eq.${encodeURIComponent(dmName)}&order=created_at.desc`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                return res.ok ? await res.json() : [];
+            } catch(e) { return []; }
+        }
+
+        async function addCommentToCloud(dmName, text) {
+            const userId = await getUserId();
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/dm_comments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ dm_name: dmName, comment_text: text, user_id: userId, created_at: new Date().toISOString() })
+                });
+                return true;
+            } catch(e) { return false; }
+        }
+
+        function getComments(dmName) {
+            const key = `dm_comments_${dmName}`;
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        }
+
+        function saveComment(dmName, comment) {
+            const comments = getComments(dmName);
+            comments.push({ text: comment, date: new Date().toLocaleString() });
+            localStorage.setItem(`dm_comments_${dmName}`, JSON.stringify(comments));
+        }
+
+        async function renderComments(dmName) {
+            const list = document.getElementById(`comment-list-${dmName}`);
+            let comments;
+            
+            if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                comments = await getCommentsFromCloud(dmName);
+            } else {
+                comments = getComments(dmName).map(c => ({ comment_text: c.text, created_at: c.date }));
+            }
+            
+            // 更新评论数量显示
+            const countEl = document.querySelector(`.comment-count[data-dm="${dmName}"]`);
+            if (countEl) {
+                countEl.textContent = `(${comments.length})`;
+            }
+            
+            if (comments.length === 0) {
+                list.innerHTML = '<div style="color: #999; font-size: 0.85rem; text-align: center; padding: 10px;">暂无评论</div>';
+            } else {
+                list.innerHTML = comments.map(c => `
+                    <div style="background: #f9f9f9; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px;">
+                        <div style="font-size: 0.85rem; color: #333;">${c.comment_text}</div>
+                        <div style="font-size: 0.75rem; color: #999; margin-top: 4px;">${new Date(c.created_at).toLocaleString()}</div>
+                    </div>
+                `).join('');
             }
         }
-        
-        function showComment(dmName) {
-            const comment = prompt(`请输入对 ${dmName} 的评价：`);
-            if (comment) {
-                alert('评价已提交：' + comment);
+
+        async function addComment(dmName) {
+            const input = document.getElementById(`comment-input-${dmName}`);
+            const text = input.value.trim();
+            if (text) {
+                if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                    await addCommentToCloud(dmName, text);
+                } else {
+                    saveComment(dmName, text);
+                }
+                input.value = '';
+                await renderComments(dmName);
+            }
+        }
+
+        function closeDMList() {
+            document.getElementById('dmListModal')?.remove();
+        }
+
+        function toggleLike(dmName, btn) {
+            if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                toggleLikeFromCloud(dmName, btn);
+            } else {
+                // 降级到localStorage
+                const countEl = btn.querySelector('.like-count');
+                let currentCount = parseInt(localStorage.getItem(`dm_like_count_${dmName}`) || '0');
+                const isLiked = localStorage.getItem(`dm_liked_${dmName}`) === 'true';
+                
+                if (isLiked) {
+                    localStorage.setItem(`dm_liked_${dmName}`, 'false');
+                    localStorage.setItem(`dm_like_count_${dmName}`, (currentCount - 1).toString());
+                    btn.classList.remove('liked');
+                    btn.style.background = 'none';
+                    btn.style.borderColor = '#ddd';
+                    btn.style.color = '#666';
+                    countEl.textContent = currentCount - 1;
+                } else {
+                    localStorage.setItem(`dm_liked_${dmName}`, 'true');
+                    localStorage.setItem(`dm_like_count_${dmName}`, (currentCount + 1).toString());
+                    btn.classList.add('liked');
+                    btn.style.background = '#ffeef0';
+                    btn.style.borderColor = '#e74c3c';
+                    btn.style.color = '#e74c3c';
+                    countEl.textContent = currentCount + 1;
+                }
             }
         }
     </script>
