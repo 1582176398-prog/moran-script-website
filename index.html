@@ -1749,6 +1749,7 @@
         
         // ===== 管理员弹幕管理 =====
         const ADMIN_PWD = '228377';
+        const DM_REPLY_PWD = '050701';
         
         function openAdminPanel() {
             document.getElementById('admin-panel').classList.add('open');
@@ -3629,7 +3630,7 @@
                                     </div>
                                     <div id="comment-section-${dm.name}" style="display: none; border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
                                         <div id="comment-list-${dm.name}" style="max-height: 150px; overflow-y: auto; margin-bottom: 10px;"></div>
-                                        <div style="display: flex; gap: 5px;">
+                                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
                                             <input type="text" id="comment-input-${dm.name}" placeholder="说点什么..." style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.85rem;">
                                             <button onclick="addComment('${dm.name}')" style="background: #8b7500; color: white; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 0.8rem;">发布</button>
                                         </div>
@@ -3745,7 +3746,8 @@
         function getDeviceId() {
             let deviceId = localStorage.getItem('moran_device_id');
             if (!deviceId) {
-                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                // 使用带前缀的格式避免被识别为UUID
+                deviceId = 'd-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
                 localStorage.setItem('moran_device_id', deviceId);
             }
             return deviceId;
@@ -3808,15 +3810,6 @@
             } catch(e) { return false; }
         }
 
-        async function getCommentsFromCloud(dmName) {
-            try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_comments?dm_name=eq.${encodeURIComponent(dmName)}&order=created_at.desc`, {
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                });
-                return res.ok ? await res.json() : [];
-            } catch(e) { return []; }
-        }
-        
         // 本地评论获取
         function getComments(dmName) {
             const stored = localStorage.getItem(`dm_comments_${dmName}`);
@@ -3874,10 +3867,20 @@
             } catch(e) { return []; }
         }
 
-        async function addCommentToCloud(dmName, text, username) {
-            const userId = await getUserId();
-            console.log('addCommentToCloud called:', { dmName, text, username, userId });
+        async function addCommentToCloud(dmName, text, username, replyTo = null) {
+            console.log('addCommentToCloud called:', { dmName, text, username, replyTo });
             try {
+                const postData = { 
+                    dm_name: dmName, 
+                    comment_text: text, 
+                    username: username
+                };
+                // 暂时不发送 user_id，避免 UUID 类型验证问题
+                // 只有在 replyTo 有效时才添加
+                if (replyTo) {
+                    postData.reply_to = replyTo;
+                }
+                
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_comments`, {
                     method: 'POST',
                     headers: {
@@ -3886,17 +3889,18 @@
                         'Authorization': `Bearer ${SUPABASE_KEY}`,
                         'Prefer': 'return=minimal'
                     },
-                    body: JSON.stringify({ dm_name: dmName, comment_text: text, user_id: userId })
+                    body: JSON.stringify(postData)
                 });
                 console.log('Response status:', res.status);
                 if (!res.ok) {
                     const errText = await res.text();
                     console.error('Error response:', errText);
-                    throw new Error('评论提交失败: ' + res.status);
+                    throw new Error(`评论提交失败 (${res.status}): ${errText}`);
                 }
                 return true;
             } catch(e) { 
                 console.error('评论失败:', e);
+                alert('评论失败，请稍后重试\n\n详细信息：' + e.message);
                 throw e;
             }
         }
@@ -3906,9 +3910,9 @@
             return JSON.parse(localStorage.getItem(key) || '[]');
         }
 
-        function saveComment(dmName, comment, username) {
+        function saveComment(dmName, comment, username, replyTo = null) {
             const comments = getComments(dmName);
-            comments.push({ text: comment, username: username, date: new Date().toLocaleString() });
+            comments.push({ text: comment, username: username, date: new Date().toLocaleString(), reply_to: replyTo });
             localStorage.setItem(`dm_comments_${dmName}`, JSON.stringify(comments));
         }
 
@@ -3919,44 +3923,308 @@
             if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
                 comments = await getCommentsFromCloud(dmName);
             } else {
-                comments = getComments(dmName).map(c => ({ comment_text: c.text, username: c.username, created_at: c.date }));
+                comments = getComments(dmName).map(c => ({ comment_text: c.text, username: c.username, created_at: c.date, reply_to: c.reply_to }));
             }
             
-            // 更新评论数量显示
+            // 更新评论数量显示（只统计主评论）
+            const mainComments = comments.filter(c => !c.reply_to);
             const countEl = document.querySelector(`.comment-count[data-dm="${dmName}"]`);
             if (countEl) {
-                countEl.textContent = `(${comments.length})`;
+                countEl.textContent = `(${mainComments.length})`;
             }
             
-            if (comments.length === 0) {
+            if (mainComments.length === 0) {
                 list.innerHTML = '<div style="color: #999; font-size: 0.85rem; text-align: center; padding: 10px;">暂无评论</div>';
             } else {
-                list.innerHTML = comments.map(c => `
-                    <div style="background: #f9f9f9; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px;">
-                        <div style="font-size: 0.8rem; color: #8b7500; font-weight: bold; margin-bottom: 4px;">${c.username || '匿名用户'}</div>
-                        <div style="font-size: 0.85rem; color: #333;">${c.comment_text}</div>
-                        <div style="font-size: 0.75rem; color: #999; margin-top: 4px;">${new Date(c.created_at).toLocaleString()}</div>
+                // 获取回复数据
+                const replies = comments.filter(c => c.reply_to);
+                
+                list.innerHTML = mainComments.map(c => {
+                    // 找出该评论的所有回复
+                    const commentReplies = replies.filter(r => r.reply_to === c.id || r.reply_to === c.comment_text);
+                    const repliesHtml = commentReplies.map(r => `
+                        <div style="background: #e8f5e9; border-radius: 8px; padding: 8px 10px; margin-top: 6px; margin-left: 20px; border-left: 3px solid #4caf50;">
+                            <div style="font-size: 0.75rem; color: #2e7d32; font-weight: bold; margin-bottom: 3px;">
+                                <span style="color: #4caf50;">↳</span> ${r.username || '管理员'} 回复
+                            </div>
+                            <div style="font-size: 0.85rem; color: #333;">${r.comment_text}</div>
+                            <div style="font-size: 0.7rem; color: #999; margin-top: 3px;">${new Date(r.created_at).toLocaleString()}</div>
+                        </div>
+                    `).join('');
+                    
+                    return `
+                        <div style="background: #f9f9f9; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; overflow: hidden;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="font-size: 0.8rem; color: #8b7500; font-weight: bold; margin-bottom: 4px; word-break: break-all;">${c.username || '匿名用户'}</div>
+                                    <div style="font-size: 0.85rem; color: #333; word-break: break-all; overflow-wrap: break-word;">${c.comment_text}</div>
+                                    <div style="font-size: 0.75rem; color: #999; margin-top: 4px;">${new Date(c.created_at).toLocaleString()}</div>
+                                </div>
+                                <div style="display: flex; gap: 4px; flex-shrink: 0;">
+                                    <button onclick="showReplyModal('${dmName}', '${c.id || c.comment_text}', '${c.username || '匿名用户'}')" style="background: #4caf50; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 0.7rem; cursor: pointer;">回复</button>
+                                    <button onclick="deleteCommentAdmin('${dmName}', '${c.id || c.comment_text}', this)" style="background: #e74c3c; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 0.7rem; cursor: pointer;">删除</button>
+                                </div>
+                            </div>
+                            ${repliesHtml}
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+        
+        // 显示回复弹窗
+        function showReplyModal(dmName, commentId, commentUser) {
+            // 先移除已存在的回复弹窗
+            const existingModal = document.getElementById('replyModalContainer');
+            if (existingModal) existingModal.remove();
+            
+            const modal = document.createElement('div');
+            modal.id = 'replyModalContainer';
+            modal.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 100002;">
+                    <div style="background: white; border-radius: 24px; padding: 30px; max-width: 420px; width: 90%; box-shadow: 0 25px 80px rgba(0,0,0,0.35);">
+                        <!-- 标题栏 -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #4caf50, #66bb6a); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 20px;">💬</span>
+                                </div>
+                                <div>
+                                    <h3 style="color: #333; margin: 0; font-size: 1.1rem;">回复评论</h3>
+                                    <p style="color: #888; margin: 0; font-size: 0.8rem;">@${commentUser}</p>
+                                </div>
+                            </div>
+                            <button onclick="closeReplyModal()" style="background: #f5f5f5; border: none; width: 36px; height: 36px; border-radius: 10px; font-size: 18px; color: #999; cursor: pointer; transition: all 0.2s;">✕</button>
+                        </div>
+                        
+                        <!-- 原评论引用 -->
+                        <div style="background: #f8f9fa; border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #8b7500;">
+                            <p style="color: #666; margin: 0; font-size: 0.85rem; word-break: break-all;">${commentId}</p>
+                        </div>
+                        
+                        <!-- 密码输入 -->
+                        <div id="replyPasswordSection">
+                            <label style="display: block; color: #555; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">🔑 输入DM回复密码</label>
+                            <input type="password" id="replyPasswordInput" placeholder="请输入密码" style="width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 1rem; box-sizing: border-box; outline: none; transition: all 0.3s;" onfocus="this.style.borderColor='#4caf50'" onblur="this.style.borderColor='#e0e0e0'">
+                        </div>
+                        
+                        <!-- DM选择 -->
+                        <div id="replyDMSelectSection" style="display: none; margin-top: 16px;">
+                            <label style="display: block; color: #555; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">👤 选择回复DM</label>
+                            <select id="replyDMSelect" style="width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 1rem; box-sizing: border-box; background: white; cursor: pointer;">
+                                <option value="">请选择DM</option>
+                                ${dmList.map(dm => `<option value="${dm.name}">✨ ${dm.name}</option>`).join('')}
+                            </select>
+                        </div>
+                        
+                        <!-- 回复内容 -->
+                        <div id="replyTextSection" style="display: none; margin-top: 16px;">
+                            <label style="display: block; color: #555; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">✏️ 回复内容</label>
+                            <textarea id="replyTextInput" placeholder="输入您的回复..." rows="3" style="width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 1rem; box-sizing: border-box; resize: none; outline: none; transition: all 0.3s; font-family: inherit;" onfocus="this.style.borderColor='#4caf50'" onblur="this.style.borderColor='#e0e0e0'"></textarea>
+                        </div>
+                        
+                        <!-- 按钮组 -->
+                        <div id="replyButtonsSection" style="display: none; margin-top: 20px; display: flex; gap: 12px;">
+                            <button onclick="closeReplyModal()" style="flex: 1; padding: 14px; border: 2px solid #ddd; border-radius: 12px; background: white; color: #666; font-size: 1rem; cursor: pointer; transition: all 0.2s; font-weight: 500;">取消</button>
+                            <button onclick="submitReply('${dmName}', '${commentId}')" style="flex: 1; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, #4caf50, #66bb6a); color: white; font-size: 1rem; cursor: pointer; transition: all 0.2s; font-weight: bold; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">发送回复</button>
+                        </div>
                     </div>
-                `).join('');
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // 密码输入后显示DM选择
+            document.getElementById('replyPasswordInput').addEventListener('change', function() {
+                if (this.value === DM_REPLY_PWD) {
+                    document.getElementById('replyPasswordSection').style.display = 'none';
+                    document.getElementById('replyDMSelectSection').style.display = 'block';
+                    document.getElementById('replyDMSelect').focus();
+                }
+            });
+            
+            // DM选择后显示回复内容
+            document.getElementById('replyDMSelect').addEventListener('change', function() {
+                if (this.value) {
+                    document.getElementById('replyTextSection').style.display = 'block';
+                    document.getElementById('replyButtonsSection').style.display = 'flex';
+                    document.getElementById('replyTextInput').focus();
+                }
+            });
+            
+            // 点击遮罩关闭
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeReplyModal();
+            });
+        }
+        
+        function closeReplyModal() {
+            const modal = document.getElementById('replyModalContainer');
+            if (modal) modal.remove();
+        }
+        
+        // 提交回复
+        async function submitReply(dmName, commentId) {
+            const password = document.getElementById('replyPasswordInput').value;
+            const replyDmName = document.getElementById('replyDMSelect').value;
+            const replyText = document.getElementById('replyTextInput').value.trim();
+            
+            if (password !== DM_REPLY_PWD) {
+                alert('密码错误，只有DM才能回复');
+                return;
+            }
+            
+            if (!replyDmName) {
+                alert('请选择回复的DM');
+                return;
+            }
+            
+            if (!replyText) {
+                alert('请输入回复内容');
+                return;
+            }
+            
+            try {
+                if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                    await addCommentToCloud(dmName, replyText, `${replyDmName}（DM）`, commentId);
+                } else {
+                    saveComment(dmName, replyText, `${replyDmName}（DM）`, commentId);
+                }
+                
+                // 关闭弹窗
+                closeReplyModal();
+                
+                // 刷新评论
+                await renderComments(dmName);
+                showSuccessAlert('回复成功！');
+            } catch(e) {
+                console.error('回复失败:', e);
+                alert('回复失败，请稍后重试');
+            }
+        }
+        
+        // 超级管理员删除评论
+        function deleteCommentAdmin(dmName, commentId, btn) {
+            const password = prompt('请输入超级管理员密码：');
+            if (password === '228377') {
+                if (confirm('确定删除这条评论？')) {
+                    // 删除评论
+                    const list = document.getElementById(`comment-list-${dmName}`);
+                    const comments = getComments(dmName);
+                    const filtered = comments.filter(c => (c.id || c.text) !== commentId && c.reply_to !== commentId);
+                    localStorage.setItem(`comments_${dmName}`, JSON.stringify(filtered));
+                    renderComments(dmName);
+                    alert('评论已删除');
+                }
+            } else if (password !== null) {
+                alert('密码错误，只有超级管理员可以删除评论');
             }
         }
 
         async function addComment(dmName) {
             const input = document.getElementById(`comment-input-${dmName}`);
             const text = input.value.trim();
-            if (text) {
-                const username = '匿名用户';
+            
+            if (!text) return;
+            
+            try {
+                // 先发布评论（用临时昵称）
+                if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                    await addCommentToCloud(dmName, text, '网友');
+                } else {
+                    saveComment(dmName, text, '网友');
+                }
+                input.value = '';
+                await renderComments(dmName);
+                
+                // 评论发布后弹出昵称框
+                showNicknameModal(dmName);
+            } catch(e) {
+                console.error('评论失败:', e);
+                alert('评论失败，请稍后重试');
+            }
+        }
+        
+        // 昵称输入弹窗
+        function showNicknameModal(dmName) {
+            const existingModal = document.getElementById('nicknameModalContainer');
+            if (existingModal) existingModal.remove();
+            
+            const modal = document.createElement('div');
+            modal.id = 'nicknameModalContainer';
+            modal.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 100003;">
+                    <div style="background: white; border-radius: 20px; padding: 30px; max-width: 360px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #8b7500, #d4a900); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
+                                <span style="font-size: 28px;">✍️</span>
+                            </div>
+                            <h3 style="color: #333; margin: 0 0 8px 0; font-size: 1.2rem;">请输入昵称</h3>
+                            <p style="color: #888; margin: 0; font-size: 0.85rem;">给刚才的评论设置一个昵称</p>
+                        </div>
+                        
+                        <input type="text" id="nicknameInput" placeholder="请输入2-10字昵称" maxlength="10" style="width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 1rem; box-sizing: border-box; outline: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='#8b7500'" onblur="this.style.borderColor='#e0e0e0'">
+                        
+                        <div style="display: flex; gap: 12px; margin-top: 20px;">
+                            <button onclick="closeNicknameModal()" style="flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 12px; background: white; color: #666; font-size: 1rem; cursor: pointer; transition: all 0.2s;">跳过</button>
+                            <button onclick="confirmNickname('${dmName}')" style="flex: 1; padding: 12px; border: none; border-radius: 12px; background: linear-gradient(135deg, #8b7500, #a08500); color: white; font-size: 1rem; cursor: pointer; transition: all 0.2s; font-weight: bold;">确认</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('nicknameInput').focus();
+            
+            // 回车确认
+            document.getElementById('nicknameInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    confirmNickname(dmName);
+                }
+            });
+        }
+        
+        function closeNicknameModal() {
+            const modal = document.getElementById('nicknameModalContainer');
+            if (modal) modal.remove();
+        }
+        
+        async function confirmNickname(dmName) {
+            const nickname = document.getElementById('nicknameInput').value.trim();
+            if (nickname.length > 0 && nickname.length < 2) {
+                alert('昵称至少需要2个字');
+                return;
+            }
+            
+            closeNicknameModal();
+            
+            // 如果输入了昵称，更新最新一条评论的昵称
+            if (nickname) {
                 try {
                     if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-                        await addCommentToCloud(dmName, text, username);
+                        // 获取最新评论并更新
+                        const comments = await getCommentsFromCloud(dmName);
+                        if (comments.length > 0) {
+                            const latestComment = comments[0];
+                            await fetch(`${SUPABASE_URL}/rest/v1/dm_comments?id=eq.${latestComment.id}`, {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'apikey': SUPABASE_KEY,
+                                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                                },
+                                body: JSON.stringify({ username: nickname })
+                            });
+                        }
                     } else {
-                        saveComment(dmName, text, username);
+                        // 降级到localStorage
+                        const comments = getComments(dmName);
+                        if (comments.length > 0) {
+                            comments[0].username = nickname;
+                            localStorage.setItem(`comments_${dmName}`, JSON.stringify(comments));
+                        }
                     }
-                    input.value = '';
                     await renderComments(dmName);
                 } catch(e) {
-                    console.error('评论失败:', e);
-                    alert('评论失败，请稍后重试');
+                    console.error('更新昵称失败:', e);
                 }
             }
         }
