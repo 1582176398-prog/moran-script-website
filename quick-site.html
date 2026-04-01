@@ -979,10 +979,12 @@
     
     
     <!-- 自动播放的背景音乐（简化版） -->
-    <audio id="bgMusic" loop preload="auto" style="display: none;">
+    <audio id="bgMusic" loop preload="auto" autoplay style="display: none;">
         <source src="web-pdfs/bgmusic.mp3" type="audio/mp3">
     </audio>
     
+
+
     <!-- 弹幕容器 -->
     <div id="danmu-container"></div>
     
@@ -1390,6 +1392,8 @@
                 本网站为墨染剧本杀内部剧本库展示页面，所有剧本仅供店内使用 · 数据更新时间：2026年4月1日
             </p>
         </footer>
+        
+
     </div>
 
     <script>
@@ -1632,7 +1636,9 @@
             initSoundToggle();
             // 初始化弹幕系统
             danmu.init();
+            // 不自动弹窗，等待用户点击头像按钮
         });
+        
         
         // ===== 管理员弹幕管理 =====
         const ADMIN_PWD = '228377';
@@ -1717,189 +1723,76 @@
             const bgMusic = document.getElementById('bgMusic');
             const soundToggle = document.getElementById('soundToggle');
             
-            // 确保音频元素已准备
-            bgMusic.volume = 0.3; // 设置合适音量
+            // 设置音量和循环
+            bgMusic.volume = 0.3;
             bgMusic.loop = true;
-            bgMusic.preload = 'auto';
             
-            // 监听音频加载完成事件
-            bgMusic.addEventListener('canplaythrough', function() {
-                console.log('背景音乐已加载完成，准备播放...');
-            });
+            // 立即尝试播放（页面加载后最快时机）
+            const tryPlay = () => {
+                bgMusic.play()
+                    .then(() => {
+                        console.log('✅ 背景音乐自动播放成功');
+                        soundToggle.querySelector('.sound-icon').textContent = '🔊';
+                        soundToggle.querySelector('.sound-label').textContent = '开/关音效';
+                    })
+                    .catch(e => {
+                        console.log('⚠️ 自动播放被阻止，等待用户交互...');
+                    });
+            };
+            
+            // 音频元数据加载后立即播放
+            bgMusic.addEventListener('loadedmetadata', tryPlay);
+            
+            // 如果已经加载完成，立即尝试
+            if (bgMusic.readyState >= 1) {
+                tryPlay();
+            }
             
             // 监听音频错误
             bgMusic.addEventListener('error', function(e) {
                 console.error('音频加载错误:', e.target.error);
-                alert('背景音乐加载失败，请刷新页面或检查网络连接');
             });
-            
-            
-            
-            // 创建用户选择界面 - 播放或不播放背景音乐
-            function createMusicChoice() {
-                // 移除已有的选择界面
-                const existingChoice = document.getElementById('musicChoice');
-                if (existingChoice) return;
-                
-                // 创建用户选择界面
-                const choiceDiv = document.createElement('div');
-                choiceDiv.id = 'musicChoice';
-                choiceDiv.innerHTML = `
-                    <div style="
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background: rgba(0, 0, 0, 0.88);
-                        color: white;
-                        padding: 30px 40px;
-                        border-radius: 18px;
-                        z-index: 99999;
-                        text-align: center;
-                        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-                        backdrop-filter: blur(15px);
-                        border: 2px solid rgba(139, 117, 0, 0.6);
-                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                        max-width: 460px;
-                        width: 90%;
-                    ">
-                        <h3 style="margin: 0 0 15px 0; color: #8b7500; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                            🎵 背景音乐设置
-                        </h3>
-                        <p style="margin: 0 0 25px 0; line-height: 1.6; font-size: 15px;">
-                            为了更好的沉浸式体验，墨染剧本杀为您准备了背景音乐<br>
-                            <small style="color: #aaa; font-size: 13px;">选择是否播放背景音乐</small>
-                        </p>
-                        
-                        <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
-                            <button id="playMusicBtn" style="
-                                background: linear-gradient(90deg, #4CAF50 0%, #388E3C 100%);
-                                color: white;
-                                border: none;
-                                padding: 15px 30px;
-                                border-radius: 10px;
-                                font-size: 16px;
-                                font-weight: 600;
-                                cursor: pointer;
-                                transition: all 0.3s ease;
-                                flex: 1;
-                                max-width: 180px;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                gap: 10px;
-                            ">
-                                🔊 播放背景音乐
-                            </button>
-                            
-                            <button id="noMusicBtn" style="
-                                background: linear-gradient(90deg, #666666 0%, #444444 100%);
-                                color: white;
-                                border: none;
-                                padding: 15px 30px;
-                                border-radius: 10px;
-                                font-size: 16px;
-                                font-weight: 600;
-                                cursor: pointer;
-                                transition: all 0.3s ease;
-                                flex: 1;
-                                max-width: 180px;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                gap: 10px;
-                            ">
-                                🔇 不播放音乐
-                            </button>
-                        </div>
-                        
-                        <p style="margin: 0; font-size: 12px; color: #aaa; line-height: 1.4;">
-                            <strong>温馨提示：</strong>选择播放后将自动播放背景音乐，您可以在页面左下角随时关闭/开启<br>
-                            如果选择不播放，页面将保持安静浏览体验
-                        </p>
-                    </div>
-                `;
-                
-                document.body.appendChild(choiceDiv);
-                
-                // 播放按钮点击事件
-                document.getElementById('playMusicBtn').addEventListener('click', function() {
-                    console.log('用户选择：播放背景音乐');
-                    choiceDiv.remove();
-                    startBackgroundMusic();
-                });
-                
-                // 不播放按钮点击事件
-                document.getElementById('noMusicBtn').addEventListener('click', function() {
-                    console.log('用户选择：不播放背景音乐');
-                    bgMusic.pause();
-                    bgMusic.currentTime = 0;
-                    soundToggle.querySelector('.sound-icon').textContent = '🔇';
-                    soundToggle.querySelector('.sound-label').textContent = '已关闭';
-                    choiceDiv.remove();
-                });
-            }
-            
-            // 全局函数：开始播放背景音乐
-            window.startBackgroundMusic = function() {
-                // 移除可能存在的选择界面
-                document.getElementById('musicChoice')?.remove();
-                
-                // 播放音乐
-                bgMusic.play().then(() => {
-                    console.log('用户手动触发播放成功');
-                    soundToggle.querySelector('.sound-icon').textContent = '🔊';
-                    soundToggle.querySelector('.sound-label').textContent = '开/关音效';
-                }).catch(error => {
-                    console.error('手动播放失败:', error);
-                    alert('播放失败，请检查浏览器音频设置或刷新页面');
-                });
-            };
-            
-            // 页面加载完成时显示音乐选择界面
-            window.addEventListener('load', function() {
-                console.log('页面加载完成，显示音乐选择界面...');
-                
-                // 使用setTimeout给页面一点加载时间
-                setTimeout(() => {
-                    // 每次进入都显示选择界面
-                    createMusicChoice();
-                }, 300);
-            }, { once: true });
             
             // 页面可见性变化时暂停/恢复播放
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
                     bgMusic.pause();
                 } else if (!bgMusic.paused) {
-                    // 如果之前是在播放状态，恢复播放
                     bgMusic.play().catch(console.error);
                 }
             });
             
-            // 音效开关功能（处理播放、暂停和静音）
+            // 音效开关功能
             soundToggle.addEventListener('click', () => {
-                if (bgMusic.paused && bgMusic.currentTime === 0) {
-                    // 音乐未播放（用户选择了"不播放"或刚刚访问），显示选择界面
-                    createMusicChoice();
-                } else if (bgMusic.muted) {
-                    // 当前是静音状态，取消静音
+                if (bgMusic.muted) {
                     bgMusic.muted = false;
                     soundToggle.querySelector('.sound-icon').textContent = '🔊';
                     soundToggle.querySelector('.sound-label').textContent = '开/关音效';
                 } else if (bgMusic.paused) {
-                    // 当前是暂停状态，恢复播放
                     bgMusic.play().then(() => {
                         soundToggle.querySelector('.sound-icon').textContent = '🔊';
                         soundToggle.querySelector('.sound-label').textContent = '开/关音效';
                     }).catch(console.error);
                 } else {
-                    // 当前是播放状态，静音
                     bgMusic.muted = true;
                     soundToggle.querySelector('.sound-icon').textContent = '🔇';
                     soundToggle.querySelector('.sound-label').textContent = '已静音';
                 }
             });
+            
+            // 首次用户交互时尝试播放（浏览器阻止自动播放时的备用方案）
+            const firstInteraction = () => {
+                if (bgMusic.paused) {
+                    bgMusic.play().then(() => {
+                        console.log('✅ 用户交互后背景音乐播放成功');
+                    }).catch(console.error);
+                }
+                // 移除监听器，只尝试一次
+                document.removeEventListener('click', firstInteraction);
+                document.removeEventListener('keydown', firstInteraction);
+            };
+            document.addEventListener('click', firstInteraction);
+            document.addEventListener('keydown', firstInteraction);
         }        // 角色简介弹窗数据
         const roleData = {
             "dayan": {
@@ -2993,10 +2886,27 @@
             } catch(e) { return []; }
         }
         
-        // 获取用户标识（使用IP地址）- 缓存避免重复请求
+        // 获取用户标识（优先使用本地存储的设备ID，回退到IP或其他方式）
         let cachedUserId = null;
+        
+        // 生成或获取设备唯一ID
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('moran_device_id');
+            if (!deviceId) {
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('moran_device_id', deviceId);
+            }
+            return deviceId;
+        }
+        
         async function getUserId() {
             if (cachedUserId) return cachedUserId;
+            // 优先使用设备ID（更稳定）
+            cachedUserId = getDeviceId();
+            return cachedUserId;
+            
+            // 旧代码：尝试获取IP（可能被阻止）
+            /*
             try {
                 const res = await fetch('https://api.ipify.org?format=json');
                 const data = await res.json();
@@ -3006,6 +2916,7 @@
                 cachedUserId = 'user_' + Math.random().toString(36).substr(2, 9);
                 return cachedUserId;
             }
+            */
         }
 
         // ========== DM点赞云端功能 ==========
@@ -3111,10 +3022,11 @@
             } catch(e) { return []; }
         }
 
-        async function addCommentToCloud(dmName, text) {
+        async function addCommentToCloud(dmName, text, username) {
             const userId = await getUserId();
+            console.log('addCommentToCloud called:', { dmName, text, username, userId });
             try {
-                await fetch(`${SUPABASE_URL}/rest/v1/dm_comments`, {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/dm_comments`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -3122,10 +3034,19 @@
                         'Authorization': `Bearer ${SUPABASE_KEY}`,
                         'Prefer': 'return=minimal'
                     },
-                    body: JSON.stringify({ dm_name: dmName, comment_text: text, user_id: userId, created_at: new Date().toISOString() })
+                    body: JSON.stringify({ dm_name: dmName, comment_text: text, user_id: userId })
                 });
+                console.log('Response status:', res.status);
+                if (!res.ok) {
+                    const errText = await res.text();
+                    console.error('Error response:', errText);
+                    throw new Error('评论提交失败: ' + res.status);
+                }
                 return true;
-            } catch(e) { return false; }
+            } catch(e) { 
+                console.error('评论失败:', e);
+                throw e;
+            }
         }
 
         function getComments(dmName) {
@@ -3133,9 +3054,9 @@
             return JSON.parse(localStorage.getItem(key) || '[]');
         }
 
-        function saveComment(dmName, comment) {
+        function saveComment(dmName, comment, username) {
             const comments = getComments(dmName);
-            comments.push({ text: comment, date: new Date().toLocaleString() });
+            comments.push({ text: comment, username: username, date: new Date().toLocaleString() });
             localStorage.setItem(`dm_comments_${dmName}`, JSON.stringify(comments));
         }
 
@@ -3146,7 +3067,7 @@
             if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
                 comments = await getCommentsFromCloud(dmName);
             } else {
-                comments = getComments(dmName).map(c => ({ comment_text: c.text, created_at: c.date }));
+                comments = getComments(dmName).map(c => ({ comment_text: c.text, username: c.username, created_at: c.date }));
             }
             
             // 更新评论数量显示
@@ -3160,6 +3081,7 @@
             } else {
                 list.innerHTML = comments.map(c => `
                     <div style="background: #f9f9f9; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px;">
+                        <div style="font-size: 0.8rem; color: #8b7500; font-weight: bold; margin-bottom: 4px;">${c.username || '匿名用户'}</div>
                         <div style="font-size: 0.85rem; color: #333;">${c.comment_text}</div>
                         <div style="font-size: 0.75rem; color: #999; margin-top: 4px;">${new Date(c.created_at).toLocaleString()}</div>
                     </div>
@@ -3171,13 +3093,19 @@
             const input = document.getElementById(`comment-input-${dmName}`);
             const text = input.value.trim();
             if (text) {
-                if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-                    await addCommentToCloud(dmName, text);
-                } else {
-                    saveComment(dmName, text);
+                const username = '匿名用户';
+                try {
+                    if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                        await addCommentToCloud(dmName, text, username);
+                    } else {
+                        saveComment(dmName, text, username);
+                    }
+                    input.value = '';
+                    await renderComments(dmName);
+                } catch(e) {
+                    console.error('评论失败:', e);
+                    alert('评论失败，请稍后重试');
                 }
-                input.value = '';
-                await renderComments(dmName);
             }
         }
 
