@@ -1376,10 +1376,11 @@
             <h2 style="color: #8b7500; margin-bottom: 20px; position: relative; padding-bottom: 10px;">
                 <span class="ink-text">📱 预约与联系</span>
             </h2>
-            <div style="display: inline-flex; gap: 15px;">
+            <div style="display: inline-flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
                 <a href="tel:18602368863" class="btn">📞 电话预约</a>
                 <a href="https://map.baidu.com/search/%E5%A2%A8%E6%9F%93%E5%89%A7%E6%9C%AC%E6%9D%80/@11834412.325,3432501.96,19z?querytype=s&da_src=shareurl&wd=%E5%A2%A8%E6%9F%93%E5%89%A7%E6%9C%AC%E6%9D%80&c=132&src=0&wd2=%E9%87%8D%E5%BA%86%E5%B8%82%E6%B2%99%E5%9D%AA%E5%9D%9D%E5%8C%BA&pn=0&sug=1&l=12&b=(11801346.46,3395404.19;11922690.46,3459084.19)&from=webmap&biz_forward=%7B%22scaler%22:1,%22styles%22:%22pl%22%7D&sug_forward=aa3a3b48038332df3a04b192&device_ratio=1" target="_blank" class="btn">📍 地址导航</a>
                 <a href="weixin://" onclick="showWeChatInfo()" class="btn">💬 在线咨询</a>
+                <button onclick="showMyPlaysModal()" class="btn">📖 打本历程</button>
             </div>
             <p style="margin-top: 20px; color: #777777; font-size: 0.95rem;">
                 地址：重庆市沙坪坝区大学城熙街2栋22-5 · 营业时间：14:00-24:00
@@ -1397,6 +1398,7 @@
     </div>
 
     <script>
+        console.log('Script loaded! Timestamp:', new Date().toISOString());
         /* ========== 弹幕系统 ========== */
         /* ===== Supabase 配置 =====
          * 请将下面两行替换为你自己的 Supabase 项目信息
@@ -2364,14 +2366,17 @@
             document.head.appendChild(shakeStyle);
         }
         
-        function showSuccessAlert(message) {
+        function showSuccessAlert(message, isError = false) {
             const alertDiv = document.createElement('div');
+            const bgColor = isError ? 'linear-gradient(90deg, #f44336 0%, #c62828 100%)' : 'linear-gradient(90deg, #4CAF50 0%, #388E3C 100%)';
+            const shadowColor = isError ? 'rgba(244, 67, 54, 0.3)' : 'rgba(76, 175, 80, 0.3)';
+            const icon = isError ? '❌' : '✅';
             alertDiv.innerHTML = `
                 <div style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100001;
-                           background: linear-gradient(90deg, #4CAF50 0%, #388E3C 100%); color: white; 
-                           padding: 15px 30px; border-radius: 50px; box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+                           background: ${bgColor}; color: white; 
+                           padding: 15px 30px; border-radius: 50px; box-shadow: 0 10px 30px ${shadowColor};
                            animation: slideDown 0.3s ease, fadeOut 0.3s ease 2s forwards;">
-                    <strong>✅ ${message}</strong>
+                    <strong>${icon} ${message}</strong>
                 </div>
             `;
             document.body.appendChild(alertDiv);
@@ -3150,6 +3155,223 @@
                 }
             }
         }
+        
+        // ========== 打本历程功能 ==========
+        const PLAYS_TABLE = 'my_plays';
+        
+        const playsScriptNames = ['大宴之上', '万仞青山听水寒', '流芳', '梦灵祈念时', '窃云台', '请君入瓮', '阙落', '如故', '壁上观', '同归', '自定义'];
+        
+        function initScriptSelect() {
+            const select = document.getElementById('scriptSelect');
+            if (select && select.children.length <= 1) {
+                playsScriptNames.forEach(name => {
+                    if (name === '自定义') {
+                        const option = document.createElement('option');
+                        option.value = '自定义';
+                        option.textContent = '➕ 自定义';
+                        select.appendChild(option);
+                    } else {
+                        const option = document.createElement('option');
+                        option.value = name;
+                        option.textContent = name;
+                        select.appendChild(option);
+                    }
+                });
+            }
+        }
+        
+        function showMyPlaysModal() {
+            const modal = document.getElementById('myPlaysModal');
+            if (modal) {
+                initScriptSelect();
+                modal.classList.add('active');
+                // 不自动加载，显示搜索提示
+                const listEl = document.getElementById('myPlaysList');
+                if (listEl) {
+                    listEl.innerHTML = '<p style="text-align: center; color: #999;">👆 请输入玩家名字，点击搜索按钮</p>';
+                }
+            }
+        }
+        
+        // 初始化数据库表结构（添加恋陪位字段）
+        async function initPlaysTableSchema() {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
+            try {
+                // 使用 SQL 添加新列
+                const sql = `
+                    ALTER TABLE ${PLAYS_TABLE} 
+                    ADD COLUMN IF NOT EXISTS has_lianpei TEXT DEFAULT '否',
+                    ADD COLUMN IF NOT EXISTS lianpei_name TEXT;
+                `;
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${PLAYS_TABLE}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Prefer': 'return=minimal',
+                        'X-use-chunked-encoding': 'true'
+                    },
+                    body: JSON.stringify({ sql: sql })
+                });
+                // 如果上面的方法不行，用 RPC 或者直接插入时会自动忽略不存在的字段
+            } catch (e) {
+                console.log('数据库初始化：', e.message);
+            }
+        }
+        
+        function toggleCustomInput() {
+            const select = document.getElementById('scriptSelect');
+            const customInput = document.getElementById('customScriptName');
+            if (select.value === '自定义') {
+                customInput.style.display = 'block';
+                customInput.required = true;
+            } else {
+                customInput.style.display = 'none';
+                customInput.required = false;
+            }
+        }
+        
+        function toggleLianpeiInput() {
+            const hasLianpei = document.getElementById('hasLianpei');
+            const lianpeiName = document.getElementById('lianpeiName');
+            if (hasLianpei.value === '是') {
+                lianpeiName.style.display = 'block';
+                lianpeiName.required = true;
+            } else {
+                lianpeiName.style.display = 'none';
+                lianpeiName.required = false;
+                lianpeiName.value = '';
+            }
+        }
+        
+        function closeMyPlaysModal() {
+            const modal = document.getElementById('myPlaysModal');
+            if (modal) modal.classList.remove('active');
+        }
+        
+        async function addMyPlay() {
+            const playerName = document.getElementById('playerName').value.trim();
+            const playDate = document.getElementById('playDate').value;
+            const scriptSelect = document.getElementById('scriptSelect');
+            const customScriptName = document.getElementById('customScriptName').value.trim();
+            const playRole = document.getElementById('playRole').value.trim();
+            const hasLianpei = document.getElementById('hasLianpei').value;
+            const lianpeiName = document.getElementById('lianpeiName').value.trim();
+            
+            let scriptName = scriptSelect.value;
+            if (scriptName === '自定义') {
+                scriptName = customScriptName;
+            }
+            
+            if (!playerName || !playDate || !scriptName) {
+                showSuccessAlert('请填写完整信息', true);
+                return;
+            }
+            
+            // 如果选择恋陪但没有填写NPC名字，提示
+            if (hasLianpei === '是' && !lianpeiName) {
+                showSuccessAlert('请填写恋陪NPC的名字', true);
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${PLAYS_TABLE}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=minimal' },
+                    body: JSON.stringify({ 
+                        player_name: playerName, 
+                        play_date: playDate, 
+                        script_name: scriptName, 
+                        role_name: playRole || null,
+                        has_lianpei: hasLianpei,
+                        lianpei_name: hasLianpei === '是' ? lianpeiName : null
+                    })
+                });
+                
+                if (res.ok) {
+                    showSuccessAlert('打本记录添加成功！');
+                    document.getElementById('playerName').value = '';
+                    document.getElementById('playDate').value = '';
+                    document.getElementById('scriptSelect').value = '';
+                    document.getElementById('customScriptName').value = '';
+                    document.getElementById('customScriptName').style.display = 'none';
+                    document.getElementById('playRole').value = '';
+                    document.getElementById('hasLianpei').value = '否';
+                    document.getElementById('lianpeiName').value = '';
+                    document.getElementById('lianpeiName').style.display = 'none';
+                    loadMyPlays();
+                } else {
+                    showSuccessAlert('添加失败，请重试', true);
+                }
+            } catch (e) {
+                showSuccessAlert('添加失败：' + e.message, true);
+            }
+        }
+        
+        // 格式化日期为中文格式（年/月/日）
+        function formatDateCN(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                return `${parts[0]}年${parts[1]}月${parts[2]}日`;
+            }
+            return dateStr;
+        }
+        
+        async function loadMyPlays(searchName = '') {
+            const listEl = document.getElementById('myPlaysList');
+            if (!listEl) return;
+            
+            try {
+                let url = `${SUPABASE_URL}/rest/v1/${PLAYS_TABLE}?order=play_date.desc&limit=50`;
+                if (searchName) url += `&player_name=ilike.%25${encodeURIComponent(searchName)}%25`;
+                
+                const res = await fetch(url, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
+                
+                if (!res.ok) {
+                    listEl.innerHTML = '<p style="text-align: center; color: #999;">暂无记录</p>';
+                    return;
+                }
+                
+                const plays = await res.json();
+                
+                if (!plays || plays.length === 0) {
+                    listEl.innerHTML = '<p style="text-align: center; color: #999;">暂无记录</p>';
+                    return;
+                }
+                
+                // 按玩家分组
+                const grouped = {};
+                plays.forEach(play => {
+                    const name = play.player_name || '未知';
+                    if (!grouped[name]) grouped[name] = [];
+                    grouped[name].push(play);
+                });
+                
+                let html = '';
+                for (const name in grouped) {
+                    html += `<div style="margin-bottom: 15px;">
+                        <div style="font-weight: bold; color: #2c3e50; margin-bottom: 8px;">👤 ${name} (${grouped[name].length}场)</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            ${grouped[name].map(play => {
+                                let info = `📅 ${formatDateCN(play.play_date)} · 📖 ${play.script_name}`;
+                                if (play.role_name) info += ` · 🎭 ${play.role_name}`;
+                                if (play.has_lianpei === '是' && play.lianpei_name) info += ` · 💕 恋陪：${play.lianpei_name}`;
+                                return `<span style="background: white; padding: 8px 12px; border-radius: 20px; font-size: 0.9rem; border: 1px solid #e0e0e0;">${info}</span>`;
+                            }).join('')}
+                        </div></div>`;
+                }
+                listEl.innerHTML = html;
+            } catch (e) {
+                listEl.innerHTML = '<p style="text-align: center; color: #999;">加载失败</p>';
+            }
+        }
+        
+        function searchMyPlays() {
+            const searchName = document.getElementById('searchPlayerName').value.trim();
+            loadMyPlays(searchName);
+        }
     </script>
     
     <!-- 为微信弹窗添加关键帧动画 -->
@@ -3175,6 +3397,72 @@
             0% { transform: translateY(-30px) scale(0.95); opacity: 0; }
             100% { transform: translateY(0) scale(1); opacity: 1; }
         }
+        
+        /* 打本历程样式 */
+        .my-plays-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100000;
+        }
+        .my-plays-modal.active {
+            display: flex;
+        }
+        .my-plays-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
     </style>
+    <!-- 打本历程弹窗 -->
+    <div id="myPlaysModal" class="my-plays-modal" onclick="if(event.target.id === 'myPlaysModal') closeMyPlaysModal()">
+        <div class="my-plays-content" onclick="event.stopPropagation()">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; border-bottom: 1px solid #eee;">
+                <h3 style="margin: 0; color: #8b7500;">📖 我的打本历程</h3>
+                <button onclick="closeMyPlaysModal()" style="background: none; border: none; font-size: 24px; color: #999; cursor: pointer;">&times;</button>
+            </div>
+            <div style="padding: 20px;">
+                <!-- 添加打本记录表单 -->
+                <div style="background: #f8f9fa; border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 12px 0; color: #2c3e50; font-size: 1rem;">➕ 添加打本记录</h4>
+                    <input type="text" id="playerName" placeholder="你的名字" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box;">
+                    <input type="date" id="playDate" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box;">
+                    <select id="scriptSelect" onchange="toggleCustomInput()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box;">
+                        <option value="">选择剧本</option>
+                    </select>
+                    <input type="text" id="customScriptName" placeholder="请输入自定义剧本名" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; display: none;">
+                    <input type="text" id="playRole" placeholder="扮演的角色（选填）" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box;">
+                    <!-- 恋陪位选项 -->
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: block; margin-bottom: 6px; color: #555; font-size: 0.9rem;">恋陪位</label>
+                        <select id="hasLianpei" onchange="toggleLianpeiInput()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+                            <option value="否">否</option>
+                            <option value="是">是</option>
+                        </select>
+                    </div>
+                    <input type="text" id="lianpeiName" placeholder="请输入恋陪NPC名字" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; display: none;">
+                    <button onclick="addMyPlay()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #8b7500, #a08000); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">提交记录</button>
+                </div>
+                <!-- 搜索功能 -->
+                <div style="margin-bottom: 20px;">
+                    <input type="text" id="searchPlayerName" placeholder="搜索用户名查看打本历程" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+                    <button onclick="searchMyPlays()" style="width: 100%; padding: 10px; margin-top: 10px; background: #2c3e50; color: white; border: none; border-radius: 8px; cursor: pointer;">🔍 搜索</button>
+                </div>
+                <!-- 打本记录列表 -->
+                <div id="myPlaysList"></div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
