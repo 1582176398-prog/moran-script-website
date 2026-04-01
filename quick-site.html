@@ -68,10 +68,10 @@
         @media (max-width: 768px) {
             .container { padding: 12px; }
             .script-grid { grid-template-columns: 1fr; gap: 16px; }
-            .stats { flex-direction: column; align-items: center; gap: 12px; margin: 15px 0 25px; }
-            .stat-item { min-width: 100%; max-width: 280px; padding: 12px 20px; }
-            .stat-number { font-size: 1.5rem; }
-            .stat-label { font-size: 0.85rem; }
+            .stats { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 15px 0 25px; }
+            .stat-item { flex: 0 0 calc(50% - 10px); max-width: calc(50% - 10px); padding: 10px 12px; min-width: unset; }
+            .stat-number { font-size: 1.4rem; }
+            .stat-label { font-size: 0.8rem; }
             .logo { font-size: 2.8rem; }
             .subtitle { font-size: 1rem; }
             .tagline { font-size: 0.9rem; }
@@ -1319,34 +1319,6 @@
             <p style="margin-top: 20px; color: #777777; font-size: 0.95rem;">
                 地址：重庆市沙坪坝区大学城熙街2栋22-5 · 营业时间：14:00-24:00
             </p>
-        </div>
-
-        <div style="background: rgba(100, 100, 100, 0.1); border: 1px solid rgba(139, 117, 0, 0.2); border-radius: 12px; padding: 20px; margin: 30px auto; max-width: 800px; text-align: center;">
-            <h3 style="color: #8b7500; margin-bottom: 10px;">📚 下载说明</h3>
-            <p style="color: #777777; margin-bottom: 15px;">
-                ✨ <strong>DM手册现已支持一键下载！</strong><br>
-                点击任何剧本的"📄 DM手册"按钮，即可下载对应的PDF文件到本地。
-            </p>
-            <div style="display: flex; justify-content: center; gap: 15px;">
-                <div style="text-align: left; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; min-width: 200px;">
-                    <div style="color: #81C784;">✅ 支持功能</div>
-                    <div style="font-size: 0.9rem; color: #777777; margin-top: 5px;">
-                        • 直接下载PDF文件<br>
-                        • 11部剧本完整手册<br>
-                        • 适配所有浏览器<br>
-                        • 保持原始格式
-                    </div>
-                </div>
-                <div style="text-align: left; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; min-width: 200px;">
-                    <div style="color: #4FC3F7;">💡 使用建议</div>
-                    <div style="font-size: 0.9rem; color: #777777; margin-top: 5px;">
-                        • 建议在电脑端下载<br>
-                        • 保存到固定文件夹<br>
-                        • 可打印或分享<br>
-                        • 定期更新维护
-                    </div>
-                </div>
-            </div>
         </div>
 
         <footer>
