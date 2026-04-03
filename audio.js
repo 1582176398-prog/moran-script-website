@@ -270,7 +270,17 @@ class AudioManager {
                     // 某年某月某天 - 28-33
                     xw_mounian: 'audio/颜人中 - 某年某月某天.mp3',
                     // 稻香 - 34-35
-                    xw_daoxiang: 'audio/先锋Music 3D环绕音乐领导者 - 周杰伦 - 稻香.mp3.mp3'
+                    xw_daoxiang: 'audio/先锋Music 3D环绕音乐领导者 - 周杰伦 - 稻香.mp3.mp3',
+
+                    // ====================
+                    // 【夏晚线第四章配乐】
+                    // ====================
+                    // 红尘客栈 - 阿昊离开/离别
+                    xw_hongchen: 'audio/周杰伦+-+红尘客栈.mp3',
+                    // Dear D - 重逢/归来
+                    xw_dear: 'audio/Dear+D+(亲爱的告诉你)-项睿娴.mp3',
+                    // 不再联系 - 开放结局/离别
+                    xw_buzai: 'audio/夏天Alex - 不再联系.mp3'
                 }
             },
             
@@ -762,6 +772,50 @@ class AudioManager {
             'xw_3_wy_end_open': { mp3Moment: 'xw_yanyuan', ambient: null },
             'xw_3_wy_end_friend': { mp3Moment: 'xw_yanyuan', ambient: null },
             'xw_3_wy_end_be': { mp3Moment: 'xw_yanyuan', ambient: null },
+            
+            // ========== 夏晚线第四章：甜蜜与危机 ==========
+            // 【第一部分：阿昊离开】红尘客栈
+            'xw_4_1': { mp3Moment: 'xw_hongchen', ambient: 'shop' },
+            'xw_4_1_b': { mp3Moment: 'xw_hongchen', ambient: 'shop' },
+            'xw_4_1_c': { mp3Moment: 'xw_hongchen', ambient: 'shop' },
+            'xw_4_1_c1': { mp3Moment: 'xw_hongchen', ambient: 'shop' },
+            
+            // 【第二部分：暑假群聊】和你
+            'xw_4_2': { mp3Moment: 'xw_heni', ambient: 'dorm' },
+            'xw_4_2_b': { mp3Moment: 'xw_heni', ambient: 'dorm' },
+            'xw_4_2_c': { mp3Moment: 'xw_heni', ambient: 'dorm' },
+            
+            // 【第三部分：暑假私聊】和你
+            'xw_4_3_xiaotong': { mp3Moment: 'xw_heni', ambient: 'street' },
+            'xw_4_3_longxinheng': { mp3Moment: 'xw_heni', ambient: 'street' },
+            'xw_4_3_ganzhiyu': { mp3Moment: 'xw_heni', ambient: 'street' },
+            'xw_4_3_wuya': { mp3Moment: 'xw_heni', ambient: 'street' },
+            
+            // 【第四部分：9月返校】Dear D
+            'xw_4_4': { mp3Moment: 'xw_dear', ambient: 'shop' },
+            'xw_4_4_b': { mp3Moment: 'xw_dear', ambient: 'shop' },
+            'xw_4_4_c': { mp3Moment: 'xw_dear', ambient: 'shop' },
+            'xw_4_4_c1': { mp3Moment: 'xw_dear', ambient: 'shop' },
+            
+            // 【第五部分：告白选择】夏夜最后的烟火
+            'xw_4_5': { mp3Moment: 'xw_xiaye', ambient: 'shop' },
+            'xw_4_5_xiaotong': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_5_longxinheng': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_5_ganzhiyu': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_5_wuya': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            
+            // 【告白结果：夏夜最后的烟火】
+            'xw_4_6_confession_xiaotong_accept': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_6_confession_longxinheng_accept': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_6_confession_ganzhiyu_accept': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_6_confession_wuya_accept': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            
+            // 【犹豫/开放结局：不再联系】
+            'xw_4_6_confession_think': { mp3Moment: 'xw_buzai', ambient: 'street' },
+            'xw_4_7_open': { mp3Moment: 'xw_buzai', ambient: null },
+            
+            // 【尾声：不再联系】
+            'xw_4_7': { mp3Moment: 'xw_buzai', ambient: null },
             
             // ========== 角色专属场景 ==========
             // 木星专属
