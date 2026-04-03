@@ -664,9 +664,9 @@ const storyData = {
         ]
     },
 
-    // 夏晚线 - 第一章：初遇
+    // 夏晚线 - 第一章：相遇
     xia_wan_chapter1: {
-        title: '第一章：初遇',
+        title: '第一章：相遇',
         theme: '玩家认识夏晚，体验第一次玩剧本杀，对木星或其他角色留下第一印象',
         scenes: [
             // --- 节点1.1:初来乍到 ---
@@ -1820,7 +1820,7 @@ const storyData = {
                     { speaker: 'roommate', text: '那个DM确实可以，长得帅还专业。' },
                     { speaker: 'xia_wan', text: '（微微一笑）嗯，还行。' },
                     { speaker: 'narrator', text: '夏晚走在回学校的路上，脑海里不自觉地闪过木星的样子。' },
-                    { speaker: 'xia_wan', text: '（肖童……）' },
+                    { speaker: 'xia_wan', text: '（木星……）' },
                     { speaker: 'xia_wan', text: '（声音确实挺好听的，人也挺帅的。）' },
                     { speaker: 'xia_wan', text: '（刚才还扶了我一下……挺细心的。）' },
                     { speaker: 'xia_wan', text: '（下次……如果再来，能再见到他吗？）' },
@@ -2888,10 +2888,10 @@ const storyData = {
         ]
     },
     // ========================================
-    // 夏晚线 - 第二章：新的开始
+    // 夏晚线 - 第二章：靠近
     // ========================================
     xia_wan_chapter2: {
-        title: '第二章：新的开始',
+        title: '第二章：靠近',
         theme: '身份转变（客人→DM）+ 心动萌芽',
         scenes: [
 
@@ -3241,10 +3241,10 @@ const storyData = {
                 background: 'bg-shop',
                 dialogues: [
                     { speaker: 'xiao_tong', text: '培训结束了？' },
-                    { speaker: 'xia_wan', text: '嗯...方圆，阿昊教得好快，我有点跟不上。' },
+                    { speaker: 'xia_wan', text: '嗯...阿昊教得好快，我有点跟不上。' },
                     { speaker: 'xiao_tong', text: '没关系，基础够用就行。' },
                     { speaker: 'xiao_tong', text: '真正重要的东西，都是在带本过程中学会的。' },
-                    { speaker: 'xia_wan', text: '方圆当初也是这样学的吗？' },
+                    { speaker: 'xia_wan', text: '你当初也是这样学的吗？' },
                     { speaker: 'xiao_tong', text: '差不多。' },
                     { speaker: 'narrator', text: '木星的声音温和而有磁性，让人不自觉地想听他继续说下去。' },
                     { speaker: 'xia_wan', text: '（他说话好温柔...）' }
@@ -3383,7 +3383,7 @@ const storyData = {
                 dialogues: [
                     { speaker: 'yu_haitong', text: '夏晚，你住校还是走读呀？' },
                     { speaker: 'xia_wan', text: '我住校，离学校不远。' },
-                    { speaker: 'yu_haitong', text: '那挺好的！我和吴琊、虹猫姐一起租房～' },
+                    { speaker: 'yu_haitong', text: '那挺好的！我和吴琊、虹猫一起租房～' },
                     { speaker: 'xia_wan', text: '哇，三个人的合租！' },
                     { speaker: 'yu_haitong', text: '对呀！虽然有时候会有点挤，但是很热闹～' },
                     { speaker: 'narrator', text: '170说话的时候眉飞色舞的，让人忍不住被她的热情感染。' }
@@ -3396,9 +3396,9 @@ const storyData = {
                 title: '和木星午餐',
                 background: 'bg-rest-area',
                 dialogues: [
-                    { speaker: 'xia_wan', text: '方圆平时喜欢玩什么类型的本？' },
+                    { speaker: 'xia_wan', text: '木星平时喜欢玩什么类型的本？' },
                     { speaker: 'xiao_tong', text: '都玩，推理和情感比较多。' },
-                    { speaker: 'xia_wan', text: '方圆有什么推荐的吗？' },
+                    { speaker: 'xia_wan', text: '木星有什么推荐的吗？' },
                     { speaker: 'xiao_tong', text: '等你能带本了，我带你玩个特别的。' },
                     { speaker: 'narrator', text: '木星说着，嘴角微微上扬。' },
                     { speaker: 'xia_wan', text: '（特别的...？）' },
@@ -5067,13 +5067,13 @@ const storyData = {
                 title: '道歉',
                 background: 'bg-shop',
                 dialogues: [
-                    { speaker: 'xia_wan', text: '对不起...肖童...' },
+                    { speaker: 'xia_wan', text: '对不起...木星...' },
                     { speaker: 'xia_wan', text: '我不是那个意思...我...' },
                     { speaker: 'narrator', text: '夏晚低下头，声音越来越小。' },
                     { speaker: 'xia_wan', text: '我只是...太累了...说了不该说的话...' },
                     { speaker: 'narrator', text: '木星沉默了一会儿。' },
                     { speaker: 'xiao_tong', text: '...去休息一下吧。' },
-                    { speaker: 'xia_wan', text: '肖童...对不起...' },
+                    { speaker: 'xia_wan', text: '木星...对不起...' },
                     { speaker: 'xiao_tong', text: '我说过了，去休息。' },
                     { speaker: 'narrator', text: '木星的声音很平静，但夏晚听出了其中的疏离。' },
                     { speaker: 'xia_wan', text: '（他生气了...）' },
@@ -5209,7 +5209,54 @@ const storyData = {
                     { speaker: 'narrator', text: '木星说完这句话，就低下头继续整理东西了。' },
                     { speaker: 'xia_wan', text: '（木星...这是什么意思...）' },
                     { speaker: 'xia_wan', text: '（他是说...他也不想我们就这样结束吗...）' },
-                    { speaker: 'xia_wan', text: '（我不敢问...但我心里好高兴...）' }
+                    { speaker: 'xia_wan', text: '（看着他认真整理东西的侧脸，夏晚突然觉得心里很暖）' },
+                    { speaker: 'xia_wan', text: '（这个平时总是沉默的男生，其实一直在认真对待每一件事）' },
+                    { speaker: 'xia_wan', text: '（包括...我们的关系）' }
+                ],
+                choices: [
+                    { text: '认真地看着他，说「我也是」', next: 'xw_3_10_a_detail', affinity: { xiao_tong: 8 }, friendship: { xiao_tong: 5 }, confessionCondition: 'xiaotong' },
+                    { text: '只是轻声说「谢谢你告诉我」', next: 'xw_3_10_b_response', affinity: { xiao_tong: 3 }, friendship: { xiao_tong: 3 } }
+                ]
+            },
+            
+            // --- 场景10a_detail：认真感受他的认真（触发隐藏条件） ---
+            {
+                id: 'xw_3_10_a_detail',
+                title: '认真',
+                background: 'bg-shop',
+                dialogues: [
+                    { speaker: 'xia_wan', text: '木星...' },
+                    { speaker: 'xia_wan', text: '我也是。' },
+                    { speaker: 'xia_wan', text: '我不想失去你。' },
+                    { speaker: 'narrator', text: '夏晚的声音很轻，但很坚定。' },
+                    { speaker: 'narrator', text: '木星终于抬起头，看着她。' },
+                    { speaker: 'xiao_tong', text: '...真的吗？' },
+                    { speaker: 'xia_wan', text: '真的。' },
+                    { speaker: 'narrator', text: '木星看着她，嘴角终于浮现出一个淡淡的笑容。' },
+                    { speaker: 'narrator', text: '不是平时那种礼貌性的微笑。' },
+                    { speaker: 'narrator', text: '是发自内心的，带着一点点不好意思的笑容。' },
+                    { speaker: 'xia_wan', text: '（木星笑起来的样子...真好看）' },
+                    { speaker: 'narrator', text: '夏晚觉得自己的心跳漏了一拍。' },
+                    { speaker: 'xia_wan', text: '（我想...一直看着这样的笑容）' }
+                ],
+                choices: [],
+                next: 'xw_3_end_selector'
+            },
+            
+            // --- 场景10b_response：轻声回应 ---
+            {
+                id: 'xw_3_10_b_response',
+                title: '回应',
+                background: 'bg-shop',
+                dialogues: [
+                    { speaker: 'xia_wan', text: '木星...' },
+                    { speaker: 'xia_wan', text: '谢谢你告诉我这些。' },
+                    { speaker: 'xiao_tong', text: '...嗯。' },
+                    { speaker: 'narrator', text: '木星低下头，继续整理东西。' },
+                    { speaker: 'narrator', text: '但夏晚看到，他的耳朵似乎有点红。' },
+                    { speaker: 'xia_wan', text: '（...他果然还是有点害羞啊）' },
+                    { speaker: 'narrator', text: '她忍不住轻轻笑了一下。' },
+                    { speaker: 'xia_wan', text: '（这样的木星...也挺可爱的）' }
                 ],
                 choices: [],
                 next: 'xw_3_end_selector'
@@ -5420,10 +5467,10 @@ const storyData = {
     },
 
     // ========================================
-    // 夏晚线 - 第三章：心动（谨言路线）
+    // 夏晚线 - 第三章：心动·谨言篇
     // ========================================
     xia_wan_chapter3_longxinheng: {
-        title: '第三章：心动（谨言路线）',
+        title: '第三章：心动·谨言篇',
         theme: '心动升温与刀子伏笔（2025年5月-7月）',
         scenes: [
 
@@ -5464,7 +5511,7 @@ const storyData = {
                     { speaker: 'xia_wan', text: '（这还是刚才那个笑容满面的谨言吗...）' },
                     { speaker: 'narrator', text: '夏晚站在原地，不知道该不该打扰他。' },
                     { speaker: 'narrator', text: '但她清楚地看到了——' },
-                    { speaker: 'narrator', text: '木星，此刻看起来是那么孤独。' },
+                    { speaker: 'narrator', text: '谨言，此刻看起来是那么孤独。' },
                     { speaker: 'xia_wan', text: '（原来他也会这样吗...）' },
                     { speaker: 'xia_wan', text: '（这种表情...好像在哪里见过...）' }
                 ],
@@ -5522,7 +5569,7 @@ const storyData = {
                 title: '懂他',
                 background: 'bg-shop',
                 dialogues: [
-                    { speaker: 'xia_wan', text: '方圆...' },
+                    { speaker: 'xia_wan', text: '谨言...' },
                     { speaker: 'xia_wan', text: '我懂。' },
                     { speaker: 'narrator', text: '只有两个字，却让谨言愣住了。' },
                     { speaker: 'long_xinheng', text: '...' },
@@ -5531,7 +5578,7 @@ const storyData = {
                     { speaker: 'long_xinheng', text: '第一个这样说的人。' },
                     { speaker: 'xia_wan', text: '（那一刻，我好像真的看见了他。）' },
                     { speaker: 'xia_wan', text: '（不是那个嘻嘻哈哈的谨言...）' },
-                    { speaker: 'xia_wan', text: '（而是真正的...龙信衡。）' }
+                    { speaker: 'xia_wan', text: '（而是真正的...谨言。）' }
                 ],
                 choices: [],
                 next: 'xw_3_lr_3'
@@ -5576,7 +5623,7 @@ const storyData = {
                     { speaker: 'long_xinheng', text: '哈哈，你这孩子就是太谦虚了～' },
                     { speaker: 'narrator', text: '他笑着揉了揉夏晚的头。' },
                     { speaker: 'xia_wan', text: '（他的手...好温暖...）' },
-                    { speaker: 'xia_wan', text: '（但我总是在想...那个孤独的方圆...）' },
+                    { speaker: 'xia_wan', text: '（但我总是在想...那个孤独的谨言...）' },
                     { speaker: 'xia_wan', text: '（他是不是也希望有人能看到他真正的样子？）' }
                 ],
                 choices: [],
@@ -5650,7 +5697,7 @@ const storyData = {
                 title: '心动',
                 background: 'bg-street',
                 dialogues: [
-                    { speaker: 'xia_wan', text: '龙信衡...' },
+                    { speaker: 'xia_wan', text: '谨言...' },
                     { speaker: 'xia_wan', text: '其实我...' },
                     { speaker: 'narrator', text: '话到嘴边，却又说不出口了。' },
                     { speaker: 'xia_wan', text: '...谢谢你愿意对我说这些。' },
@@ -6007,10 +6054,10 @@ const storyData = {
     },
 
     // ========================================
-    // 夏晚线 - 第三章：心动（方圆路线）
+    // 夏晚线 - 第三章：心动·方圆篇
     // ========================================
     xia_wan_chapter3_ganzhiyu: {
-        title: '第三章：心动（方圆路线）',
+        title: '第三章：心动·方圆篇',
         theme: '心动升温与刀子伏笔（2025年5月-7月）',
         scenes: [
 
@@ -6636,10 +6683,10 @@ const storyData = {
     },
 
     // ========================================
-    // 夏晚线 - 第三章：心动（吴琊路线）
+    // 夏晚线 - 第三章：心动·吴琊篇
     // ========================================
     xia_wan_chapter3_wuya: {
-        title: '第三章：心动（吴琊路线）',
+        title: '第三章：心动·吴琊篇',
         theme: '心动升温与刀子伏笔（2025年5月-7月）',
         scenes: [
 
@@ -7200,9 +7247,9 @@ const storyData = {
         ]
     },
 
-    // 夏晚线 - 第四章：甜蜜与危机
+    // 夏晚线 - 第四章：抉择
     xia_wan_chapter4: {
-        title: '第四章：甜蜜与危机',
+        title: '第四章：抉择',
         theme: '感情线发展 + 告白（2025年7月-11月）',
         scenes: [
 
@@ -7402,7 +7449,8 @@ const storyData = {
                     { speaker: 'narrator', text: '现在却只剩下空荡荡的通知。' },
                     { speaker: 'xia_wan', text: '（人走了，群也变了。）' }
                 ],
-                choices: []
+                choices: [],
+                next: 'xw_4_2_b'
             },
 
             {
@@ -7434,7 +7482,8 @@ const storyData = {
                     { speaker: 'narrator', text: '嘴角不自觉地弯了起来。' },
                     { speaker: 'xia_wan', text: '（木星他...在群里也会回我的消息呢。）' }
                 ],
-                choices: []
+                choices: [],
+                next: 'xw_4_2_c'
             },
 
             {
@@ -7463,11 +7512,12 @@ const storyData = {
                     { speaker: 'narrator', text: '她翻看着聊天记录，嘴角带着笑意。' },
                     { speaker: 'narrator', text: '（真想快点回去...）' }
                 ],
-                choices: []
+                choices: [],
+                next: 'xw_4_3_xiaotong'
             },
 
             // =============================================
-            // 第三部分：暑假私聊
+            // 第三部分：暑假私聊（自动依次触发）
             // =============================================
 
             {
@@ -7510,7 +7560,8 @@ const storyData = {
                     { speaker: 'narrator', text: '但她心里暖暖的。' },
                     { speaker: 'xia_wan', text: '（木星...开学见。）' }
                 ],
-                choices: []
+                choices: [],
+                next: 'xw_4_3_longxinheng'
             },
 
             {
@@ -7552,7 +7603,8 @@ const storyData = {
                     { speaker: 'narrator', text: '她默默在心里算了算日子。' },
                     { speaker: 'narrator', text: '（还有二十天就能回去了...）' }
                 ],
-                choices: []
+                choices: [],
+                next: 'xw_4_3_ganzhiyu'
             },
 
             {
@@ -7590,7 +7642,8 @@ const storyData = {
                     { speaker: 'narrator', text: '「我不怎么会带城限本，只能打打下手」' },
                     { speaker: 'xia_wan', text: '（方圆哥他...在努力吗...）' }
                 ],
-                choices: []
+                choices: [],
+                next: 'xw_4_3_wuya'
             },
 
             {
@@ -7673,7 +7726,8 @@ const storyData = {
                     { speaker: 'narrator', text: '橙子神秘兮兮地眨眨眼。' },
                     { speaker: 'xia_wan', text: '（变化...是什么样的变化呢...）' }
                 ],
-                choices: []
+                choices: [],
+                next: 'xw_4_4_b'
             },
 
             {
@@ -7692,7 +7746,7 @@ const storyData = {
                     { speaker: 'narrator', text: '不再是那个站在角落里不知道说什么的人。' },
                     { speaker: 'narrator', text: '而是一个真正的店长。' },
                     { speaker: 'wu_ya', text: '回来了？' },
-                    { speaker: 'xia_wan', text: '嗯...方圆...' },
+                    { speaker: 'xia_wan', text: '嗯...吴琊...' },
                     { speaker: 'wu_ya', text: '嗯。先休息一下。' },
                     { speaker: 'wu_ya', text: '明天再来上班。' },
                     { speaker: 'narrator', text: '他的语气还是那样简短。' },
@@ -7709,7 +7763,8 @@ const storyData = {
                     { speaker: 'narrator', text: '吴琊、木星、橙子、170、谨言...' },
                     { speaker: 'xia_wan', text: '（我也要加油...）' }
                 ],
-                choices: []
+                choices: [],
+                next: 'xw_4_4_c'
             },
 
             {
@@ -7727,7 +7782,7 @@ const storyData = {
                     { speaker: 'narrator', text: '但眼神还是那样温柔。' },
                     { speaker: 'narrator', text: '带着一种让人安心的力量。' },
                     { speaker: 'xiao_tong', text: '回来了？' },
-                    { speaker: 'xia_wan', text: '嗯，方圆辛苦了...' },
+                    { speaker: 'xia_wan', text: '嗯，木星辛苦了...' },
                     { speaker: 'narrator', text: '木星看了她一眼。' },
                     { speaker: 'narrator', text: '只是一眼。' },
                     { speaker: 'narrator', text: '但夏晚觉得心跳都停了一瞬。' },
@@ -7737,14 +7792,14 @@ const storyData = {
                     { speaker: 'narrator', text: '他的动作比以前更成熟了。' },
                     { speaker: 'narrator', text: '带着一种经历过什么的沉淀感。' },
                     { speaker: 'xiao_tong', text: '暑假...怎么样？' },
-                    { speaker: 'xia_wan', text: '（方圆他在...关心我？）' },
+                    { speaker: 'xia_wan', text: '（木星他在...关心我？）' },
                     { speaker: 'xia_wan', text: '挺好的～就是有点想店里...' },
                     { speaker: 'xiao_tong', text: '...' },
                     { speaker: 'narrator', text: '木星没有说话。' },
                     { speaker: 'narrator', text: '但他的嘴角微微弯了一下。' },
                     { speaker: 'narrator', text: '很淡。' },
                     { speaker: 'narrator', text: '但夏晚看到了。' },
-                    { speaker: 'xia_wan', text: '（方圆他...笑了？）' },
+                    { speaker: 'xia_wan', text: '（木星他...笑了？）' },
                     { speaker: 'narrator', text: '她觉得自己脸有点热。' },
                     { speaker: 'xia_wan', text: '（想店里...其实是想你。）' },
                     { speaker: 'narrator', text: '但这句话，她说不出口。' }
@@ -7761,7 +7816,7 @@ const storyData = {
                 background: 'bg-shop',
                 mood: 'romantic',
                 dialogues: [
-                    { speaker: 'xia_wan', text: '方圆...你最近是不是很累？' },
+                    { speaker: 'xia_wan', text: '木星...你最近是不是很累？' },
                     { speaker: 'xiao_tong', text: '...还好。' },
                     { speaker: 'xia_wan', text: '可是你瘦了...要多注意休息啊...' },
                     { speaker: 'narrator', text: '木星愣了一下。' },
@@ -7776,19 +7831,19 @@ const storyData = {
                     { speaker: 'narrator', text: '这句话...' },
                     { speaker: 'narrator', text: '像是一颗小小的种子。' },
                     { speaker: 'narrator', text: '落在她心里。' },
-                    { speaker: 'xia_wan', text: '嗯...方圆也是...' },
+                    { speaker: 'xia_wan', text: '嗯...木星也是...' },
                     { speaker: 'narrator', text: '两人沉默了一会儿。' },
                     { speaker: 'narrator', text: '但不是尴尬的沉默。' },
                     { speaker: 'narrator', text: '而是一种...舒服的沉默。' },
                     { speaker: 'narrator', text: '好像什么都不用说。' },
                     { speaker: 'narrator', text: '只要待在一起就很好。' },
                     { speaker: 'xiao_tong', text: '...那我去休息了。' },
-                    { speaker: 'xia_wan', text: '嗯，方圆晚安。' },
+                    { speaker: 'xia_wan', text: '嗯，木星晚安。' },
                     { speaker: 'xiao_tong', text: '晚安。' },
                     { speaker: 'narrator', text: '木星转身离开。' },
                     { speaker: 'narrator', text: '夏晚看着他的背影。' },
                     { speaker: 'narrator', text: '心里暖暖的。' },
-                    { speaker: 'xia_wan', text: '（方圆...这个学期...）' },
+                    { speaker: 'xia_wan', text: '（木星...这个学期...）' },
                     { speaker: 'narrator', text: '（我想离你更近一点。）' }
                 ],
                 choices: [],
@@ -7796,14 +7851,14 @@ const storyData = {
             },
 
             // =============================================
-            // 第五部分：各线专属剧情
+            // 第五部分：告白之夜（混合模式）
             // =============================================
 
             {
                 id: 'xw_4_5',
-                title: '某个夜晚',
+                title: '告白之夜',
                 background: 'bg-shop',
-                mood: 'normal',
+                mood: 'tense',
                 dialogues: [
                     { speaker: 'narrator', text: '某天晚上。' },
                     { speaker: 'narrator', text: '店里只剩夏晚在整理最后的东西。' },
@@ -7811,24 +7866,67 @@ const storyData = {
                     { speaker: 'narrator', text: '她正准备收拾东西走人的时候。' },
                     { speaker: 'narrator', text: '手机震动了。' },
                     { speaker: 'narrator', text: '是一条私信。' },
-                    { speaker: 'narrator', text: '是木星发来的。' },
-                    { speaker: 'xiao_tong', text: '「你还在店里吗。」' },
-                    { speaker: 'xia_wan', text: '（方圆怎么突然发消息...）' },
-                    { speaker: 'xia_wan', text: '在的～方圆有什么事吗？' },
-                    { speaker: 'xiao_tong', text: '「...我在门口。」' },
-                    { speaker: 'xiao_tong', text: '「能出来一下吗。」' },
-                    { speaker: 'xia_wan', text: '（...？）' },
-                    { speaker: 'narrator', text: '夏晚的心跳突然快了起来。' },
-                    { speaker: 'narrator', text: '她不知道会发生什么。' },
-                    { speaker: 'narrator', text: '但她有一种预感。' },
-                    { speaker: 'narrator', text: '一种让她心跳加速的预感。' },
-                    { speaker: 'xia_wan', text: '（方圆...他想说什么...）' }
+                    { speaker: 'narrator', text: '她看了一眼屏幕。' },
+                    { speaker: 'narrator', text: '心跳突然漏了一拍。' },
+                    { speaker: 'xia_wan', text: '（...是他？）' },
+                    { speaker: 'narrator', text: '夏晚看着手机屏幕。' },
+                    { speaker: 'narrator', text: '消息还没来得及看。' },
+                    { speaker: 'narrator', text: '但她的脑海里突然闪过一个念头——' },
+                    { speaker: 'xia_wan', text: '（今晚...要不要主动一点？）' },
+                    { speaker: 'xia_wan', text: '（与其等他来找我...' },
+                    { speaker: 'xia_wan', text: '不如我先...）' }
+                ],
+                choices: [
+                    { text: '等他来找我（被动）', next: 'xw_4_5_passive', affinity: {}, friendship: {} },
+                    { text: '主动去找他告白（主动）', next: 'xw_4_5_active', affinity: {}, friendship: {} }
+                ]
+            },
+
+            // =============================================
+            // 被动告白场景（由game.js动态处理）
+            // =============================================
+
+            {
+                id: 'xw_4_5_passive',
+                title: '某个夜晚',
+                background: 'bg-shop',
+                mood: 'normal',
+                dialogues: [
+                    { speaker: 'narrator', text: '夏晚打开手机。' },
+                    { speaker: 'narrator', text: '消息还在那里等着她。' }
                 ],
                 choices: [
                     { text: '去见木星', next: 'xw_4_5_xiaotong', affinity: { xiao_tong: 5 }, friendship: { xiao_tong: 3 } },
                     { text: '去见谨言', next: 'xw_4_5_longxinheng', affinity: { long_xinheng: 5 }, friendship: { long_xinheng: 3 } },
                     { text: '去见方圆', next: 'xw_4_5_ganzhiyu', affinity: { gan_zhiyu: 5 }, friendship: { gan_zhiyu: 3 } },
                     { text: '去见吴琊', next: 'xw_4_5_wuya', affinity: { wu_ya: 5 }, friendship: { wu_ya: 3 } }
+                ]
+            },
+
+            // =============================================
+            // 主动告白入口
+            // =============================================
+
+            {
+                id: 'xw_4_5_active',
+                title: '告白的勇气',
+                background: 'bg-shop',
+                mood: 'nervous',
+                dialogues: [
+                    { speaker: 'narrator', text: '夏晚深吸一口气。' },
+                    { speaker: 'narrator', text: '她知道自己想见谁。' },
+                    { speaker: 'narrator', text: '也知道今晚...她想告诉他什么。' },
+                    { speaker: 'xia_wan', text: '（鼓起勇气...）' },
+                    { speaker: 'narrator', text: '她走出店门。' },
+                    { speaker: 'narrator', text: '秋夜的风有点凉。' },
+                    { speaker: 'narrator', text: '但她的心是热的。' }
+                ],
+                choices: [
+                    { text: '去找木星', next: 'xw_4_5_active_xiaotong', affinity: {}, friendship: {} },
+                    { text: '去找谨言', next: 'xw_4_5_active_longxinheng', affinity: {}, friendship: {} },
+                    { text: '去找方圆', next: 'xw_4_5_active_ganzhiyu', affinity: {}, friendship: {} },
+                    { text: '去找吴琊', next: 'xw_4_5_active_wuya', affinity: {}, friendship: {} },
+                    { text: '算了...还是等他来找我吧', next: 'xw_4_5_passive', affinity: { xiao_tong: -2 }, friendship: {} }
                 ]
             },
 
@@ -7844,18 +7942,18 @@ const storyData = {
                     { speaker: 'narrator', text: '秋夜的风有点凉。' },
                     { speaker: 'narrator', text: '但夏晚的心是热的。' },
                     { speaker: 'xiao_tong', text: '...你来了。' },
-                    { speaker: 'xia_wan', text: '嗯...方圆有什么事吗？' },
+                    { speaker: 'xia_wan', text: '嗯...木星有什么事吗？' },
                     { speaker: 'xiao_tong', text: '...' },
                     { speaker: 'narrator', text: '沉默了很久。' },
                     { speaker: 'narrator', text: '木星张了张嘴。' },
                     { speaker: 'narrator', text: '又闭上。' },
                     { speaker: 'narrator', text: '好像不知道该从何说起。' },
-                    { speaker: 'xia_wan', text: '方圆...' },
+                    { speaker: 'xia_wan', text: '木星...' },
                     { speaker: 'xiao_tong', text: '这个暑假。' },
                     { speaker: 'xiao_tong', text: '你不在的时候。' },
                     { speaker: 'narrator', text: '他的声音很轻。' },
                     { speaker: 'xiao_tong', text: '我发现我...有点不习惯。' },
-                    { speaker: 'xia_wan', text: '（方圆...）' },
+                    { speaker: 'xia_wan', text: '（木星...）' },
                     { speaker: 'xiao_tong', text: '每天都想你什么时候回来。' },
                     { speaker: 'xiao_tong', text: '想你在老家过得好不好。' },
                     { speaker: 'xiao_tong', text: '想你会不会也想店里。' },
@@ -7866,7 +7964,7 @@ const storyData = {
                     { speaker: 'narrator', text: '她没想到。' },
                     { speaker: 'narrator', text: '那个平时沉默寡言的人。' },
                     { speaker: 'narrator', text: '会说出这样的话。' },
-                    { speaker: 'xia_wan', text: '方圆...' },
+                    { speaker: 'xia_wan', text: '木星...' },
                     { speaker: 'narrator', text: '她的声音有点颤抖。' },
                     { speaker: 'xia_wan', text: '我...' },
                     { speaker: 'xiao_tong', text: '夏晚。' },
@@ -7874,7 +7972,7 @@ const storyData = {
                     { speaker: 'narrator', text: '看着她的眼睛。' },
                     { speaker: 'xiao_tong', text: '我喜欢你。' },
                     { speaker: 'xia_wan', text: '（...！）' },
-                    { speaker: 'narrator', text: '三个字。' },
+                    { speaker: 'narrator', text: ' 四个字。' },
                     { speaker: 'narrator', text: '说得很轻。' },
                     { speaker: 'narrator', text: '但夏晚觉得那是她听过最重的话。' }
                 ],
@@ -8015,6 +8113,334 @@ const storyData = {
             },
 
             // =============================================
+            // 主动告白场景（玩家先告白）
+            // =============================================
+
+            {
+                id: 'xw_4_5_active_xiaotong',
+                title: '主动告白·木星',
+                background: 'bg-shop',
+                mood: 'nervous',
+                dialogues: [
+                    { speaker: 'narrator', text: '夏晚找到了木星。' },
+                    { speaker: 'narrator', text: '他正站在后门附近。' },
+                    { speaker: 'narrator', text: '手里拿着一瓶水。' },
+                    { speaker: 'narrator', text: '看到夏晚过来，他愣了一下。' },
+                    { speaker: 'xiao_tong', text: '...你怎么在这？' },
+                    { speaker: 'xia_wan', text: '我...' },
+                    { speaker: 'narrator', text: '夏晚深吸一口气。' },
+                    { speaker: 'xia_wan', text: '木星，我有话想跟你说。' },
+                    { speaker: 'xiao_tong', text: '...' },
+                    { speaker: 'narrator', text: '木星看着她。' },
+                    { speaker: 'narrator', text: '没有说话。' },
+                    { speaker: 'narrator', text: '但他的眼神在问：什么？' },
+                    { speaker: 'xia_wan', text: '其实...这个暑假我一直在想一件事。' },
+                    { speaker: 'xia_wan', text: '想店里的大家。' },
+                    { speaker: 'xia_wan', text: '想你。' },
+                    { speaker: 'xiao_tong', text: '...' },
+                    { speaker: 'xia_wan', text: '木星。' },
+                    { speaker: 'xia_wan', text: '我喜欢你。' },
+                    { speaker: 'narrator', text: '她说完这句话。' },
+                    { speaker: 'narrator', text: '感觉心跳都快停了。' },
+                    { speaker: 'xia_wan', text: '（说出来了...）' },
+                    { speaker: 'xiao_tong', text: '...' },
+                    { speaker: 'narrator', text: '沉默了很久。' },
+                    { speaker: 'narrator', text: '木星低下头。' },
+                    { speaker: 'narrator', text: '夏晚的心一点点往下沉。' },
+                    { speaker: 'xia_wan', text: '（是我太唐突了吗...）' },
+                    { speaker: 'xiao_tong', text: '其实...' },
+                    { speaker: 'narrator', text: '木星的声音很轻。' },
+                    { speaker: 'xiao_tong', text: '我本来想今晚告诉你的。' },
+                    { speaker: 'xia_wan', text: '...什么？' },
+                    { speaker: 'xiao_tong', text: '我喜欢你。' },
+                    { speaker: 'narrator', text: '他抬起头。' },
+                    { speaker: 'narrator', text: '眼神里有一种她从没见过的温柔。' },
+                    { speaker: 'xiao_tong', text: '谢谢你来告诉我。' },
+                    { speaker: 'xia_wan', text: '（...！）' },
+                    { speaker: 'narrator', text: '夏晚愣在原地。' },
+                    { speaker: 'narrator', text: '然后慢慢红了眼眶。' },
+                    { speaker: 'xia_wan', text: '木星...' },
+                    { speaker: 'narrator', text: '秋夜的风有点凉。' },
+                    { speaker: 'narrator', text: '但夏晚觉得这是她经历过最温暖的夜晚。' }
+                ],
+                choices: [
+                    { text: '（紧紧抱住他）', next: 'xw_4_6_active_xiaotong_success', affinity: { xiao_tong: 25 }, friendship: { xiao_tong: 5 } },
+                    { text: '（轻轻牵起他的手）', next: 'xw_4_6_active_xiaotong_success', affinity: { xiao_tong: 20 }, friendship: { xiao_tong: 3 } }
+                ]
+            },
+
+            {
+                id: 'xw_4_5_active_longxinheng',
+                title: '主动告白·谨言',
+                background: 'bg-shop',
+                mood: 'nervous',
+                dialogues: [
+                    { speaker: 'narrator', text: '夏晚找到了谨言。' },
+                    { speaker: 'narrator', text: '他正靠在窗边看月亮。' },
+                    { speaker: 'narrator', text: '今晚的他看起来有些不一样。' },
+                    { speaker: 'narrator', text: '没有平时那种嬉皮笑脸的感觉。' },
+                    { speaker: 'xia_wan', text: '谨言。' },
+                    { speaker: 'long_xinheng', text: '嗯？夏晚～' },
+                    { speaker: 'narrator', text: '他转过头笑了笑。' },
+                    { speaker: 'narrator', text: '但夏晚看得出来。' },
+                    { speaker: 'narrator', text: '那笑容背后藏着什么。' },
+                    { speaker: 'xia_wan', text: '我有话想跟你说。' },
+                    { speaker: 'long_xinheng', text: '...什么？' },
+                    { speaker: 'narrator', text: '他的语气变了。' },
+                    { speaker: 'narrator', text: '变得认真了起来。' },
+                    { speaker: 'xia_wan', text: '其实我一直记得。' },
+                    { speaker: 'xia_wan', text: '那天你在休息室里。' },
+                    { speaker: 'xia_wan', text: '我进来陪你坐了一会儿。' },
+                    { speaker: 'long_xinheng', text: '...' },
+                    { speaker: 'xia_wan', text: '那时候我就在想。' },
+                    { speaker: 'xia_wan', text: '你这个人，其实很好。' },
+                    { speaker: 'xia_wan', text: '只是大家都不太了解你。' },
+                    { speaker: 'long_xinheng', text: '...你还记得那件事。' },
+                    { speaker: 'narrator', text: '他的声音有点不一样了。' },
+                    { speaker: 'xia_wan', text: '我今天来是想告诉你。' },
+                    { speaker: 'xia_wan', text: '我喜欢你。' },
+                    { speaker: 'narrator', text: '夏晚说出这句话的时候。' },
+                    { speaker: 'narrator', text: '心里反而平静了下来。' },
+                    { speaker: 'xia_wan', text: '（说出来了...）' },
+                    { speaker: 'long_xinheng', text: '...' },
+                    { speaker: 'narrator', text: '沉默了一会儿。' },
+                    { speaker: 'narrator', text: '然后他笑了。' },
+                    { speaker: 'narrator', text: '不是平时那种嬉皮的笑。' },
+                    { speaker: 'narrator', text: '而是一种...释然的笑。' },
+                    { speaker: 'long_xinheng', text: '其实我一直觉得自己藏得很好。' },
+                    { speaker: 'long_xinheng', text: '没想到被你发现了。' },
+                    { speaker: 'long_xinheng', text: '谢谢你，夏晚。' },
+                    { speaker: 'xia_wan', text: '所以...？' },
+                    { speaker: 'long_xinheng', text: '所以...' },
+                    { speaker: 'narrator', text: '他走近了一步。' },
+                    { speaker: 'long_xinheng', text: '我也喜欢你啊。' },
+                    { speaker: 'xia_wan', text: '（...！）' },
+                    { speaker: 'narrator', text: '月光洒在他身上。' },
+                    { speaker: 'narrator', text: '夏晚第一次觉得。' },
+                    { speaker: 'narrator', text: '这个爱笑的男孩，原来这么耀眼。' }
+                ],
+                choices: [
+                    { text: '（笑着拍拍他的肩）以后别藏着了', next: 'xw_4_6_active_longxinheng_success', affinity: { long_xinheng: 25 }, friendship: { long_xinheng: 5 } },
+                    { text: '（轻轻握住他的手）谢谢你愿意告诉我', next: 'xw_4_6_active_longxinheng_success', affinity: { long_xinheng: 20 }, friendship: { long_xinheng: 3 } }
+                ]
+            },
+
+            {
+                id: 'xw_4_5_active_ganzhiyu',
+                title: '主动告白·方圆',
+                background: 'bg-shop',
+                mood: 'nervous',
+                dialogues: [
+                    { speaker: 'narrator', text: '夏晚找到了方圆。' },
+                    { speaker: 'narrator', text: '他正在吧台整理东西。' },
+                    { speaker: 'narrator', text: '看到夏晚过来，他抬起头。' },
+                    { speaker: 'gan_zhiyu', text: '还没走？' },
+                    { speaker: 'xia_wan', text: '嗯...方圆，我有话想跟你说。' },
+                    { speaker: 'gan_zhiyu', text: '...' },
+                    { speaker: 'narrator', text: '方圆放下手里的东西。' },
+                    { speaker: 'narrator', text: '看着她。' },
+                    { speaker: 'gan_zhiyu', text: '什么事？' },
+                    { speaker: 'xia_wan', text: '其实我一直想说。' },
+                    { speaker: 'xia_wan', text: '你真的很厉害。' },
+                    { speaker: 'xia_wan', text: '不管是带本还是管理店。' },
+                    { speaker: 'xia_wan', text: '你都做得很好。' },
+                    { speaker: 'gan_zhiyu', text: '...谢谢。' },
+                    { speaker: 'xia_wan', text: '还有...' },
+                    { speaker: 'narrator', text: '夏晚深吸一口气。' },
+                    { speaker: 'xia_wan', text: '方圆。' },
+                    { speaker: 'xia_wan', text: '我喜欢你。' },
+                    { speaker: 'narrator', text: '她说完这句话。' },
+                    { speaker: 'narrator', text: '感觉脸有点热。' },
+                    { speaker: 'xia_wan', text: '（说出来了...）' },
+                    { speaker: 'gan_zhiyu', text: '...' },
+                    { speaker: 'narrator', text: '方圆愣了一下。' },
+                    { speaker: 'narrator', text: '然后笑了。' },
+                    { speaker: 'gan_zhiyu', text: '没想到是你先说。' },
+                    { speaker: 'xia_wan', text: '...什么？' },
+                    { speaker: 'gan_zhiyu', text: '本来想等店里稳定一点再说的。' },
+                    { speaker: 'narrator', text: '他轻轻叹了口气。' },
+                    { speaker: 'gan_zhiyu', text: '其实我一直在想怎么开口。' },
+                    { speaker: 'gan_zhiyu', text: '没想到你比我勇敢。' },
+                    { speaker: 'xia_wan', text: '所以...？' },
+                    { speaker: 'gan_zhiyu', text: '所以...' },
+                    { speaker: 'narrator', text: '他伸出手。' },
+                    { speaker: 'narrator', text: '轻轻揉了揉她的头发。' },
+                    { speaker: 'gan_zhiyu', text: '我也喜欢你啊。' },
+                    { speaker: 'xia_wan', text: '（...！）' },
+                    { speaker: 'narrator', text: '夏晚感觉心跳快得要飞出来。' },
+                    { speaker: 'narrator', text: '她没想到。' },
+                    { speaker: 'narrator', text: '那个平时看起来游刃有余的人。' },
+                    { speaker: 'narrator', text: '也有这么温柔的一面。' }
+                ],
+                choices: [
+                    { text: '（踮起脚尖亲了他一下）', next: 'xw_4_6_active_ganzhiyu_success', affinity: { gan_zhiyu: 25 }, friendship: { gan_zhiyu: 5 } },
+                    { text: '（低头笑了）那以后请多指教了', next: 'xw_4_6_active_ganzhiyu_success', affinity: { gan_zhiyu: 20 }, friendship: { gan_zhiyu: 3 } }
+                ]
+            },
+
+            {
+                id: 'xw_4_5_active_wuya',
+                title: '主动告白·吴琊',
+                background: 'bg-shop',
+                mood: 'nervous',
+                dialogues: [
+                    { speaker: 'narrator', text: '夏晚找到了吴琊。' },
+                    { speaker: 'narrator', text: '他正站在门口。' },
+                    { speaker: 'narrator', text: '像是在想什么事情。' },
+                    { speaker: 'narrator', text: '看到夏晚过来，他的眼神动了动。' },
+                    { speaker: 'wu_ya', text: '...还没走？' },
+                    { speaker: 'xia_wan', text: '嗯...吴琊，我有话想跟你说。' },
+                    { speaker: 'wu_ya', text: '...' },
+                    { speaker: 'narrator', text: '他点点头。' },
+                    { speaker: 'narrator', text: '没有说话。' },
+                    { speaker: 'narrator', text: '但那种安静的等待。' },
+                    { speaker: 'narrator', text: '让夏晚觉得...他是在认真听的。' },
+                    { speaker: 'xia_wan', text: '我一直记得。' },
+                    { speaker: 'xia_wan', text: '你来当店长之后。' },
+                    { speaker: 'xia_wan', text: '变了很多。' },
+                    { speaker: 'xia_wan', text: '从那个不知道说什么的人。' },
+                    { speaker: 'xia_wan', text: '变成了现在这样...可靠的人。' },
+                    { speaker: 'wu_ya', text: '...' },
+                    { speaker: 'xia_wan', text: '我一直觉得。' },
+                    { speaker: 'xia_wan', text: '你很好。' },
+                    { speaker: 'xia_wan', text: '只是不太会表达。' },
+                    { speaker: 'xia_wan', text: '吴琊...' },
+                    { speaker: 'xia_wan', text: '我喜欢你。' },
+                    { speaker: 'narrator', text: '夏晚说完这句话。' },
+                    { speaker: 'narrator', text: '有点紧张地看着他。' },
+                    { speaker: 'xia_wan', text: '（他会怎么回答...）' },
+                    { speaker: 'wu_ya', text: '...' },
+                    { speaker: 'narrator', text: '沉默了很久。' },
+                    { speaker: 'narrator', text: '吴琊低下头。' },
+                    { speaker: 'xia_wan', text: '（是我太直接了吗...）' },
+                    { speaker: 'wu_ya', text: '谢谢。' },
+                    { speaker: 'narrator', text: '他的声音很轻。' },
+                    { speaker: 'xia_wan', text: '...嗯？' },
+                    { speaker: 'wu_ya', text: '谢谢你说出来。' },
+                    { speaker: 'wu_ya', text: '其实我一直觉得自己不擅长这些。' },
+                    { speaker: 'narrator', text: '他抬起头。' },
+                    { speaker: 'narrator', text: '看着夏晚的眼睛。' },
+                    { speaker: 'wu_ya', text: '但既然你都说了...' },
+                    { speaker: 'wu_ya', text: '那我也不藏着了。' },
+                    { speaker: 'wu_ya', text: '我也喜欢你。' },
+                    { speaker: 'xia_wan', text: '（...！）' },
+                    { speaker: 'narrator', text: '夏晚愣住了。' },
+                    { speaker: 'narrator', text: '她第一次听到吴琊说这么多话。' },
+                    { speaker: 'narrator', text: '也是第一次看到他眼睛里这么亮的光。' }
+                ],
+                choices: [
+                    { text: '（轻轻握住他的手）谢谢你', next: 'xw_4_6_active_wuya_success', affinity: { wu_ya: 25 }, friendship: { wu_ya: 5 } },
+                    { text: '（笑了）原来你也会说这么多话', next: 'xw_4_6_active_wuya_success', affinity: { wu_ya: 20 }, friendship: { wu_ya: 3 } }
+                ]
+            },
+
+            // =============================================
+            // 主动告白成功场景
+            // =============================================
+
+            {
+                id: 'xw_4_6_active_xiaotong_success',
+                title: '确定关系',
+                background: 'bg-shop',
+                mood: 'romantic',
+                dialogues: [
+                    { speaker: 'narrator', text: '夏晚紧紧抱住木星。' },
+                    { speaker: 'narrator', text: '他的怀抱很温暖。' },
+                    { speaker: 'narrator', text: '带着淡淡的洗衣液香味。' },
+                    { speaker: 'xiao_tong', text: '...' },
+                    { speaker: 'narrator', text: '木星轻轻回抱住她。' },
+                    { speaker: 'xiao_tong', text: '谢谢你。' },
+                    { speaker: 'xia_wan', text: '谢什么...' },
+                    { speaker: 'xiao_tong', text: '谢谢你愿意喜欢我。' },
+                    { speaker: 'xia_wan', text: '（木星...）' },
+                    { speaker: 'narrator', text: '秋夜的风有点凉。' },
+                    { speaker: 'narrator', text: '但夏晚一点都不觉得冷。' },
+                    { speaker: 'narrator', text: '因为此刻。' },
+                    { speaker: 'narrator', text: '她觉得自己是世界上最幸福的人。' }
+                ],
+                choices: [],
+                next: 'xw_4_7',
+                confession: { character: 'xiao_tong' }
+            },
+
+            {
+                id: 'xw_4_6_active_longxinheng_success',
+                title: '确定关系',
+                background: 'bg-shop',
+                mood: 'romantic',
+                dialogues: [
+                    { speaker: 'narrator', text: '夏晚笑着拍了拍他的肩。' },
+                    { speaker: 'xia_wan', text: '以后别藏着了，知道吗？' },
+                    { speaker: 'long_xinheng', text: '...好。' },
+                    { speaker: 'narrator', text: '他轻轻笑了。' },
+                    { speaker: 'narrator', text: '那笑容里有一种她从没见过的释然。' },
+                    { speaker: 'long_xinheng', text: '夏晚。' },
+                    { speaker: 'xia_wan', text: '嗯？' },
+                    { speaker: 'long_xinheng', text: '谢谢你来找我。' },
+                    { speaker: 'xia_wan', text: '（...）' },
+                    { speaker: 'narrator', text: '月光洒在他们身上。' },
+                    { speaker: 'narrator', text: '这个夜晚很安静。' },
+                    { speaker: 'narrator', text: '但夏晚知道。' },
+                    { speaker: 'narrator', text: '从今晚开始。' },
+                    { speaker: 'narrator', text: '一切都会不一样了。' }
+                ],
+                choices: [],
+                next: 'xw_4_7',
+                confession: { character: 'long_xinheng' }
+            },
+
+            {
+                id: 'xw_4_6_active_ganzhiyu_success',
+                title: '确定关系',
+                background: 'bg-shop',
+                mood: 'romantic',
+                dialogues: [
+                    { speaker: 'narrator', text: '夏晚踮起脚尖。' },
+                    { speaker: 'narrator', text: '在他脸颊上轻轻亲了一下。' },
+                    { speaker: 'gan_zhiyu', text: '...' },
+                    { speaker: 'narrator', text: '方圆愣了一下。' },
+                    { speaker: 'narrator', text: '然后笑了。' },
+                    { speaker: 'narrator', text: '那笑容里有一种她从没见过的温柔。' },
+                    { speaker: 'gan_zhiyu', text: '你啊...' },
+                    { speaker: 'xia_wan', text: '怎么？不行吗？' },
+                    { speaker: 'gan_zhiyu', text: '没有不行。' },
+                    { speaker: 'narrator', text: '他轻轻揉了揉她的头发。' },
+                    { speaker: 'gan_zhiyu', text: '只是没想到你这么主动。' },
+                    { speaker: 'xia_wan', text: '（脸红了）喜欢就要说出来嘛...' },
+                    { speaker: 'narrator', text: '他笑了。' },
+                    { speaker: 'narrator', text: '那笑容在吧台的灯光下显得格外温暖。' }
+                ],
+                choices: [],
+                next: 'xw_4_7',
+                confession: { character: 'gan_zhiyu' }
+            },
+
+            {
+                id: 'xw_4_6_active_wuya_success',
+                title: '确定关系',
+                background: 'bg-shop',
+                mood: 'romantic',
+                dialogues: [
+                    { speaker: 'narrator', text: '夏晚轻轻握住吴琊的手。' },
+                    { speaker: 'xia_wan', text: '谢谢你。' },
+                    { speaker: 'wu_ya', text: '...' },
+                    { speaker: 'narrator', text: '他愣了一下。' },
+                    { speaker: 'narrator', text: '然后轻轻回握住她的手。' },
+                    { speaker: 'wu_ya', text: '谢谢你说出来。' },
+                    { speaker: 'xia_wan', text: '（...）' },
+                    { speaker: 'narrator', text: '月光洒在他们身上。' },
+                    { speaker: 'narrator', text: '很安静。' },
+                    { speaker: 'narrator', text: '但那种安静不再是尴尬。' },
+                    { speaker: 'narrator', text: '而是一种...默契。' },
+                    { speaker: 'narrator', text: '不需要太多话。' },
+                    { speaker: 'narrator', text: '只要在一起就很好的默契。' }
+                ],
+                choices: [],
+                next: 'xw_4_7',
+                confession: { character: 'wu_ya' }
+            },
+
+            // =============================================
             // 告白接受场景
             // =============================================
 
@@ -8035,7 +8461,7 @@ const storyData = {
                     { speaker: 'xiao_tong', text: '...谢谢你。' },
                     { speaker: 'xia_wan', text: '谢什么...' },
                     { speaker: 'xiao_tong', text: '谢谢你愿意喜欢我。' },
-                    { speaker: 'xia_wan', text: '（方圆...）' },
+                    { speaker: 'xia_wan', text: '（木星...）' },
                     { speaker: 'narrator', text: '秋夜的风有点凉。' },
                     { speaker: 'narrator', text: '但夏晚觉得很暖。' },
                     { speaker: 'narrator', text: '因为身边的人。' },
@@ -8275,6 +8701,36 @@ const storyData = {
                     { speaker: 'narrator', text: '这个秋天。' },
                     { speaker: 'narrator', text: '因为有了喜欢的人。' },
                     { speaker: 'narrator', text: '一切都变得很美好。' },
+                    { speaker: 'narrator', text: '...' },
+                    { speaker: 'narrator', text: '夏晚线 第四章「甜蜜与危机」 完' }
+                ],
+                choices: [],
+                next: null
+            },
+            
+            // --- 没有告白的日常延续 ---
+            {
+                id: 'xw_4_8',
+                title: '日常',
+                background: 'bg-shop',
+                mood: 'peaceful',
+                dialogues: [
+                    { speaker: 'narrator', text: '日子一天天过去。' },
+                    { speaker: 'narrator', text: '夏晚继续在店里工作。' },
+                    { speaker: 'narrator', text: '和木星、谨言、方圆、吴琊相处。' },
+                    { speaker: 'narrator', text: '每天都很忙碌。' },
+                    { speaker: 'narrator', text: '也很充实。' },
+                    { speaker: 'narrator', text: '虽然没有发生什么特别的事。' },
+                    { speaker: 'narrator', text: '但夏晚觉得。' },
+                    { speaker: 'narrator', text: '现在的生活也很好。' },
+                    { speaker: 'narrator', text: '有朋友。' },
+                    { speaker: 'narrator', text: '有工作。' },
+                    { speaker: 'narrator', text: '有值得期待的事。' },
+                    { speaker: 'narrator', text: '至于感情的事...' },
+                    { speaker: 'xia_wan', text: '（顺其自然吧）' },
+                    { speaker: 'narrator', text: '夏晚这样想着。' },
+                    { speaker: 'narrator', text: '窗外阳光正好。' },
+                    { speaker: 'narrator', text: '又是新的一天。' },
                     { speaker: 'narrator', text: '...' },
                     { speaker: 'narrator', text: '夏晚线 第四章「甜蜜与危机」 完' }
                 ],

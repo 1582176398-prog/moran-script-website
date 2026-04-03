@@ -204,10 +204,13 @@ class VisualNovelGame {
             transition.id = 'chapter-transition';
             transition.innerHTML = `
                 <div class="transition-bg">
+                    <div class="transition-gradient"></div>
                     <video autoplay muted loop playsinline id="transition-video">
                         <source src="file:///D:/SteamLibrary/steamapps/workshop/content/431960/3466567674/Wavy%20Grass%204K60FPS.mp4" type="video/mp4">
                     </video>
                     <div class="transition-video-overlay"></div>
+                    <div class="transition-glow top"></div>
+                    <div class="transition-glow bottom"></div>
                 </div>
                 <div class="transition-content">
                     <div class="chapter-number"></div>
@@ -246,6 +249,44 @@ class VisualNovelGame {
                     height: 100%;
                     overflow: hidden;
                 }
+                .transition-gradient {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #1a1a2e 100%);
+                    z-index: -2;
+                }
+                /* 动态光效 */
+                .transition-gradient::before,
+                .transition-gradient::after {
+                    content: '';
+                    position: absolute;
+                    border-radius: 50%;
+                    filter: blur(80px);
+                    opacity: 0.4;
+                }
+                .transition-gradient::before {
+                    width: 400px;
+                    height: 400px;
+                    top: -100px;
+                    left: -100px;
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    animation: gradientShift 8s ease-in-out infinite;
+                }
+                .transition-gradient::after {
+                    width: 350px;
+                    height: 350px;
+                    bottom: -80px;
+                    right: -80px;
+                    background: linear-gradient(135deg, #f093fb, #f5576c);
+                    animation: gradientShift 8s ease-in-out infinite reverse;
+                }
+                @keyframes gradientShift {
+                    0%, 100% { transform: translate(0, 0) scale(1); }
+                    50% { transform: translate(30px, 20px) scale(1.1); }
+                }
                 #transition-video {
                     position: absolute;
                     top: 50%;
@@ -254,6 +295,7 @@ class VisualNovelGame {
                     min-height: 100%;
                     transform: translate(-50%, -50%);
                     object-fit: cover;
+                    z-index: -1;
                 }
                 .transition-video-overlay {
                     position: absolute;
@@ -261,7 +303,7 @@ class VisualNovelGame {
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(135deg, rgba(26,26,46,0.85) 0%, rgba(22,33,62,0.85) 50%, rgba(15,52,96,0.85) 100%);
+                    background: linear-gradient(135deg, rgba(26,26,46,0.9) 0%, rgba(22,33,62,0.85) 50%, rgba(15,52,96,0.9) 100%);
                 }
                 .transition-content {
                     position: relative;
@@ -269,36 +311,87 @@ class VisualNovelGame {
                     text-align: center;
                     color: #fff;
                     opacity: 0;
-                    transition: opacity 0.6s ease 0.3s;
+                    transform: translateY(30px);
+                    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
                 }
                 #chapter-transition.active .transition-content {
                     opacity: 1;
+                    transform: translateY(0);
                 }
                 .chapter-number {
-                    font-size: 1rem;
-                    letter-spacing: 0.5rem;
-                    opacity: 0.6;
-                    margin-bottom: 1rem;
+                    font-size: 0.9rem;
+                    letter-spacing: 0.6rem;
+                    opacity: 0.5;
+                    margin-bottom: 1.5rem;
                     text-transform: uppercase;
+                    font-weight: 300;
                 }
                 .chapter-title {
-                    font-size: 3rem;
+                    font-size: 3.5rem;
                     font-weight: 300;
-                    letter-spacing: 0.3rem;
-                    margin-bottom: 0.5rem;
+                    letter-spacing: 0.4rem;
+                    margin-bottom: 1rem;
+                    text-shadow: 0 0 60px rgba(255,255,255,0.3);
+                    position: relative;
+                }
+                .chapter-title::before,
+                .chapter-title::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    width: 60px;
+                    height: 1px;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+                }
+                .chapter-title::before {
+                    right: 100%;
+                    margin-right: 20px;
+                }
+                .chapter-title::after {
+                    left: 100%;
+                    margin-left: 20px;
                 }
                 .chapter-subtitle {
-                    font-size: 1.2rem;
-                    opacity: 0.7;
+                    font-size: 1.1rem;
+                    opacity: 0.6;
                     font-weight: 300;
+                    letter-spacing: 0.2em;
+                    font-style: italic;
+                }
+                /* 装饰性竖线 */
+                .transition-content::before {
+                    content: '';
+                    position: absolute;
+                    left: 50%;
+                    bottom: 120%;
+                    width: 1px;
+                    height: 50px;
+                    background: linear-gradient(to top, transparent, rgba(255,255,255,0.3));
+                }
+                /* 装饰性光点 */
+                .transition-glow {
+                    position: absolute;
+                    width: 4px;
+                    height: 4px;
+                    background: #fff;
+                    border-radius: 50%;
+                    box-shadow: 0 0 20px 5px rgba(255,255,255,0.3);
+                    animation: glow-pulse 2s ease-in-out infinite;
+                }
+                .transition-glow.top { top: 15%; left: 20%; animation-delay: 0s; }
+                .transition-glow.bottom { bottom: 20%; right: 25%; animation-delay: 1s; }
+                @keyframes glow-pulse {
+                    0%, 100% { opacity: 0.3; transform: scale(1); }
+                    50% { opacity: 0.8; transform: scale(1.5); }
                 }
                 #chapter-transition.exiting {
                     opacity: 0;
-                    transition: opacity 0.8s ease;
+                    transition: opacity 1s ease;
                 }
                 #chapter-transition.exiting .transition-content {
                     opacity: 0;
-                    transition: opacity 0.4s ease;
+                    transform: translateY(-20px);
+                    transition: opacity 0.5s ease, transform 0.5s ease;
                 }
             `;
             document.head.appendChild(style);
@@ -998,17 +1091,13 @@ class VisualNovelGame {
         }
 
         // =============================================
-        // 第四章告白场景动态处理
+        // 第四章告白场景动态处理（混合模式）
         // =============================================
         
-        // xw_4_5 告白入口：根据各角色爱情度和隐藏条件动态生成告白选项
+        // xw_4_5 告白入口（选择主动还是被动）
         if (scene.id === 'xw_4_5' && this.currentRoute === 'xia_wan') {
-            // 获取所有符合条件的告白角色（爱情度>60 且 隐藏条件满足）
-            const confessors = [];
-            
-            // 检查是否已经处于恋爱关系（恋爱关系唯一）
+            // 检查是否已经处于恋爱关系
             if (this.isInRelationship()) {
-                // 如果已经恋爱，只能选择当前恋人或跳过
                 const currentPartner = this.getCurrentPartner();
                 const partnerNames = {
                     'xiao_tong': '木星',
@@ -1020,71 +1109,225 @@ class VisualNovelGame {
                 scene.dialogues = [
                     { speaker: 'narrator', text: '某天晚上。' },
                     { speaker: 'narrator', text: '店里只剩夏晚在整理最后的东西。' },
-                    { speaker: 'narrator', text: `手机震动了，是${partnerNames[currentPartner]}发来的消息。` },
+                    { speaker: 'narrator', text: '她正准备收拾东西走人的时候。' },
+                    { speaker: 'narrator', text: '手机震动了。' },
+                    { speaker: 'narrator', text: `是${partnerNames[currentPartner]}发来的消息。` },
                     { speaker: currentPartner, text: '「在店里吗？我在门口等你。」' },
                     { speaker: 'xia_wan', text: '（...是他。）' },
                     { speaker: 'narrator', text: '夏晚的嘴角不自觉地弯了起来。' }
                 ];
                 
                 scene.choices = [
-                    { text: `去见${partnerNames[currentPartner]}`, next: `xw_4_5_${currentPartner}`, affinity: {}, friendship: {} }
+                    { text: `去见${partnerNames[currentPartner]}`, next: 'xw_4_7', affinity: {}, friendship: {} }
                 ];
                 
                 console.log('[game] 已处于恋爱关系，只能选择当前恋人:', currentPartner);
-            } else {
-                // 木星
-                if (this.affinity.xiao_tong && 
-                    this.affinity.xiao_tong.love > 60 && 
-                    this.confessionFlags.xiaotong) {
-                    confessors.push('xiao_tong');
-                }
-                // 谨言
-                if (this.affinity.long_xinheng && 
-                    this.affinity.long_xinheng.love > 60 && 
-                    this.confessionFlags.longxinheng) {
-                    confessors.push('long_xinheng');
-                }
-                // 方圆
-                if (this.affinity.gan_zhiyu && 
-                    this.affinity.gan_zhiyu.love > 60 && 
-                    this.confessionFlags.ganzhiyu) {
-                    confessors.push('gan_zhiyu');
-                }
-                // 吴琊
-                if (this.affinity.wu_ya && 
-                    this.affinity.wu_ya.love > 60 && 
-                    this.confessionFlags.wuya) {
-                    confessors.push('wu_ya');
-                }
+            }
+            // 如果未恋爱，xw_4_5保持原样，让玩家选择主动或被动
+        }
+        
+        // xw_4_5_passive 被动告白场景（被告白）
+        if (scene.id === 'xw_4_5_passive' && this.currentRoute === 'xia_wan') {
+            const confessors = [];
+            const characterNames = {
+                'xiao_tong': '木星',
+                'long_xinheng': '谨言',
+                'gan_zhiyu': '方圆',
+                'wu_ya': '吴琊'
+            };
+            
+            // 检查是否已经处于恋爱关系
+            if (this.isInRelationship()) {
+                const currentPartner = this.getCurrentPartner();
+                scene.dialogues = [
+                    { speaker: 'narrator', text: `手机屏幕上是${characterNames[currentPartner]}的消息。` },
+                    { speaker: currentPartner, text: '「在店里吗？我在门口等你。」' },
+                    { speaker: 'xia_wan', text: '（...是他。）' },
+                    { speaker: 'narrator', text: '夏晚的嘴角不自觉地弯了起来。' }
+                ];
+                scene.choices = [
+                    { text: `去见${characterNames[currentPartner]}`, next: `xw_4_5_${currentPartner}`, affinity: {}, friendship: {} }
+                ];
+                return;
+            }
+            
+            // 检查各角色是否可以告白（爱情度>60 且 隐藏条件满足）
+            if (this.affinity.xiao_tong && 
+                this.affinity.xiao_tong.love > 60 && 
+                this.confessionFlags.xiaotong) {
+                confessors.push('xiao_tong');
+            }
+            if (this.affinity.long_xinheng && 
+                this.affinity.long_xinheng.love > 60 && 
+                this.confessionFlags.longxinheng) {
+                confessors.push('long_xinheng');
+            }
+            if (this.affinity.gan_zhiyu && 
+                this.affinity.gan_zhiyu.love > 60 && 
+                this.confessionFlags.ganzhiyu) {
+                confessors.push('gan_zhiyu');
+            }
+            if (this.affinity.wu_ya && 
+                this.affinity.wu_ya.love > 60 && 
+                this.confessionFlags.wuya) {
+                confessors.push('wu_ya');
+            }
+            
+            console.log('[game] 被动告白 - 可被告白的角色:', confessors);
+            
+            // 动态生成被动告白场景
+            if (confessors.length > 0) {
+                // 取爱情度最高的角色
+                confessors.sort((a, b) => {
+                    const loveA = this.affinity[a]?.love || 0;
+                    const loveB = this.affinity[b]?.love || 0;
+                    return loveB - loveA;
+                });
                 
-                console.log('[game] 可告白角色:', confessors);
+                const topConfessor = confessors[0];
+                const charName = characterNames[topConfessor];
                 
-                // 如果有多个角色可以告白，生成多角色告白场景
-                if (confessors.length > 1) {
-                    scene.dialogues = this.generateMultiConfessionDialogue(confessors);
-                }
+                scene.dialogues = [
+                    { speaker: 'narrator', text: `是${charName}发来的消息。` },
+                    { speaker: topConfessor, text: '「你还在店里吗。」' },
+                    { speaker: 'xia_wan', text: `（${charName}怎么突然发消息...）` },
+                    { speaker: 'xia_wan', text: `在的～${charName}有什么事吗？` },
+                    { speaker: topConfessor, text: '「...我在门口。」' },
+                    { speaker: topConfessor, text: '「能出来一下吗。」' },
+                    { speaker: 'xia_wan', text: '（...？）' },
+                    { speaker: 'narrator', text: '夏晚的心跳突然快了起来。' },
+                    { speaker: 'narrator', text: '她不知道会发生什么。' },
+                    { speaker: 'narrator', text: '但她有一种预感。' },
+                    { speaker: 'narrator', text: '一种让她心跳加速的预感。' },
+                    { speaker: 'xia_wan', text: `（${charName}...他想说什么...）` }
+                ];
                 
-                // 动态生成选项（只显示符合条件的角色）
-                const choiceMap = {
-                    'xiao_tong': { text: '去见木星', next: 'xw_4_5_xiaotong', affinity: { xiao_tong: 5 }, friendship: { xiao_tong: 3 } },
-                    'long_xinheng': { text: '去见谨言', next: 'xw_4_5_longxinheng', affinity: { long_xinheng: 5 }, friendship: { long_xinheng: 3 } },
-                    'gan_zhiyu': { text: '去见方圆', next: 'xw_4_5_ganzhiyu', affinity: { gan_zhiyu: 5 }, friendship: { gan_zhiyu: 3 } },
-                    'wu_ya': { text: '去见吴琊', next: 'xw_4_5_wuya', affinity: { wu_ya: 5 }, friendship: { wu_ya: 3 } }
+                // 角色key转换为scene id格式（xiao_tong -> xiaotong）
+                const charKeyToScene = {
+                    'xiao_tong': 'xiaotong',
+                    'long_xinheng': 'longxinheng',
+                    'gan_zhiyu': 'ganzhiyu',
+                    'wu_ya': 'wuya'
                 };
                 
-                scene.choices = confessors.map(charKey => choiceMap[charKey]);
-                
-                // 如果没有符合条件的角色，显示友情提示
-                if (confessors.length === 0) {
+                // 如果有多个符合条件的角色，让玩家选择
+                if (confessors.length > 1) {
+                    scene.choices = confessors.map(charKey => ({
+                        text: `去见${characterNames[charKey]}`,
+                        next: `xw_4_6_confession_${charKeyToScene[charKey]}_accept`,
+                        affinity: { [charKey]: 5 },
+                        friendship: { [charKey]: 3 }
+                    }));
+                } else {
                     scene.choices = [
-                        { text: '（暂无告白对象，继续日常）', next: 'xw_4_7', affinity: {}, friendship: {} }
+                        { text: `去见${charName}`, next: `xw_4_6_confession_${charKeyToScene[topConfessor]}_accept`, affinity: { [topConfessor]: 5 }, friendship: { [topConfessor]: 3 } }
                     ];
-                    scene.dialogues.push(
-                        { speaker: 'narrator', text: '（爱情度不足60，或隐藏条件未满足，暂时无法触发告白场景）' }
-                    );
                 }
-                
-                console.log('[game] 动态生成告白选项:', scene.choices.map(c => c.text));
+            } else {
+                // 没有符合条件的角色
+                scene.dialogues = [
+                    { speaker: 'narrator', text: '手机没有新消息。' },
+                    { speaker: 'narrator', text: '也许今晚不会有人来找她了。' },
+                    { speaker: 'xia_wan', text: '（...）' },
+                    { speaker: 'narrator', text: '夏晚收拾好东西。' },
+                    { speaker: 'narrator', text: '准备离开。' },
+                    { speaker: 'narrator', text: '她抬头看了看店里的天花板。' },
+                    { speaker: 'xia_wan', text: '（算了...感情的事急不来）' },
+                    { speaker: 'xia_wan', text: '（先把工作做好吧）' },
+                    { speaker: 'narrator', text: '她这样想着，推开了店门。' },
+                    { speaker: 'narrator', text: '夜风有点凉，但她的心却很平静。' }
+                ];
+                scene.choices = [
+                    { text: '（继续日常）', next: 'xw_4_8', affinity: {}, friendship: {} }
+                ];
+            }
+        }
+        
+        // xw_4_5_active 主动告白入口
+        if (scene.id === 'xw_4_5_active' && this.currentRoute === 'xia_wan') {
+            const activatableChars = [];
+            const characterNames = {
+                'xiao_tong': '木星',
+                'long_xinheng': '谨言',
+                'gan_zhiyu': '方圆',
+                'wu_ya': '吴琊'
+            };
+            
+            // 检查是否已经处于恋爱关系
+            if (this.isInRelationship()) {
+                const currentPartner = this.getCurrentPartner();
+                scene.dialogues = [
+                    { speaker: 'narrator', text: '夏晚看着手机屏幕。' },
+                    { speaker: 'narrator', text: '已经有了那个人的消息。' },
+                    { speaker: 'narrator', text: '她已经不需要主动了。' },
+                    { speaker: 'xia_wan', text: '（...已经在等我了啊。）' }
+                ];
+                // charKey转scene id
+                const activeCharKeyToScene = {
+                    'xiao_tong': 'xiaotong',
+                    'long_xinheng': 'longxinheng',
+                    'gan_zhiyu': 'ganzhiyu',
+                    'wu_ya': 'wuya'
+                };
+                scene.choices = [
+                    { text: '（去找他）', next: `xw_4_5_active_${activeCharKeyToScene[currentPartner]}`, affinity: {}, friendship: {} }
+                ];
+                return;
+            }
+            
+            // 主动告白条件：爱情度>=50 且 隐藏条件满足
+            if (this.affinity.xiao_tong && 
+                this.affinity.xiao_tong.love >= 50 && 
+                this.confessionFlags.xiaotong) {
+                activatableChars.push('xiao_tong');
+            }
+            if (this.affinity.long_xinheng && 
+                this.affinity.long_xinheng.love >= 50 && 
+                this.confessionFlags.longxinheng) {
+                activatableChars.push('long_xinheng');
+            }
+            if (this.affinity.gan_zhiyu && 
+                this.affinity.gan_zhiyu.love >= 50 && 
+                this.confessionFlags.ganzhiyu) {
+                activatableChars.push('gan_zhiyu');
+            }
+            if (this.affinity.wu_ya && 
+                this.affinity.wu_ya.love >= 50 && 
+                this.confessionFlags.wuya) {
+                activatableChars.push('wu_ya');
+            }
+            
+            console.log('[game] 主动告白 - 可主动告白的角色:', activatableChars);
+            
+            // charKey转scene id（xiao_tong -> xiaotong）
+            const activeCharToScene = {
+                'xiao_tong': 'xiaotong',
+                'long_xinheng': 'longxinheng',
+                'gan_zhiyu': 'ganzhiyu',
+                'wu_ya': 'wuya'
+            };
+            
+            // 动态生成主动告白选项
+            if (activatableChars.length > 0) {
+                scene.choices = activatableChars.map(charKey => ({
+                    text: `去找${characterNames[charKey]}`,
+                    next: `xw_4_5_active_${activeCharToScene[charKey]}`,
+                    affinity: {},
+                    friendship: {}
+                }));
+                // 添加返回选项
+                scene.choices.push({ text: '算了...还是等他来找我吧', next: 'xw_4_5_passive', affinity: { xiao_tong: -2 }, friendship: {} });
+            } else {
+                // 没有符合条件的角色
+                scene.dialogues = [
+                    { speaker: 'narrator', text: '夏晚想了想...' },
+                    { speaker: 'narrator', text: '觉得自己还没准备好。' },
+                    { speaker: 'xia_wan', text: '（...再等等吧。）' },
+                    { speaker: 'narrator', text: '她决定还是保守一点。' }
+                ];
+                scene.choices = [
+                    { text: '（等他来找我）', next: 'xw_4_5_passive', affinity: {}, friendship: {} }
+                ];
             }
         }
 
@@ -1232,7 +1475,12 @@ class VisualNovelGame {
                 'xw_4_6_confession_xiaotong_accept': 'xiao_tong',
                 'xw_4_6_confession_longxinheng_accept': 'long_xinheng',
                 'xw_4_6_confession_ganzhiyu_accept': 'gan_zhiyu',
-                'xw_4_6_confession_wuya_accept': 'wu_ya'
+                'xw_4_6_confession_wuya_accept': 'wu_ya',
+                // 主动告白成功场景
+                'xw_4_6_active_xiaotong_success': 'xiao_tong',
+                'xw_4_6_active_longxinheng_success': 'long_xinheng',
+                'xw_4_6_active_ganzhiyu_success': 'gan_zhiyu',
+                'xw_4_6_active_wuya_success': 'wu_ya'
             };
             const characterId = confessionScenes[this.currentScene.id];
             if (characterId && !this.isInRelationship()) {
