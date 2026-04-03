@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墨染之夏 - 最后的夏天</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- 主菜单 -->
+        <div id="main-menu" class="screen active">
+            <div class="menu-bg">
+                <video autoplay muted loop playsinline id="menu-video">
+                    <source src="file:///D:/SteamLibrary/steamapps/workshop/content/431960/3466567674/Wavy%20Grass%204K60FPS.mp4" type="video/mp4">
+                </video>
+                <div class="menu-bg-overlay"></div>
+            </div>
+            <div class="menu-content">
+                <h1 class="game-title">墨染之夏</h1>
+                <p class="game-subtitle">最后的夏天</p>
+                <div class="menu-buttons">
+                    <button class="menu-btn" onclick="game.startNewGame()">开始游戏</button>
+                    <button class="menu-btn" onclick="game.loadGame()">继续游戏</button>
+                    <button class="menu-btn" onclick="game.showSettings()">设置</button>
+                    <button class="menu-btn" onclick="game.showCredits()">制作人员</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 角色选择 -->
+        <div id="character-select" class="screen">
+            <div class="select-bg"></div>
+            <div class="select-content">
+                <h2 class="select-title">选择你的故事</h2>
+                <p class="select-subtitle">两条平行线，同一个夏天</p>
+                <div class="character-cards">
+                    <div class="character-card" onclick="game.selectCharacter('zhou_yan')">
+                        <div class="card-portrait">
+                            <img src="images/cutout/周砚.png" alt="周砚">
+                        </div>
+                        <h3>周砚</h3>
+                        <p class="card-desc">内向温柔的大一新生</p>
+                        <p class="card-theme">成长与归属</p>
+                        <div class="card-route">应聘兼职DM的故事</div>
+                    </div>
+                    <div class="character-card" onclick="game.selectCharacter('xia_wan')">
+                        <div class="card-portrait">
+                            <img src="images/cutout/夏晚.png" alt="夏晚">
+                        </div>
+                        <h3>夏晚</h3>
+                        <p class="card-desc">内向漂亮的客人</p>
+                        <p class="card-theme">理解与被理解</p>
+                        <div class="card-route">客人到DM的蜕变</div>
+                    </div>
+                </div>
+                <button class="back-btn" onclick="game.backToMenu()">返回</button>
+            </div>
+        </div>
+
+        <!-- 游戏主界面 -->
+        <div id="game-screen" class="screen">
+            <div class="game-bg" id="game-bg"></div>
+            <div class="character-layer" id="character-layer"></div>
+            
+            <!-- UI层 -->
+            <div class="game-ui">
+                <!-- 顶部信息栏 -->
+                <div class="top-bar">
+                    <button class="ui-btn" onclick="game.toggleMenu()">☰ 菜单</button>
+                    <div class="chapter-info" id="chapter-info">第一章</div>
+                    <button class="ui-btn" onclick="game.toggleAffinity()">💕 好感度</button>
+                </div>
+
+                <!-- 好感度面板 -->
+                <div class="affinity-panel" id="affinity-panel">
+                    <h3>角色好感度</h3>
+                    <div class="affinity-list" id="affinity-list"></div>
+                </div>
+
+                <!-- 对话框 -->
+                <div class="dialogue-box" id="dialogue-box">
+                    <div class="speaker-name" id="speaker-name"></div>
+                    <div class="dialogue-text" id="dialogue-text"></div>
+                    <div class="dialogue-controls">
+                        <button class="auto-btn" onclick="game.toggleAuto()">▶ 自动</button>
+                        <button class="skip-btn" onclick="game.toggleSkip()">⏩ 跳过</button>
+                    </div>
+                </div>
+
+                <!-- 选项区 -->
+                <div class="choices-container" id="choices-container"></div>
+            </div>
+        </div>
+
+        <!-- 游戏菜单 -->
+        <div id="game-menu" class="overlay">
+            <div class="menu-panel">
+                <h3>游戏菜单</h3>
+                <button class="menu-item" onclick="game.saveGame()">保存游戏</button>
+                <button class="menu-item" onclick="game.loadGame()">读取游戏</button>
+                <button class="menu-item" onclick="game.showSettings()">设置</button>
+                <button class="menu-item" onclick="game.toggleDevPanel()">开发者选项</button>
+                <button class="menu-item" onclick="game.backToTitle()">返回标题</button>
+                <button class="menu-item" onclick="game.toggleMenu()">继续游戏</button>
+                
+                <!-- 开发者面板 -->
+                <div id="dev-panel" class="overlay" style="display:none;">
+                    <div class="panel-content" style="background:#1a1a2e;padding:20px;border-radius:12px;max-width:600px;margin:50px auto;max-height:80vh;overflow-y:auto;">
+                        <h3 style="color:#fff;margin-bottom:15px;">开发者选项</h3>
+                        
+                        <!-- 章节快速跳转 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">📚 章节跳转</label>
+                            <div style="margin-bottom:8px;">
+                                <span style="color:#888;font-size:12px;">夏晚线：</span>
+                                <button class="dev-btn" onclick="game.devJump('xw_1_1')">第1章</button>
+                                <button class="dev-btn" onclick="game.devJump('xw_2_1')">第2章</button>
+                                <button class="dev-btn" onclick="game.devJump('xw_3_1')">第3章</button>
+                                <button class="dev-btn" onclick="game.devJump('xw_4_1')">第4章</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:12px;">周砚线：</span>
+                                <button class="dev-btn" onclick="game.devJump('zy_1_1')">第1章</button>
+                                <button class="dev-btn" onclick="game.devJump('zy_2_1')">第2章</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第二章扩展章节 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">📖 第二章扩展（xw_2_9~18）</label>
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_9')">第二天</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_9_1')">店里的早晨</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_10')">午休时间</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_10_a')">和橙子聊天</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_10_b')">和谨言聊天</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_11')">下午工作</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_12')">晚上聚餐</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_12_ganzhiyu')">和方圆聊天</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_13')">工作日常</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_14')">第一次带本</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_14_a')">带本成功</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_14_b')">带本失误</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_15')">第一次值夜班</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_16')">店长的话</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_17')">真正的融入</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_18')">舍不得</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第三章木星线 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">⭐ 第三章·木星线</label>
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_1')">3章开始</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_4')">端午</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_5')">演员开始</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_8')">恋人开始</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_end_selector')">结局选择</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_end_he')">HE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_end_be')">BE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_end_friend')">友情</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第三章谨言线 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🎸 第三章·谨言线</label>
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_1')">线开始</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_2')">斑马结束</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_3')">演员开始</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_choice')">结局选择</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_he')">HE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_be')">BE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_friend')">友情</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第三章甘志宇线 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🎬 第三章·甘志宇线</label>
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_1')">线开始</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_2')">说好不哭结束</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_3')">演员开始</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_choice')">结局选择</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_he')">HE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_be')">BE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_friend')">友情</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第三章吴琊线 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🌙 第三章·吴琊线</label>
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_1')">线开始</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_4')">落空结束</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_4_detail')">演员开始</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_selector')">结局选择</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_he')">HE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_be')">BE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_friend')">友情</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 关键节点跳转 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🎯 夏晚线关键节点</label>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_1_xiaotong')">木星</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_1_longxinheng')">谨言</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_1_ganzhiyu')">方圆</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_1_wuya')">吴琊</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_2')">培训</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_4')">聚餐</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_6')">心动</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_2_end')">第2章结局</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_1')">第3章</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_1')">第4章</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 节点ID跳转 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🔑 节点ID跳转</label>
+                            <div style="display:flex;gap:10px;">
+                                <input type="text" id="dev-node-id" placeholder="输入节点ID，如 xw_3_1" 
+                                    style="flex:1;padding:10px;border-radius:6px;border:1px solid #444;background:#2a2a4a;color:#fff;font-size:14px;">
+                                <button class="dev-btn-primary" onclick="game.devJumpById()">跳转</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 好感度调试 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">💕 好感度重置</label>
+                            <div style="display:flex;gap:10px;">
+                                <button class="dev-btn" onclick="game.devResetAffinity('xia_wan')">夏晚线</button>
+                                <button class="dev-btn" onclick="game.devResetAffinity('zhou_yan')">周砚线</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 好感度快速调整（夏晚线） -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">💗 好感度+20（夏晚线）</label>
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                <button class="dev-btn-small" onclick="game.devAddAffinity('xia_wan', 'xiao_tong', 20)">木星+20</button>
+                                <button class="dev-btn-small" onclick="game.devAddAffinity('xia_wan', 'long_xinheng', 20)">谨言+20</button>
+                                <button class="dev-btn-small" onclick="game.devAddAffinity('xia_wan', 'gan_zhiyu', 20)">方圆+20</button>
+                                <button class="dev-btn-small" onclick="game.devAddAffinity('xia_wan', 'wu_ya', 20)">吴琊+20</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 音乐测试 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🎵 音乐测试</label>
+                            <div style="margin-bottom:8px;">
+                                <span style="color:#888;font-size:11px;">第二章扩展：</span>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('xw_xiaowan')">下完这场雨</button>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('xw_zhaopian')">照片</button>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('xw_mounian')">某年某月</button>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('xw_daoxiang')">稻香</button>
+                            </div>
+                            <div style="margin-bottom:8px;">
+                                <span style="color:#888;font-size:11px;">第三章：</span>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('xw_jifen')">几分之几</button>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('xw_yanyuan')">演员</button>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('xw_lianren')">恋人</button>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('xw_banma')">斑马</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">其他：</span>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('xw_shuohaobuku')">说好不哭</button>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('xw_luokong')">落空</button>
+                                <button class="dev-btn-small" onclick="game.devPlayMusic('stop')">停止</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 游戏状态 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">📊 当前状态</label>
+                            <div id="dev-status" style="color:#888;font-size:12px;background:#2a2a4a;padding:10px;border-radius:6px;line-height:1.6;"></div>
+                            <button class="dev-btn-small" onclick="game.devUpdateStatus()" style="margin-top:8px;">刷新状态</button>
+                        </div>
+                        
+                        <div style="display:flex;gap:10px;margin-top:20px;">
+                            <button class="menu-item" onclick="game.toggleDevPanel()" style="flex:1;background:#555;">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设置面板 -->
+        <div id="settings-panel" class="overlay">
+            <div class="settings-content">
+                <h3>设置</h3>
+                <div class="setting-item">
+                    <label>文字速度</label>
+                    <input type="range" id="text-speed" min="10" max="100" value="50">
+                </div>
+                <div class="setting-item">
+                    <label>背景音乐</label>
+                    <input type="range" id="bgm-volume" min="0" max="100" value="50">
+                </div>
+                <div class="setting-item">
+                    <label>音效</label>
+                    <input type="range" id="se-volume" min="0" max="100" value="50">
+                </div>
+                <button class="back-btn" onclick="game.closeSettings()">返回</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="story.js"></script>
+    <script src="audio.js"></script>
+    <script src="game.js"></script>
+    <script>
+        // 添加UI音效
+        document.addEventListener('DOMContentLoaded', () => {
+            // audioManager 已在 audio.js 中自动创建为 window.audioManager
+            
+            // 首次点击时初始化音频上下文
+            const initAudioOnFirstClick = async () => {
+                if (window.audioManager) {
+                    await window.audioManager.initAudioContext();
+                    
+                    // 音频初始化完成后，如果有游戏实例且有当前场景，播放音乐
+                    if (window.game && game.currentScene && window.game.initAudioAndPlay) {
+                        game.initAudioAndPlay();
+                    }
+                }
+                // 移除这个监听器，只需要初始化一次
+                document.removeEventListener('click', initAudioOnFirstClick);
+            };
+            document.addEventListener('click', initAudioOnFirstClick);
+            
+            // 为所有按钮添加点击音效
+            document.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (window.audioManager) {
+                        audioManager.playSFX('click');
+                    }
+                });
+                
+                // 添加悬停音效
+                btn.addEventListener('mouseenter', () => {
+                    if (window.audioManager) {
+                        audioManager.playSFX('hover');
+                    }
+                });
+            });
+
+            // 音量控制
+            const bgmSlider = document.getElementById('bgm-volume');
+            const seSlider = document.getElementById('se-volume');
+            
+            if (bgmSlider) {
+                bgmSlider.addEventListener('input', (e) => {
+                    if (window.audioManager) {
+                        audioManager.setVolume('mp3', e.target.value / 100);
+                    }
+                });
+            }
+            
+            if (seSlider) {
+                seSlider.addEventListener('input', (e) => {
+                    if (window.audioManager) {
+                        audioManager.setVolume('sfx', e.target.value / 100);
+                    }
+                });
+            }
+            
+            // 开发者面板事件
+            const devRoute = document.getElementById('dev-route');
+            const devChapter = document.getElementById('dev-chapter');
+            
+            if (devRoute) {
+                devRoute.addEventListener('change', () => {
+                    if (window.game) game.updateDevSceneList();
+                });
+            }
+            if (devChapter) {
+                devChapter.addEventListener('change', () => {
+                    if (window.game) game.updateDevSceneList();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
