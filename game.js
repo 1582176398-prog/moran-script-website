@@ -4,6 +4,7 @@ class VisualNovelGame {
         this.currentRoute = null;
         this.currentScene = null;
         this.currentDialogueIndex = 0;
+        this.dialogueHistory = [];  // 对话历史记录（用于返回上一句）
         this.affinity = {};
         this.isTyping = false;
         this.autoMode = false;
@@ -24,6 +25,8 @@ class VisualNovelGame {
             ganzhiyu: false,             // 方圆隐藏条件：认可他的能力
             wuya: false                  // 吴琊隐藏条件：感受到他的温柔
         };
+        // 第五章修复指数系统（多条选择累积决定和好程度）
+        this.repairScore = 0;          // 当前恋人线的修复指数
         
         // 初始化好感度（构造函数中不设置特殊初始值）
         this.initAffinity();
@@ -101,8 +104,30 @@ class VisualNovelGame {
 
     // 选择角色
     async selectCharacter(characterId) {
+        // 重置所有游戏状态
         this.currentRoute = characterId;
+        this.currentScene = null;
+        this.currentDialogueIndex = 0;
+        
+        // 重置好感度系统
         this.initAffinity(characterId);
+        
+        // 重置对话历史
+        this.dialogueHistory = [];
+        
+        // 重置游戏进程追踪
+        this.firstChapterChoice = null;
+        this.observedCharacter = null;
+        
+        // 重置第四章告白系统
+        this.relationship = null;
+        this.chapter3EndingType = null;
+        this.confessionFlags = {
+            xiaotong: false,
+            longxinheng: false,
+            ganzhiyu: false,
+            wuya: false
+        };
         
         // 根据角色加载第一章
         if (characterId === 'zhou_yan') {
@@ -255,37 +280,13 @@ class VisualNovelGame {
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #1a1a2e 100%);
+                    background: transparent;
                     z-index: -2;
                 }
-                /* 动态光效 */
+                /* 动态光效 - 全透明 */
                 .transition-gradient::before,
                 .transition-gradient::after {
-                    content: '';
-                    position: absolute;
-                    border-radius: 50%;
-                    filter: blur(80px);
-                    opacity: 0.4;
-                }
-                .transition-gradient::before {
-                    width: 400px;
-                    height: 400px;
-                    top: -100px;
-                    left: -100px;
-                    background: linear-gradient(135deg, #667eea, #764ba2);
-                    animation: gradientShift 8s ease-in-out infinite;
-                }
-                .transition-gradient::after {
-                    width: 350px;
-                    height: 350px;
-                    bottom: -80px;
-                    right: -80px;
-                    background: linear-gradient(135deg, #f093fb, #f5576c);
-                    animation: gradientShift 8s ease-in-out infinite reverse;
-                }
-                @keyframes gradientShift {
-                    0%, 100% { transform: translate(0, 0) scale(1); }
-                    50% { transform: translate(30px, 20px) scale(1.1); }
+                    display: none;
                 }
                 #transition-video {
                     position: absolute;
@@ -303,7 +304,7 @@ class VisualNovelGame {
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(135deg, rgba(26,26,46,0.9) 0%, rgba(22,33,62,0.85) 50%, rgba(15,52,96,0.9) 100%);
+                    background: transparent;
                 }
                 .transition-content {
                     position: relative;
@@ -410,9 +411,9 @@ class VisualNovelGame {
         transition.classList.add('active');
         transition.classList.remove('exiting');
         
-        // 延迟时间：正常1.5秒，跳过动画0.3秒
-        const delay = skipAnimation ? 300 : 1500;
-        const fadeTime = skipAnimation ? 200 : 800;
+        // 延迟时间：正常4.5秒，跳过动画1.2秒
+        const delay = skipAnimation ? 1200 : 4500;
+        const fadeTime = skipAnimation ? 400 : 1000;
         
         setTimeout(() => {
             transition.classList.add('exiting');
@@ -1331,6 +1332,31 @@ class VisualNovelGame {
             }
         }
 
+        // =============================================
+        // 第五章入口：xw_5_start 动态分流
+        // 有恋人 → 进入对应角色的恋人线
+        // 无恋人 → 进入单身线
+        // =============================================
+        if (scene.id === 'xw_5_start' && this.currentRoute === 'xia_wan') {
+            const partnerRouteMap = {
+                'xiao_tong':    'xw_5_lover_xiaotong_1',
+                'long_xinheng': 'xw_5_lover_longxinheng_1',
+                'gan_zhiyu':    'xw_5_lover_ganzhiyu_1',
+                'wu_ya':        'xw_5_lover_wuya_1'
+            };
+
+            // 先播完过渡对话，然后动态决定去哪里
+            scene.next = null;   // 清掉默认next，防止走章节结束
+            scene.choices = [];  // 清掉选项
+
+            // 在最后一句话之后追加一个隐藏的 autoNext
+            scene.autoNext = this.isInRelationship()
+                ? (partnerRouteMap[this.getCurrentPartner()] || 'xw_5_single_1')
+                : 'xw_5_single_1';
+
+            console.log('[game] xw_5_start 分流 → ', scene.autoNext, '  恋人:', this.getCurrentPartner());
+        }
+
         // 显示第一句对话
         this.showDialogue(0);
     }
@@ -1420,7 +1446,20 @@ class VisualNovelGame {
                 'bg-rest-area': 'images/bg-rest-area.png',
                 'bg-room': 'images/bg-room.png',
                 'bg-restaurant': 'images/bg-rest-area.png',  // 餐厅用休息区图片
-                'bg-hotpot': 'images/bg-rest-area.png'       // 火锅用休息区图片
+                'bg-hotpot': 'images/bg-rest-area.png',       // 火锅用休息区图片
+                'bg-rooftop': 'images/bg-rooftop.png',        // 天台
+                'bg-seaside': 'images/bg-seaside.png',        // 海边
+                'bg-alley': 'images/bg-alley.png',            // 小巷
+                'bg-bar': 'images/bg-bar.png',               // 酒吧
+                'bg-bedroom': 'images/bg-bedroom.png',         // 卧室
+                'bg-bookstore': 'images/bg-bookstore.png',    // 书店
+                'bg-cafe-corridor': 'images/bg-cafe-corridor.png',  // 咖啡馆走廊
+                'bg-cafe-day': 'images/bg-cafe-day.png',      // 咖啡馆白天
+                'bg-cafe-room': 'images/bg-cafe-room.png',   // 咖啡馆包间
+                'bg-convenience': 'images/bg-convenience.png',// 便利店
+                'bg-hongyadong': 'images/bg-hongyadong.png', // 洪崖洞
+                'bg-ktv': 'images/bg-ktv.png',               // KTV
+                'bg-metro': 'images/bg-metro.png',            // 地铁
             };
             
             const imagePath = bgMap[bgClass];
@@ -1601,8 +1640,88 @@ class VisualNovelGame {
             audioManager.playSFX('next');
         }
 
+        // 记录当前对话到历史（用于返回功能）
+        this.dialogueHistory.push({
+            sceneId: this.currentScene.id,
+            dialogueIndex: this.currentDialogueIndex
+        });
+        // 限制历史记录数量（最多保存50条）
+        if (this.dialogueHistory.length > 50) {
+            this.dialogueHistory.shift();
+        }
+
         this.currentDialogueIndex++;
+
         this.showDialogue(this.currentDialogueIndex);
+    }
+
+    // 记录场景切换到历史（用于返回功能）
+    recordSceneTransition(targetSceneId) {
+        this.dialogueHistory.push({
+            sceneId: this.currentScene.id,
+            dialogueIndex: this.currentDialogueIndex,
+            nextSceneId: targetSceneId  // 记录目标场景，方便返回
+        });
+        if (this.dialogueHistory.length > 50) {
+            this.dialogueHistory.shift();
+        }
+    }
+
+    // 返回上一句对话
+    goBackDialogue() {
+        // 如果没有历史记录，无法返回
+        if (this.dialogueHistory.length === 0) {
+            console.log('没有可以返回的历史记录');
+            return;
+        }
+
+        // 获取上一条历史记录
+        const lastHistory = this.dialogueHistory.pop();
+
+        // 如果历史记录中的场景与当前场景不同，需要切换场景
+        if (lastHistory.sceneId !== this.currentScene.id) {
+            // 先切换场景
+            const sceneData = this.findScene(lastHistory.sceneId);
+            if (sceneData) {
+                this.currentScene = sceneData;
+                this.currentSceneIndex = this.currentChapter.scenes.findIndex(s => s.id === sceneData.id);
+                this.updateUI();
+                // 切换场景后，显示最后一条对话（而不是从0开始）
+                // 如果历史记录有保存的对话索引，用它；否则显示最后一条
+                if (lastHistory.dialogueIndex !== undefined) {
+                    const targetIndex = Math.min(lastHistory.dialogueIndex, this.currentScene.dialogues.length - 1);
+                    this.currentDialogueIndex = Math.max(0, targetIndex);
+                } else {
+                    this.currentDialogueIndex = Math.max(0, this.currentScene.dialogues.length - 1);
+                }
+            } else {
+                console.error('无法找到场景:', lastHistory.sceneId);
+                return;
+            }
+        } else {
+            // 同一场景内返回，直接恢复对话索引
+            this.currentDialogueIndex = lastHistory.dialogueIndex;
+        }
+
+        // 播放返回音效
+        if (window.audioManager) {
+            audioManager.playSFX('next');
+        }
+
+        // 重新显示当前对话
+        this.showDialogue(this.currentDialogueIndex);
+    }
+
+    // 查找场景数据
+    findScene(sceneId) {
+        for (const chapter of storyData.chapters) {
+            for (const scene of chapter.scenes) {
+                if (scene.id === sceneId) {
+                    return scene;
+                }
+            }
+        }
+        return null;
     }
 
     // 处理场景结束
@@ -1719,7 +1838,23 @@ class VisualNovelGame {
         if (scene.choices && scene.choices.length > 0) {
             // 显示选项
             this.showChoices(scene.choices);
+        } else if (scene.conditionNext) {
+            // 处理条件跳转
+            console.log('[debug] handleSceneEnd - 当前场景ID:', scene.id, 'confessionFlags:', JSON.stringify(this.confessionFlags));
+            const conditionMet = this.checkCondition(scene.conditionNext.condition);
+            console.log('[debug] conditionNext - condition:', scene.conditionNext.condition, 'met:', conditionMet);
+            const targetScene = conditionMet ? scene.conditionNext.ifTrue : scene.conditionNext.ifFalse;
+            console.log('[debug] conditionNext - targetScene:', targetScene);
+            this.findAndLoadScene(targetScene);
+        } else if (scene.autoNext) {
+            // 动态分流（如 xw_5_start 根据恋爱状态自动跳转）
+            console.log('[game] autoNext 跳转 →', scene.autoNext);
+            this.findAndLoadScene(scene.autoNext);
         } else if (scene.next) {
+            // 检查是否有自动触发条件（用于无选项场景触发隐藏条件）
+            if (scene.autoTriggerCondition) {
+                this.triggerConfessionCondition(scene.autoTriggerCondition);
+            }
             // 进入下一场景
             const nextSceneIndex = this.currentChapter.scenes.findIndex(s => s.id === scene.next);
             if (nextSceneIndex !== -1) {
@@ -1733,9 +1868,29 @@ class VisualNovelGame {
             this.showChapterEnd();
         }
     }
+    
+    // 检查条件是否满足
+    checkCondition(condition) {
+        if (!condition) return false;
+        
+        // 格式: "confessionCondition:xxx"
+        if (condition.startsWith('confessionCondition:')) {
+            const target = condition.replace('confessionCondition:', '');
+            console.log('[debug] checkCondition - 完整confessionFlags:', JSON.stringify(this.confessionFlags));
+            const result = this.confessionFlags && this.confessionFlags[target] === true;
+            console.log('[debug] checkCondition - condition:', condition, 'target:', target, 'result:', result);
+            return result;
+        }
+        
+        // 其他条件类型可以在这里扩展
+        return false;
+    }
 
     // 查找并加载场景
     findAndLoadScene(sceneId) {
+        // 记录场景切换历史
+        this.recordSceneTransition(sceneId);
+        
         // 木星线多结局选择
         if (sceneId === 'xw_3_end_selector') {
             const love = this.affinity.xiao_tong ? this.affinity.xiao_tong.love || 0 : 0;
@@ -1810,6 +1965,14 @@ class VisualNovelGame {
                 this.loadChapter('xia_wan_chapter3_wuya');
                 return;
             }
+        }
+
+        // =============================================
+        // 第五章入口处理（恋人线 + 单身线统一在 xia_wan_chapter5）
+        // =============================================
+        if (this.currentRoute === 'xia_wan' && sceneId.startsWith('xw_5_')) {
+            this.loadChapter('xia_wan_chapter5', sceneId);
+            return;
         }
 
         // 如果找不到，显示章节结束
@@ -1898,8 +2061,18 @@ class VisualNovelGame {
             });
         }
 
+        // 处理修复指数变化（第五章和好系统）
+        if (choice.repair !== undefined && choice.repair !== 0) {
+            const oldScore = this.repairScore;
+            this.repairScore += choice.repair;
+            // 限制在-30到+30之间
+            this.repairScore = Math.max(-30, Math.min(30, this.repairScore));
+            console.log(`[修复指数] ${oldScore} -> ${this.repairScore} (${choice.repair > 0 ? '+' : ''}${choice.repair})`);
+        }
+
         // 处理告白隐藏条件触发
         if (choice.confessionCondition) {
+            console.log('[debug] handleChoiceClick - confessionCondition:', choice.confessionCondition);
             this.triggerConfessionCondition(choice.confessionCondition);
         }
 
@@ -1907,18 +2080,45 @@ class VisualNovelGame {
 
         // 处理章节跳转（如果choice指定了loadChapter）
         if (choice.loadChapter) {
+            // 记录章节切换历史
+            const targetSceneId = typeof choice.next === 'string' ? choice.next : 'chapter_start';
+            this.recordSceneTransition(targetSceneId);
             this.loadChapter(choice.loadChapter, choice.next || true);
             return;
         }
 
         // 进入下一场景
         if (choice.next) {
-            const nextSceneIndex = this.currentChapter.scenes.findIndex(s => s.id === choice.next);
+            // 检查是否是第五章各线结局入口（需要根据repairScore跳转）
+            let targetScene = choice.next;
+            if (this.relationship && targetScene.startsWith('xw_5_lover_') && targetScene.endsWith('_end')) {
+                targetScene = this.getRepairEndingScene(targetScene);
+            }
+
+            // 记录场景切换历史
+            this.recordSceneTransition(targetScene);
+            const nextSceneIndex = this.currentChapter.scenes.findIndex(s => s.id === targetScene);
             if (nextSceneIndex !== -1) {
                 this.loadScene(nextSceneIndex);
             } else {
-                this.findAndLoadScene(choice.next);
+                this.findAndLoadScene(targetScene);
             }
+        }
+    }
+
+    // 根据修复指数获取对应的结局场景ID
+    getRepairEndingScene(baseEndScene) {
+        // baseEndScene格式：xw_5_lover_longxinheng_end 或 xw_5_lover_ganzhiyu_end 等
+        // 根据repairScore决定结局类型
+        if (this.repairScore >= 15) {
+            // 甜蜜和好
+            return baseEndScene.replace('_end', '_end_sweet');
+        } else if (this.repairScore >= 5) {
+            // 普通和好
+            return baseEndScene.replace('_end', '_end_normal');
+        } else {
+            // 冷淡疏远
+            return baseEndScene.replace('_end', '_end_cold');
         }
     }
 
@@ -2276,7 +2476,112 @@ class VisualNovelGame {
         if (flagKey) {
             this.confessionFlags[flagKey] = true;
             console.log(`[game] 告白隐藏条件已触发: ${condition} -> confessionFlags.${flagKey} = true`);
+            
+            // 显示隐藏条件触发通知
+            const conditionNames = {
+                'xiaotong': '木星',
+                'longxinheng': '谨言',
+                'ganzhiyu': '方圆',
+                'wuya': '吴琊'
+            };
+            this.showConfessionConditionNotification(conditionNames[flagKey], flagKey);
         }
+    }
+    
+    // 显示隐藏条件触发通知
+    showConfessionConditionNotification(characterName, flagKey) {
+        // 条件描述
+        const conditionDescriptions = {
+            'xiaotong': '「我们都害怕失去对方」',
+            'longxinheng': '「他是第一个愿意在我面前安静的人」',
+            'ganzhiyu': '「他的眼睛因为我重新亮起来」',
+            'wuya': '「他笨拙的温柔，只对我展现」'
+        };
+        
+        const description = conditionDescriptions[flagKey] || '';
+        
+        // 创建通知
+        const notification = document.createElement('div');
+        notification.id = 'confession-condition-notification';
+        notification.innerHTML = `
+            <div class="condition-content">
+                <div class="condition-icon">✦</div>
+                <div class="condition-text">
+                    <div class="condition-title">告白条件已解锁</div>
+                    <div class="condition-character">${characterName}</div>
+                    <div class="condition-desc">${description}</div>
+                </div>
+            </div>
+        `;
+        
+        // 添加样式
+        const style = document.createElement('style');
+        style.id = 'confession-condition-style';
+        style.textContent = `
+            #confession-condition-notification {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+                animation: conditionShow 3s ease forwards;
+            }
+            #confession-condition-notification .condition-content {
+                background: linear-gradient(135deg, rgba(147,112,219,0.95), rgba(138,43,226,0.95));
+                border-radius: 16px;
+                padding: 25px 40px;
+                text-align: center;
+                box-shadow: 0 10px 40px rgba(138,43,226,0.4);
+                border: 2px solid rgba(255,255,255,0.4);
+            }
+            #confession-condition-notification .condition-icon {
+                font-size: 3rem;
+                color: #fff;
+                text-shadow: 0 0 15px rgba(255,255,255,0.8);
+                animation: starTwinkle 1s ease infinite;
+            }
+            #confession-condition-notification .condition-title {
+                font-size: 1.3rem;
+                color: #fff;
+                font-weight: bold;
+                margin-top: 8px;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            #confession-condition-notification .condition-character {
+                font-size: 1.1rem;
+                color: rgba(255,255,255,0.95);
+                margin-top: 5px;
+            }
+            #confession-condition-notification .condition-desc {
+                font-size: 0.9rem;
+                color: rgba(255,255,255,0.8);
+                margin-top: 8px;
+                font-style: italic;
+            }
+            @keyframes conditionShow {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+                15% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+                25% { transform: translate(-50%, -50%) scale(1); }
+                75% { opacity: 1; }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            }
+            @keyframes starTwinkle {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0.7; transform: scale(1.1); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        document.body.appendChild(notification);
+        
+        // 3秒后移除
+        setTimeout(() => {
+            notification.remove();
+            const oldStyle = document.getElementById('confession-condition-style');
+            if (oldStyle) oldStyle.remove();
+        }, 3000);
+        
+        console.log('[game] 告白条件解锁通知:', characterName, description);
     }
 
     // 初始化告白隐藏条件（从存档恢复）
@@ -2440,13 +2745,31 @@ class VisualNovelGame {
         const devPanel = document.getElementById('dev-panel');
         const menu = document.getElementById('game-menu');
         if (devPanel) {
-            if (devPanel.style.display === 'none') {
-                // 关闭菜单，打开开发者面板
-                if (menu) menu.classList.remove('show');
-                devPanel.style.display = 'block';
+            if (devPanel.classList.contains('show')) {
+                // 关闭开发者面板
+                devPanel.classList.remove('show');
             } else {
-                devPanel.style.display = 'none';
+                // 关闭游戏菜单，打开开发者面板
+                if (menu) menu.classList.remove('show');
+                devPanel.classList.add('show');
+                // 打开时刷新状态显示
+                this.devSyncRelationshipDisplay();
+                this.devUpdateStatus();
             }
+        }
+    }
+
+    // 同步情侣关系显示
+    devSyncRelationshipDisplay() {
+        const names = {
+            'xiao_tong': '木星',
+            'long_xinheng': '谨言',
+            'gan_zhiyu': '方圆',
+            'wu_ya': '吴琊',
+        };
+        const statusEl = document.getElementById('dev-relationship-status');
+        if (statusEl) {
+            statusEl.textContent = this.relationship ? (names[this.relationship] || this.relationship) : '无';
         }
     }
 
@@ -2464,8 +2787,8 @@ class VisualNovelGame {
         this.initAffinity(route);
         this.currentRoute = route;
         
-        // 在所有章节中查找节点（周砚线1-2章，夏晚线1-4章+扩展）
-        const chapterKeys = [route + '_chapter1', route + '_chapter2', route + '_chapter3', route + '_chapter4'];
+        // 在所有章节中查找节点（周砚线1-2章，夏晚线1-5章+扩展）
+        const chapterKeys = [route + '_chapter1', route + '_chapter2', route + '_chapter3', route + '_chapter4', route + '_chapter5'];
         // 添加夏晚线扩展章节
         if (route === 'xia_wan') {
             chapterKeys.push('xia_wan_chapter2_extend', 'xia_wan_chapter3_longxinheng', 'xia_wan_chapter3_ganzhiyu', 'xia_wan_chapter3_wuya');
@@ -2562,6 +2885,24 @@ class VisualNovelGame {
     }
 
     // 开发者：更新状态显示
+    // 开发者工具：设置情侣关系
+    devSetRelationship(characterId) {
+        const names = {
+            'xiao_tong': '木星',
+            'long_xinheng': '谨言',
+            'gan_zhiyu': '方圆',
+            'wu_ya': '吴琊',
+        };
+        this.relationship = characterId;
+        const statusEl = document.getElementById('dev-relationship-status');
+        if (statusEl) {
+            statusEl.textContent = characterId ? (names[characterId] || characterId) : '无';
+        }
+        // 同步更新当前状态面板
+        this.devUpdateStatus();
+        console.log('[dev] 情侣关系设置为:', characterId || '无');
+    }
+
     devUpdateStatus() {
         const statusDiv = document.getElementById('dev-status');
         if (!statusDiv) return;
@@ -2594,6 +2935,180 @@ class VisualNovelGame {
             <div>恋爱关系: <span style="color:#f88;">${relationship}</span></div>
             ${affinityInfo ? '<div style="margin-top:8px;border-top:1px solid #444;padding-top:8px;">好感度:</div>' + affinityInfo : ''}
         `;
+    }
+
+    // ==================== 音乐测试面板 ====================
+    
+    // 选中的音乐
+    _selectedMusic = null;
+    
+    // 切换音乐测试面板
+    toggleMusicPanel() {
+        const panel = document.getElementById('music-panel');
+        const menu = document.getElementById('game-menu');
+        if (panel) {
+            if (panel.classList.contains('show')) {
+                // 关闭
+                panel.classList.remove('show');
+            } else {
+                // 关闭游戏菜单，打开音乐面板
+                if (menu) menu.classList.remove('show');
+                panel.classList.add('show');
+                // 更新当前节点显示
+                this._updateMusicPanelInfo();
+            }
+        }
+    }
+    
+    // 更新音乐面板信息
+    _updateMusicPanelInfo() {
+        const currentNode = this.currentScene?.id || '无';
+        const currentMusicEl = document.getElementById('music-current-node');
+        const currentMusicInfoEl = document.getElementById('music-current-music');
+        
+        if (currentMusicEl) {
+            currentMusicEl.textContent = currentNode;
+        }
+        if (currentMusicInfoEl) {
+            // 获取当前节点配置的音乐
+            const moodConfig = window.audioManager?.sceneMoodMap?.[currentNode];
+            const musicKey = moodConfig?.mp3Moment || '无';
+            currentMusicInfoEl.textContent = `当前配置: ${musicKey}`;
+        }
+    }
+    
+    // 选择音乐
+    musicSelect(musicKey) {
+        this._selectedMusic = musicKey;
+        
+        // 更新按钮样式
+        document.querySelectorAll('.music-select-btn').forEach(btn => {
+            if (btn.dataset.music === musicKey) {
+                btn.classList.add('selected');
+            } else {
+                btn.classList.remove('selected');
+            }
+        });
+        
+        // 更新显示
+        const selectedEl = document.getElementById('music-selected');
+        if (selectedEl) {
+            selectedEl.textContent = musicKey || '无';
+        }
+    }
+    
+    // 播放选中的音乐
+    musicTestPlay() {
+        if (!this._selectedMusic) {
+            alert('请先选择一个音乐');
+            return;
+        }
+        
+        if (window.audioManager) {
+            window.audioManager.playMP3ByStoryMoment(this._selectedMusic, 1000, true);
+            console.log('[音乐测试] 播放:', this._selectedMusic);
+        }
+    }
+    
+    // 停止音乐
+    musicTestStop() {
+        if (window.audioManager) {
+            window.audioManager.stopMusic();
+            console.log('[音乐测试] 停止播放');
+        }
+    }
+    
+    // 跳转到第五章入口
+    musicJumpChapter5() {
+        this.devJump('xw_5_start');
+        this._updateMusicPanelInfo();
+    }
+    
+    // 跳转各条线
+    musicJumpLine(line) {
+        const nodes = {
+            'xiaotong': 'xw_5_lover_xiaotong_1',
+            'longxinheng': 'xw_5_lover_longxinheng_1',
+            'ganzhiyu': 'xw_5_lover_ganzhiyu_1',
+            'wuya': 'xw_5_lover_wuya_1',
+            'single': 'xw_5_single_1'
+        };
+        if (nodes[line]) {
+            this.devJump(nodes[line]);
+            this._updateMusicPanelInfo();
+        }
+    }
+    
+    // 跳转到指定节点
+    musicJumpToNode() {
+        const input = document.getElementById('music-node-input');
+        if (input && input.value.trim()) {
+            this.devJump(input.value.trim());
+            this._updateMusicPanelInfo();
+        }
+    }
+    
+    // 保存音乐配置 → 自动写入 audio.js
+    async musicSaveConfig() {
+        if (!this._selectedMusic) {
+            alert('请先选择一个音乐');
+            return;
+        }
+
+        const currentNode = this.currentScene?.id;
+        if (!currentNode) {
+            alert('当前没有节点');
+            return;
+        }
+
+        // 1. 先更新内存中的 sceneMoodMap（立即生效）
+        if (window.audioManager?.sceneMoodMap) {
+            window.audioManager.sceneMoodMap[currentNode] = {
+                mp3Moment: this._selectedMusic,
+                ambient: 'shop'
+            };
+        }
+
+        // 2. 发送到服务器自动写入 audio.js
+        const serverUrl = 'http://localhost:8080/save-music';
+        const configPayload = {
+            nodeId: currentNode,
+            mp3Moment: this._selectedMusic,
+            ambient: 'shop'
+        };
+
+        try {
+            const response = await fetch(serverUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(configPayload)
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                const configText = `'${currentNode}': { mp3Moment: '${this._selectedMusic}', ambient: 'shop' },`;
+                console.log('[音乐配置] 已写入 audio.js:', configText);
+                alert(`✓ 配置已自动保存到 audio.js！\n\n节点: ${currentNode}\n音乐: ${this._selectedMusic}\n\n如需下次游戏也生效，请刷新页面（F5）让 audio.js 重新加载。`);
+            } else {
+                alert(`服务器保存失败: ${result.message}\n\n配置文本已复制到剪贴板，请手动添加到 audio.js。`);
+                this._copyConfigToClipboard(configText);
+            }
+        } catch (e) {
+            // 服务器未启动，降级为手动复制
+            console.warn('[音乐配置] 服务器未启动，降级为手动模式:', e.message);
+            const configText = `'${currentNode}': { mp3Moment: '${this._selectedMusic}', ambient: 'shop' },`;
+            const hint = `服务器未启动，请先运行:\n\n  python music_server.py\n\n或者手动复制以下配置到 audio.js 的 sceneMoodMap 中:\n\n${configText}`;
+            alert(hint);
+            this._copyConfigToClipboard(configText);
+        }
+    }
+
+    // 复制配置到剪贴板（降级备用）
+    _copyConfigToClipboard(text) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text);
+        }
+        console.log('[音乐配置]', text);
     }
 
     // 切换好感度面板
@@ -2736,14 +3251,21 @@ class VisualNovelGame {
         }
     }
 
-    // 跳过对话
+    // 跳过对话（单句快进模式）
     skipDialogues() {
         if (!this.skipMode) return;
         
-        const remaining = this.currentScene.dialogues.length - this.currentDialogueIndex - 1;
-        if (remaining > 0) {
-            this.currentDialogueIndex = this.currentScene.dialogues.length - 1;
+        // 只跳一句
+        if (this.currentDialogueIndex < this.currentScene.dialogues.length - 1) {
+            this.currentDialogueIndex++;
             this.showDialogue(this.currentDialogueIndex);
+        } else {
+            // 已经到最后一句了，关闭跳过模式
+            this.skipMode = false;
+            const btn = document.querySelector('.skip-btn');
+            if (btn) {
+                btn.style.background = '';
+            }
         }
     }
 

@@ -280,7 +280,9 @@ class AudioManager {
                     // Dear D - 重逢/归来
                     xw_dear: 'audio/Dear+D+(亲爱的告诉你)-项睿娴.mp3',
                     // 不再联系 - 开放结局/离别
-                    xw_buzai: 'audio/夏天Alex - 不再联系.mp3'
+                    xw_buzai: 'audio/夏天Alex - 不再联系.mp3',
+                    // 舍得 - 放手/成全
+                    xw_shesde: 'audio/舍得+-+王唯旖.mp3'
                 }
             },
             
@@ -700,7 +702,9 @@ class AudioManager {
             'xw_3_9': { mp3Moment: 'xw_lianren', ambient: 'shop' },
             'xw_3_10': { mp3Moment: 'xw_lianren', ambient: 'street' },
             'xw_3_10_a': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_3_10_a_detail': { mp3Moment: 'xw_lianren', ambient: 'street' },
             'xw_3_10_b': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_3_10_b_response': { mp3Moment: 'xw_lianren', ambient: 'street' },
             'xw_3_end_selector': { mp3Moment: 'xw_lianren', ambient: 'shop' },
             'xw_3_end_he': { mp3Moment: 'xw_lianren', ambient: null },
             'xw_3_end_open': { mp3Moment: 'xw_lianren', ambient: null },
@@ -712,6 +716,7 @@ class AudioManager {
             'xw_3_lr_2': { mp3Moment: 'xw_banma', ambient: 'shop' },
             'xw_3_lr_2_a': { mp3Moment: 'xw_banma', ambient: 'shop' },
             'xw_3_lr_2_a_detail': { mp3Moment: 'xw_banma', ambient: 'street' },
+            'xw_3_lr_2_a_after': { mp3Moment: 'xw_yanyuan', ambient: 'street' },
             'xw_3_lr_2_b': { mp3Moment: 'xw_banma', ambient: 'shop' },
             'xw_3_lr_3': { mp3Moment: 'xw_yanyuan', ambient: 'restaurant' },
             'xw_3_lr_4': { mp3Moment: 'xw_yanyuan', ambient: 'street' },
@@ -750,6 +755,7 @@ class AudioManager {
             'xw_3_gz_end_open': { mp3Moment: 'xw_yanyuan', ambient: null },
             'xw_3_gz_end_friend': { mp3Moment: 'xw_yanyuan', ambient: null },
             'xw_3_gz_end_be': { mp3Moment: 'xw_yanyuan', ambient: null },
+            'xw_3_gz_end': { mp3Moment: 'xw_yanyuan', ambient: 'street' },
             
             // 【吴琊线】1-6:落空 7-20:演员
             'xw_3_wy_1': { mp3Moment: 'xw_luokong', ambient: 'shop' },
@@ -817,6 +823,193 @@ class AudioManager {
             // 【尾声：不再联系】
             'xw_4_7': { mp3Moment: 'xw_buzai', ambient: null },
             
+            // 【新告白节点：夏夜最后的烟火】
+            'xw_4_5_passive': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_5_active': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_5_active_xiaotong': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_5_active_longxinheng': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_5_active_ganzhiyu': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_5_active_wuya': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_6_active_xiaotong_success': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_6_active_longxinheng_success': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_6_active_ganzhiyu_success': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_6_active_wuya_success': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            'xw_4_8': { mp3Moment: 'xw_xiaye', ambient: 'street' },
+            
+            // ========== 夏晚线 第五章 ==========
+            // 【入口】
+            'xw_5_start': { mp3Moment: 'xw_yanyuan', ambient: null },
+            
+            // ========== 木星线（吃醋与信任） ==========
+            // 【告白后/浪漫】几分之几
+            'xw_5_lover_xiaotong_1': { mp3Moment: 'xw_heni', ambient: 'shop' },
+            'xw_5_lover_xiaotong_1b': { mp3Moment: 'xw_heni', ambient: 'shop' },
+            'xw_5_lover_xiaotong_1c': { mp3Moment: 'xw_heni', ambient: 'shop' },
+            // 【搬店】几分之几
+            'xw_5_lover_xiaotong_2': { mp3Moment: 'xw_jili', ambient: 'shop' },
+            'xw_5_lover_xiaotong_2b': { mp3Moment: 'xw_jili', ambient: 'shop' },
+            // 【新年】几分之几
+            'xw_5_lover_xiaotong_3': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            // 【吃醋/矛盾】演员
+            'xw_5_lover_xiaotong_4': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
+            'xw_5_lover_xiaotong_4a': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
+            'xw_5_lover_xiaotong_4b': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            // 【和好】几分之几
+            'xw_5_lover_xiaotong_6a': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
+            'xw_5_lover_xiaotong_6b': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_7': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_7a': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_7b_detail': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_7b': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            // 【异地】恋人
+            'xw_5_lover_xiaotong_8': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
+            'xw_5_lover_xiaotong_8a': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
+            'xw_5_lover_xiaotong_8b': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
+            'xw_5_lover_xiaotong_9': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
+            'xw_5_lover_xiaotong_9a': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
+            'xw_5_lover_xiaotong_9b': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
+            // 【异地见面】舍得
+            'xw_5_lover_xiaotong_10': { mp3Moment: 'xw_shesde', ambient: 'street' },
+            'xw_5_lover_xiaotong_10a': { mp3Moment: 'xw_shesde', ambient: 'street' },
+            'xw_5_lover_xiaotong_10b': { mp3Moment: 'xw_shesde', ambient: 'street' },
+            // 【端午/信任】舍得
+            'xw_5_lover_xiaotong_11': { mp3Moment: 'xw_shesde', ambient: 'street' },
+            'xw_5_lover_xiaotong_11b': { mp3Moment: 'xw_shesde', ambient: 'street' },
+            // 【毕业/工作】舍得
+            'xw_5_lover_xiaotong_12': { mp3Moment: 'xw_shesde', ambient: 'campus' },
+            'xw_5_lover_xiaotong_13': { mp3Moment: 'xw_shesde', ambient: 'campus' },
+            'xw_5_lover_xiaotong_14': { mp3Moment: 'xw_shesde', ambient: 'street' },
+            // 【求婚/结局】舍得
+            'xw_5_lover_xiaotong_15': { mp3Moment: 'xw_shesde', ambient: 'street' },
+            'xw_5_lover_xiaotong_end': { mp3Moment: 'xw_shesde', ambient: null },
+            'xw_5_lover_xiaotong_end_cold': { mp3Moment: 'xw_shesde', ambient: null },
+            'xw_5_lover_xiaotong_end_normal': { mp3Moment: 'xw_shesde', ambient: null },
+            'xw_5_lover_xiaotong_end_sweet': { mp3Moment: 'xw_shesde', ambient: null },
+            
+            // ========== 谨言线（想说不敢说/那道墙） ==========
+            // 【告白后】几分之几
+            'xw_5_lover_longxinheng_1': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            // 【搬店】斑马
+            'xw_5_lover_longxinheng_2': { mp3Moment: 'xw_banma', ambient: 'shop' },
+            'xw_5_lover_longxinheng_2b': { mp3Moment: 'xw_banma', ambient: 'shop' },
+            'xw_5_lover_longxinheng_2c': { mp3Moment: 'xw_banma', ambient: 'shop' },
+            // 【新年】斑马
+            'xw_5_lover_longxinheng_3': { mp3Moment: 'xw_banma', ambient: 'street' },
+            // 【争吵/冷战】演员
+            'xw_5_lover_longxinheng_4': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
+            'xw_5_lover_longxinheng_4b': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
+            'xw_5_lover_longxinheng_4c': { mp3Moment: 'xw_yanyuan', ambient: 'street' },
+            'xw_5_lover_longxinheng_4d': { mp3Moment: 'xw_yanyuan', ambient: 'street' },
+            // 【想说不敢说】几分之几
+            'xw_5_lover_longxinheng_5': { mp3Moment: 'xw_jifen', ambient: 'dorm' },
+            'xw_5_lover_longxinheng_5a': { mp3Moment: 'xw_jifen', ambient: 'dorm' },
+            'xw_5_lover_longxinheng_5b': { mp3Moment: 'xw_jifen', ambient: 'dorm' },
+            'xw_5_lover_longxinheng_6': { mp3Moment: 'xw_jifen', ambient: 'dorm' },
+            'xw_5_lover_longxinheng_6b': { mp3Moment: 'xw_jifen', ambient: 'dorm' },
+            // 【我也想你】几分之几
+            'xw_5_lover_longxinheng_7': { mp3Moment: 'xw_jifen', ambient: 'phone' },
+            // 【五一约定/你来深圳】几分之几
+            'xw_5_lover_longxinheng_8': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            'xw_5_lover_longxinheng_9': { mp3Moment: 'xw_jifen', ambient: 'street' },
+            // 【毕业】演员
+            'xw_5_lover_longxinheng_10': { mp3Moment: 'xw_yanyuan', ambient: 'campus' },
+            // 【异地/等你/决定】几分之几
+            'xw_5_lover_longxinheng_11': { mp3Moment: 'xw_jifen', ambient: 'dorm' },
+            'xw_5_lover_longxinheng_12': { mp3Moment: 'xw_jifen', ambient: 'dorm' },
+            'xw_5_lover_longxinheng_13': { mp3Moment: 'xw_jifen', ambient: 'street' },
+            // 【求婚】恋人
+            'xw_5_lover_longxinheng_14': { mp3Moment: 'xw_lianren', ambient: 'street' },
+            'xw_5_lover_longxinheng_15': { mp3Moment: 'xw_lianren', ambient: 'street' },
+            // 【那道墙结局】斑马
+            'xw_5_lover_longxinheng_end': { mp3Moment: 'xw_banma', ambient: null },
+            
+            // ========== 方圆线（点亮与等待） ==========
+            // 【告白后】几分之几
+            'xw_5_lover_ganzhiyu_1': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            // 【搬店/热情退潮】说好不哭
+            'xw_5_lover_ganzhiyu_2': { mp3Moment: 'xw_shuohaobuku', ambient: 'shop' },
+            'xw_5_lover_ganzhiyu_2b': { mp3Moment: 'xw_shuohaobuku', ambient: 'shop' },
+            'xw_5_lover_ganzhiyu_2c': { mp3Moment: 'xw_shuohaobuku', ambient: 'shop' },
+            'xw_5_lover_ganzhiyu_2d': { mp3Moment: 'xw_shuohaobuku', ambient: 'shop' },
+            // 【找工作/面试】说好不哭
+            'xw_5_lover_ganzhiyu_3': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_ganzhiyu_3b': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_ganzhiyu_3c': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_ganzhiyu_3d': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            // 【第一次成功】演员
+            'xw_5_lover_ganzhiyu_4': { mp3Moment: 'xw_yanyuan', ambient: 'street' },
+            'xw_5_lover_ganzhiyu_4a': { mp3Moment: 'xw_yanyuan', ambient: 'street' },
+            'xw_5_lover_ganzhiyu_4b': { mp3Moment: 'xw_yanyuan', ambient: 'street' },
+            // 【默默陪伴】几分之几
+            'xw_5_lover_ganzhiyu_5': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            'xw_5_lover_ganzhiyu_5a': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            'xw_5_lover_ganzhiyu_5b': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            // 【城限本】演员
+            'xw_5_lover_ganzhiyu_6': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
+            'xw_5_lover_ganzhiyu_7': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
+            'xw_5_lover_ganzhiyu_8': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
+            // 【毕业/新工作】几分之几
+            'xw_5_lover_ganzhiyu_9': { mp3Moment: 'xw_jifen', ambient: 'campus' },
+            'xw_5_lover_ganzhiyu_10': { mp3Moment: 'xw_jifen', ambient: 'street' },
+            // 【留下/异地的考验/点亮与等待结局】说好不哭
+            'xw_5_lover_ganzhiyu_11': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_ganzhiyu_12': { mp3Moment: 'xw_shuohaobuku', ambient: 'dorm' },
+            'xw_5_lover_ganzhiyu_13': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_ganzhiyu_14': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_ganzhiyu_15': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_ganzhiyu_end': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            
+            // ========== 吴琊线（沉默的爱/不说但在） ==========
+            // 【告白后/笨拙】几分之几
+            'xw_5_lover_wuya_1': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            'xw_5_lover_wuya_1b': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            'xw_5_lover_wuya_1c': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            // 【新年/独守】落空
+            'xw_5_lover_wuya_2': { mp3Moment: 'xw_luokong', ambient: 'shop' },
+            // 【提前回来】几分之几
+            'xw_5_lover_wuya_3': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            // 【沉默的矛盾】落空
+            'xw_5_lover_wuya_4': { mp3Moment: 'xw_luokong', ambient: 'shop' },
+            'xw_5_lover_wuya_4b': { mp3Moment: 'xw_luokong', ambient: 'shop' },
+            'xw_5_lover_wuya_4c': { mp3Moment: 'xw_luokong', ambient: 'phone' },
+            'xw_5_lover_wuya_4d': { mp3Moment: 'xw_luokong', ambient: 'phone' },
+            // 【她的耐心】几分之几
+            'xw_5_lover_wuya_5': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            'xw_5_lover_wuya_5a': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            // 【毕业/工作】演员
+            'xw_5_lover_wuya_6': { mp3Moment: 'xw_yanyuan', ambient: 'campus' },
+            'xw_5_lover_wuya_7': { mp3Moment: 'xw_yanyuan', ambient: 'street' },
+            // 【他的改变】几分之几
+            'xw_5_lover_wuya_8': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            // 【邀请/他开口/求婚/婚礼/不说但在结局】说好不哭
+            'xw_5_lover_wuya_9': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_wuya_10': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_wuya_11': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_wuya_12': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
+            'xw_5_lover_wuya_13': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            'xw_5_lover_wuya_14': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            'xw_5_lover_wuya_15': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            'xw_5_lover_wuya_end': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            
+            // ========== 单身线（遥遥） ==========
+            // 【微妙的变化/搬店】几分之几
+            'xw_5_single_1': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            'xw_5_single_2': { mp3Moment: 'xw_jifen', ambient: 'shop' },
+            // 【回老家/拒绝】落空
+            'xw_5_single_3': { mp3Moment: 'xw_luokong', ambient: 'street' },
+            'xw_5_single_4': { mp3Moment: 'xw_luokong', ambient: 'street' },
+            'xw_5_single_4b': { mp3Moment: 'xw_luokong', ambient: 'street' },
+            // 【开学/离开】落空
+            'xw_5_single_5': { mp3Moment: 'xw_luokong', ambient: 'campus' },
+            'xw_5_single_6': { mp3Moment: 'xw_luokong', ambient: 'street' },
+            // 【告别/遥遥结局】不再联系
+            'xw_5_single_7a': { mp3Moment: 'xw_buzai', ambient: 'street' },
+            'xw_5_single_7b': { mp3Moment: 'xw_buzai', ambient: 'street' },
+            'xw_5_single_8': { mp3Moment: 'xw_buzai', ambient: 'street' },
+            'xw_5_single_8b': { mp3Moment: 'xw_buzai', ambient: 'street' },
+            'xw_5_single_end': { mp3Moment: 'xw_buzai', ambient: null },
+            
             // ========== 角色专属场景 ==========
             // 木星专属
             'muxin_story_1': { 
@@ -881,6 +1074,18 @@ class AudioManager {
             },
             
             // ========== 默认场景 ==========
+            'xw_5_lover_xiaotong_5a': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5a_detail': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5a_future': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5a_silent': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5a_want': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5a_decide': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5a_ok': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5a_force': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5a_wait': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5a_respond': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5a_end': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_5b': { mp3Moment: 'xw_lianren', ambient: 'shop' },
             'default': { mp3Mood: 'joyful', ambient: null }
         };
         
