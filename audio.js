@@ -33,48 +33,48 @@ class AudioManager {
                     // 轻松愉悦 - 明快、治愈、充满活力
                     // 适用：日常、校园、阳光场景
                     joyful: [
-                        'audio/岭南小事-杨默依.mp3',
-                        'audio/王睿卓+-+茶花开了.mp3'
+                        'audio/lingnan.mp3',
+                        'audio/chahua.mp3'
                     ],
                     
                     // 平静状态 - 安静、平和、心如止水
                     // 适用：平静独处、思考、等待、空闲时刻
                     peaceful: [
-                        'audio/久石让 - 菊次郎的夏天.mp3'
+                        'audio/julishuang.mp3'
                     ],
                     
                     // 温馨浪漫 - 甜蜜、温暖、心跳加速
                     // 适用：浪漫互动、心动时刻、暧昧期
                     romantic: [
-                        'audio/余佳运 - 和你.mp3',
-                        'audio/颜人中+-+夏夜最后的烟火.mp3',
-                        'audio/卢广仲 - 几分之几 (You Complete Me).mp3',
-                        'audio/张碧晨 - 不要忘记我爱你.mp3'
+                        'audio/heni.mp3',
+                        'audio/xiaye.mp3',
+                        'audio/jifenzhiji.mp3',
+                        'audio/buyaowangji.mp3'
                     ],
                     
                     // 伤感离别 - 忧伤、失落、回忆
                     // 适用：离别、遗憾、夜晚独白、虐心场景
                     melancholic: [
-                        'audio/宋冬野 - 斑马，斑马.mp3',
-                        'audio/印子月 - 落空.mp3',
-                        'audio/夏天Alex - 不再联系.mp3',
-                        'audio/下完这场雨-赵乃吉.mp3',
-                        'audio/薛之谦+-+演员.mp3'
+                        'audio/banma.mp3',
+                        'audio/luokong.mp3',
+                        'audio/buzailianxi.mp3',
+                        'audio/xiaowan.mp3',
+                        'audio/yanyuan.mp3'
                     ],
                     
                     // 治愈温暖 - 温柔、治愈、释然
                     // 适用：治愈场景、释怀、结局
                     healing: [
-                        'audio/久石让 - 菊次郎的夏天.mp3',
-                        'audio/做個好人 - 说好不哭.mp3',
-                        'audio/复乐园-呆呆破.mp3'
+                        'audio/julishuang.mp3',
+                        'audio/shuohaobuku.mp3',
+                        'audio/fuleyuan.mp3'
                     ],
                     
                     // 夜晚独白 - 安静、沉思、内心戏
                     // 适用：夜晚、宿舍独处、自我对话
                     nightfall: [
-                        'audio/卢广仲 - 几分之几 (You Complete Me).mp3',
-                        'audio/宋冬野 - 斑马，斑马.mp3'
+                        'audio/jifenzhiji.mp3',
+                        'audio/banma.mp3'
                     ]
                 },
                 
@@ -84,57 +84,57 @@ class AudioManager {
                 scene: {
                     // 日常校园 - 轻松活泼
                     campus: [
-                        'audio/岭南小事-杨默依.mp3',
-                        'audio/王睿卓+-+茶花开了.mp3'
+                        'audio/lingnan.mp3',
+                        'audio/chahua.mp3'
                     ],
                     
                     // 剧本杀店 - 沉浸/温馨
                     scriptshop: [
-                        'audio/复乐园-呆呆破.mp3',
-                        'audio/卢广仲 - 几分之几 (You Complete Me).mp3',
-                        'audio/岭南小事-杨默依.mp3'
+                        'audio/fuleyuan.mp3',
+                        'audio/jifenzhiji.mp3',
+                        'audio/lingnan.mp3'
                     ],
                     
                     // 宿舍夜晚 - 安静温馨/独处
                     dorm_night: [
-                        'audio/卢广仲 - 几分之几 (You Complete Me).mp3',
-                        'audio/余佳运 - 和你.mp3'
+                        'audio/jifenzhiji.mp3',
+                        'audio/heni.mp3'
                     ],
                     
                     // 合租日常 - 轻松温馨
                     cohabitation: [
-                        'audio/岭南小事-杨默依.mp3',
-                        'audio/复乐园-呆呆破.mp3'
+                        'audio/lingnan.mp3',
+                        'audio/fuleyuan.mp3'
                     ],
                     
                     // 浪漫时刻 - 心跳加速
                     romantic: [
-                        'audio/颜人中+-+夏夜最后的烟火.mp3',
-                        'audio/余佳运 - 和你.mp3',
-                        'audio/卢广仲 - 几分之几 (You Complete Me).mp3',
-                        'audio/张碧晨 - 不要忘记我爱你.mp3'
+                        'audio/xiaye.mp3',
+                        'audio/heni.mp3',
+                        'audio/jifenzhiji.mp3',
+                        'audio/buyaowangji.mp3'
                     ],
                     
                     // 离别场景 - 伤感
                     farewell: [
-                        'audio/宋冬野 - 斑马，斑马.mp3',
-                        'audio/夏天Alex - 不再联系.mp3',
-                        'audio/印子月 - 落空.mp3',
-                        'audio/下完这场雨-赵乃吉.mp3',
-                        'audio/薛之谦+-+演员.mp3'
+                        'audio/banma.mp3',
+                        'audio/buzailianxi.mp3',
+                        'audio/luokong.mp3',
+                        'audio/xiaowan.mp3',
+                        'audio/yanyuan.mp3'
                     ],
                     
                     // 火锅聚餐 - 热闹温馨
                     hotpot: [
-                        'audio/岭南小事-杨默依.mp3',
-                        'audio/复乐园-呆呆破.mp3'
+                        'audio/lingnan.mp3',
+                        'audio/fuleyuan.mp3'
                     ],
                     
                     // 结局/制作名单 - 治愈收尾
                     ending: [
-                        'audio/久石让 - 菊次郎的夏天.mp3',
-                        'audio/做個好人 - 说好不哭.mp3',
-                        'audio/复乐园-呆呆破.mp3'
+                        'audio/julishuang.mp3',
+                        'audio/shuohaobuku.mp3',
+                        'audio/fuleyuan.mp3'
                     ]
                 },
                 
@@ -145,32 +145,32 @@ class AudioManager {
                     // 木星（肖童）- 夏夜浪漫
                     // 角色特点：阳光、温暖、陪伴感
                     muxin: [
-                        'audio/颜人中+-+夏夜最后的烟火.mp3',
-                        'audio/卢广仲 - 几分之几 (You Complete Me).mp3',
-                        'audio/余佳运 - 和你.mp3'
+                        'audio/xiaye.mp3',
+                        'audio/jifenzhiji.mp3',
+                        'audio/heni.mp3'
                     ],
                     
                     // 龙信衡（谨言）- 温柔深情
                     // 角色特点：内敛、体贴、深情
                     longxinheng: [
-                        'audio/余佳运 - 和你.mp3',
-                        'audio/宋冬野 - 斑马，斑马.mp3',
-                        'audio/张碧晨 - 不要忘记我爱你.mp3'
+                        'audio/heni.mp3',
+                        'audio/banma.mp3',
+                        'audio/buyaowangji.mp3'
                     ],
                     
                     // 吴琊 - 轻松欢快
                     // 角色特点：幽默、阳光、活跃气氛
                     wuya: [
-                        'audio/岭南小事-杨默依.mp3',
-                        'audio/王睿卓+-+茶花开了.mp3'
+                        'audio/lingnan.mp3',
+                        'audio/chahua.mp3'
                     ],
                     
                     // 甘志宇（方圆）- 温暖治愈
                     // 角色特点：细腻、温暖、专业
                     ganzhiyu: [
-                        'audio/久石让 - 菊次郎的夏天.mp3',
-                        'audio/复乐园-呆呆破.mp3',
-                        'audio/做個好人 - 说好不哭.mp3'
+                        'audio/julishuang.mp3',
+                        'audio/fuleyuan.mp3',
+                        'audio/shuohaobuku.mp3'
                     ]
                 },
                 
@@ -179,110 +179,110 @@ class AudioManager {
                 // ====================
                 storyMoment: {
                     // 木星心动 - 第一次见面
-                    muxin_firstmeet: 'audio/颜人中+-+夏夜最后的烟火.mp3',
+                    muxin_firstmeet: 'audio/xiaye.mp3',
                     
                     // 木星心动 - 共同演绎
-                    muxin_acttogether: 'audio/卢广仲 - 几分之几 (You Complete Me).mp3',
+                    muxin_acttogether: 'audio/jifenzhiji.mp3',
                     
                     // 木星线 - 告白时刻
-                    muxin_confession: 'audio/余佳运 - 和你.mp3',
+                    muxin_confession: 'audio/heni.mp3',
                     
                     // 龙信衡线 - 温柔时刻
-                    longxinheng_gentle: 'audio/余佳运 - 和你.mp3',
+                    longxinheng_gentle: 'audio/heni.mp3',
                     
                     // 龙信衡线 - 深情表白
-                    longxinheng_confession: 'audio/张碧晨 - 不要忘记我爱你.mp3',
+                    longxinheng_confession: 'audio/buyaowangji.mp3',
                     
                     // 龙信衡线 - 夜晚独白
-                    longxinheng_nighttalk: 'audio/卢广仲 - 几分之几 (You Complete Me).mp3',
+                    longxinheng_nighttalk: 'audio/jifenzhiji.mp3',
                     
                     // 吴琊线 - 欢乐日常
-                    wuya_funny: 'audio/岭南小事-杨默依.mp3',
+                    wuya_funny: 'audio/lingnan.mp3',
                     
                     // 吴琊线 - 释放压力
-                    wuya_relax: 'audio/岭南小事-杨默依.mp3',
+                    wuya_relax: 'audio/lingnan.mp3',
                     
                     // 甘志宇线 - 突破自我
-                    ganzhiyu_breakthrough: 'audio/久石让 - 菊次郎的夏天.mp3',
+                    ganzhiyu_breakthrough: 'audio/julishuang.mp3',
                     
                     // 甘志宇线 - 温暖时刻
-                    ganzhiyu_warm: 'audio/复乐园-呆呆破.mp3',
+                    ganzhiyu_warm: 'audio/fuleyuan.mp3',
                     
                     // 合租火锅夜 - 温馨聚会
-                    hotpot_night: 'audio/岭南小事-杨默依.mp3',
+                    hotpot_night: 'audio/lingnan.mp3',
                     
                     // 离别场景 - 伤感
-                    farewell: 'audio/宋冬野 - 斑马，斑马.mp3',
+                    farewell: 'audio/banma.mp3',
                     
                     // 结局 - 治愈
-                    ending_healing: 'audio/久石让 - 菊次郎的夏天.mp3',
+                    ending_healing: 'audio/julishuang.mp3',
                     
                     // 制作名单
-                    credits: 'audio/做個好人 - 说好不哭.mp3',
+                    credits: 'audio/shuohaobuku.mp3',
                     
                     // ====================
                     // 【夏晚线第一章配乐】
                     // ====================
                     // 岭南小事 - 日常轻松
-                    xw_lingnan: 'audio/岭南小事-杨默依.mp3',
+                    xw_lingnan: 'audio/lingnan.mp3',
                     // 菊次郎的夏天 - 日常轻松
-                    xw_jili: 'audio/久石让 - 菊次郎的夏天.mp3',
+                    xw_jili: 'audio/julishuang.mp3',
                     // 和你 - 心动时刻
-                    xw_heni: 'audio/余佳运 - 和你.mp3',
+                    xw_heni: 'audio/heni.mp3',
                     // 落空 - 离别伤感
-                    xw_luokong: 'audio/印子月 - 落空.mp3',
+                    xw_luokong: 'audio/luokong.mp3',
                     // 茶花开了 - 培训/聚餐
-                    xw_chahua: 'audio/王睿卓+-+茶花开了.mp3',
+                    xw_chahua: 'audio/chahua.mp3',
                     // 夏夜最后的烟火 - 心动/离开
-                    xw_xiaye: 'audio/颜人中+-+夏夜最后的烟火.mp3',
+                    xw_xiaye: 'audio/xiaye.mp3',
                     
                     // ====================
                     // 【周砚线第一章配乐】
                     // ====================
                     // 岭南小事 - 街头/犹豫
-                    zy_lingnan: 'audio/岭南小事-杨默依.mp3',
+                    zy_lingnan: 'audio/lingnan.mp3',
                     // 菊次郎的夏天 - 日常温暖
-                    zy_jili: 'audio/久石让 - 菊次郎的夏天.mp3',
+                    zy_jili: 'audio/julishuang.mp3',
                     
                     // ====================
                     // 【夏晚线第三章配乐】
                     // ====================
                     // 几分之几 - 木星线1-12
-                    xw_jifen: 'audio/卢广仲 - 几分之几 (You Complete Me).mp3',
+                    xw_jifen: 'audio/jifenzhiji.mp3',
                     // 演员 - 通用心动
-                    xw_yanyuan: 'audio/薛之谦+-+演员.mp3',
+                    xw_yanyuan: 'audio/yanyuan.mp3',
                     // 恋人 - 木星线22-33
-                    xw_lianren: 'audio/恋人-李荣浩.mp3',
+                    xw_lianren: 'audio/lianren.mp3',
                     // 斑马 - 谨言线1-5
-                    xw_banma: 'audio/宋冬野 - 斑马，斑马.mp3',
+                    xw_banma: 'audio/banma.mp3',
                     // 说好不哭 - 甘志宇线1-4
-                    xw_shuohaobuku: 'audio/做個好人 - 说好不哭.mp3',
+                    xw_shuohaobuku: 'audio/shuohaobuku.mp3',
                     // 落空 - 吴琊线1-6
-                    xw_luokong: 'audio/印子月 - 落空.mp3',
+                    xw_luokong: 'audio/luokong.mp3',
                     
                     // ====================
                     // 【夏晚线第二章扩展配乐】
                     // ====================
                     // 下完这场雨 - 1-11
-                    xw_xiaowan: 'audio/下完这场雨-赵乃吉.mp3',
+                    xw_xiaowan: 'audio/xiaowan.mp3',
                     // 照片 - 12-27
-                    xw_zhaopian: 'audio/单依纯 - 照片.mp3',
+                    xw_zhaopian: 'audio/zhaopian.mp3',
                     // 某年某月某天 - 28-33
-                    xw_mounian: 'audio/颜人中 - 某年某月某天.mp3',
+                    xw_mounian: 'audio/mounian.mp3',
                     // 稻香 - 34-35
-                    xw_daoxiang: 'audio/先锋Music 3D环绕音乐领导者 - 周杰伦 - 稻香.mp3.mp3',
+                    xw_daoxiang: 'audio/daoxiang.mp3',
 
                     // ====================
                     // 【夏晚线第四章配乐】
                     // ====================
                     // 红尘客栈 - 阿昊离开/离别
-                    xw_hongchen: 'audio/周杰伦+-+红尘客栈.mp3',
+                    xw_hongchen: 'audio/hongchen.mp3',
                     // Dear D - 重逢/归来
-                    xw_dear: 'audio/Dear+D+(亲爱的告诉你)-项睿娴.mp3',
+                    xw_dear: 'audio/dear_d.mp3',
                     // 不再联系 - 开放结局/离别
-                    xw_buzai: 'audio/夏天Alex - 不再联系.mp3',
+                    xw_buzai: 'audio/buzailianxi.mp3',
                     // 舍得 - 放手/成全
-                    xw_shesde: 'audio/舍得+-+王唯旖.mp3'
+                    xw_shesde: 'audio/shesde.mp3'
                 }
             },
             
