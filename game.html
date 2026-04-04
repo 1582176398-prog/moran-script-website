@@ -67,7 +67,10 @@
             <div class="game-ui">
                 <!-- 顶部信息栏 -->
                 <div class="top-bar">
-                    <button class="ui-btn" onclick="game.toggleMenu()">☰ 菜单</button>
+                    <div class="top-bar-left">
+                        <button class="ui-btn" onclick="game.toggleMenu()">☰ 菜单</button>
+                        <button class="ui-btn music-test-btn" onclick="game.toggleMusicPanel()">🎵 音乐</button>
+                    </div>
                     <div class="chapter-info" id="chapter-info">第一章</div>
                     <button class="ui-btn" onclick="game.toggleAffinity()">💕 好感度</button>
                 </div>
@@ -83,6 +86,7 @@
                     <div class="speaker-name" id="speaker-name"></div>
                     <div class="dialogue-text" id="dialogue-text"></div>
                     <div class="dialogue-controls">
+                        <button class="back-btn" onclick="game.goBackDialogue()" title="返回上一句">◀ 上一句</button>
                         <button class="auto-btn" onclick="game.toggleAuto()">▶ 自动</button>
                         <button class="skip-btn" onclick="game.toggleSkip()">⏩ 跳过</button>
                     </div>
@@ -103,9 +107,11 @@
                 <button class="menu-item" onclick="game.toggleDevPanel()">开发者选项</button>
                 <button class="menu-item" onclick="game.backToTitle()">返回标题</button>
                 <button class="menu-item" onclick="game.toggleMenu()">继续游戏</button>
-                
-                <!-- 开发者面板 -->
-                <div id="dev-panel" class="overlay" style="display:none;">
+            </div>
+        </div>
+        
+        <!-- 开发者面板（放在菜单外面） -->
+        <div id="dev-panel" class="overlay">
                     <div class="panel-content" style="background:#1a1a2e;padding:20px;border-radius:12px;max-width:600px;margin:50px auto;max-height:80vh;overflow-y:auto;">
                         <h3 style="color:#fff;margin-bottom:15px;">开发者选项</h3>
                         
@@ -152,74 +158,402 @@
                         <!-- 第三章木星线 -->
                         <div style="margin-bottom:15px;">
                             <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">⭐ 第三章·木星线</label>
-                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_1')">3章开始</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_4')">端午</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_5')">演员开始</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_8')">恋人开始</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_end_selector')">结局选择</button>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">主线(几分之几)：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_1')">1</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_2')">2</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_3')">3</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_4')">4</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_5')">5</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_6')">6</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_7')">7</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_8')">8</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_9')">9</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_10')">10</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">演员/恋人：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_10_a')">10_a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_10_a_detail')">10_a_detail</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_10_b')">10_b</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">结局：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_end_selector')">选择</button>
                                 <button class="dev-btn-small" onclick="game.devJump('xw_3_end_he')">HE</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_end_be')">BE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_end_open')">OPEN</button>
                                 <button class="dev-btn-small" onclick="game.devJump('xw_3_end_friend')">友情</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_end_be')">BE</button>
                             </div>
                         </div>
                         
                         <!-- 第三章谨言线 -->
                         <div style="margin-bottom:15px;">
                             <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🎸 第三章·谨言线</label>
-                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_1')">线开始</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_2')">斑马结束</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_3')">演员开始</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_choice')">结局选择</button>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">斑马：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_1')">1</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_2')">2</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_2_a')">2_a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_2_a_detail')">2_a_detail</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_2_a_after')">2_a_after</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_2_b')">2_b</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">演员：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_3')">3</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_4')">4</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">告白/竞赛：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_choice')">选择</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_confess')">告白</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_stay')">留下</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_competition')">竞赛</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">结局：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_selector')">选择</button>
                                 <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_he')">HE</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_be')">BE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_open')">OPEN</button>
                                 <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_friend')">友情</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_lr_end_be')">BE</button>
                             </div>
                         </div>
                         
                         <!-- 第三章甘志宇线 -->
                         <div style="margin-bottom:15px;">
                             <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🎬 第三章·甘志宇线</label>
-                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_1')">线开始</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_2')">说好不哭结束</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_3')">演员开始</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_choice')">结局选择</button>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">说好不哭：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_1')">1</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_2')">2</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_2_a')">2_a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_2_b')">2_b</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">演员：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_3')">3</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_4')">4</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_4_detail')">4_detail</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">告白/竞赛：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_choice')">选择</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_confess')">告白</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_stay')">留下</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_help')">帮助</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_competition')">竞赛</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">结局：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_selector')">选择</button>
                                 <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_he')">HE</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_be')">BE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_open')">OPEN</button>
                                 <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_friend')">友情</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_gz_end_be')">BE</button>
                             </div>
                         </div>
                         
                         <!-- 第三章吴琊线 -->
                         <div style="margin-bottom:15px;">
                             <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🌙 第三章·吴琊线</label>
-                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_1')">线开始</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_4')">落空结束</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_4_detail')">演员开始</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_selector')">结局选择</button>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">落空：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_1')">1</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_2')">2</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_2_a')">2_a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_2_b')">2_b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_3')">3</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_4')">4</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">演员：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_4_detail')">4_detail</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">告白/竞赛：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_choice')">选择</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_invite')">邀请</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_stay')">留下</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_ask')">询问</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_competition')">竞赛</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">结局：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_selector')">选择</button>
                                 <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_he')">HE</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_be')">BE</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_open')">OPEN</button>
                                 <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_friend')">友情</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_3_wy_end_be')">BE</button>
                             </div>
                         </div>
                         
-                        <!-- 关键节点跳转 -->
+                        <!-- 第四章 -->
                         <div style="margin-bottom:15px;">
-                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🎯 夏晚线关键节点</label>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                                <button class="dev-btn-small" onclick="game.devJump('xw_2_1_xiaotong')">木星</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_2_1_longxinheng')">谨言</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_2_1_ganzhiyu')">方圆</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_2_1_wuya')">吴琊</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_2_2')">培训</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_2_4')">聚餐</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_2_6')">心动</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_2_end')">第2章结局</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_3_1')">第3章</button>
-                                <button class="dev-btn-small" onclick="game.devJump('xw_4_1')">第4章</button>
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">📕 第四章·主线</label>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">开头：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_1')">4_1</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_1_b')">4_1_b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_1_c')">4_1_c</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_1_c1')">4_1_c1</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">四线选择：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_2')">4_2</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_2_b')">4_2_b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_2_c')">4_2_c</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">个人剧情：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_3_xiaotong')">木星</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_3_longxinheng')">谨言</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_3_ganzhiyu')">方圆</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_3_wuya')">吴琊</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">5章开头：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_4')">4_4</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_4_b')">4_4_b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_4_c')">4_4_c</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_4_c1')">4_4_c1</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">被动/主动：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_5_passive')">被动</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_5_active')">主动</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">主动-个人：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_5_xiaotong')">木星</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_5_longxinheng')">谨言</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_5_ganzhiyu')">方圆</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_5_wuya')">吴琊</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">主动-成功：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_6_active_xiaotong_success')">木星</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_6_active_longxinheng_success')">谨言</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_6_active_ganzhiyu_success')">方圆</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_6_active_wuya_success')">吴琊</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">告白：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_6_confession_xiaotong_accept')">木星</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_6_confession_longxinheng_accept')">谨言</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_6_confession_ganzhiyu_accept')">方圆</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_6_confession_wuya_accept')">吴琊</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_6_confession_think')">思考</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">结局：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_7_open')">OPEN</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_7')">结局</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_4_8')">终</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第五章 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">📗 第五章·入口</label>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">入口：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_start')">5章开始</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第五章木星线 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">⭐ 第五章·木星线</label>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景1-5：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_1')">1</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_1b')">1b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_2')">2</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_2b')">2b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_3')">3</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_4')">4</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_4a')">4a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_4b')">4b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_5')">5</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景6-10：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_6a')">6a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_6b')">6b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_7')">7</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_7a')">7a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_7b_detail')">7b_detail</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_7b')">7b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_8')">8</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_8a')">8a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_8b')">8b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_9')">9</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_9a')">9a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_9b')">9b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_10')">10</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_10a')">10a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_10b')">10b</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景11-15：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_11')">11</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_11b')">11b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_12')">12</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_13')">13</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_14')">14</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_15')">15</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">结局：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_xiaotong_end')">结局</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第五章谨言线 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🎸 第五章·谨言线</label>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景1-5：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_1')">1</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_2')">2</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_2b')">2b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_2c')">2c</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_3')">3</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_4')">4</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_4b')">4b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_4c')">4c</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_4d')">4d</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_5')">5</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景6-10：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_5a')">5a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_5b')">5b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_6')">6</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_6b')">6b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_7')">7</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_8')">8</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_9')">9</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_10')">10</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景11-15：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_11')">11</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_12')">12</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_13')">13</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_14')">14</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_15')">15</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">结局：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_longxinheng_end')">结局</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第五章方圆线 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🎬 第五章·方圆线</label>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景1-5：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_1')">1</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_2')">2</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_2b')">2b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_2c')">2c</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_2d')">2d</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_3')">3</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_3b')">3b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_3c')">3c</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_3d')">3d</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_4')">4</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景5-10：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_4a')">4a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_4b')">4b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_5')">5</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_5a')">5a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_5b')">5b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_6')">6</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_7')">7</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_8')">8</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_9')">9</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_10')">10</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景11-15：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_11')">11</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_12')">12</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_13')">13</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_14')">14</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_15')">15</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">结局：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_ganzhiyu_end')">结局</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第五章吴琊线 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">🌙 第五章·吴琊线</label>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景1-5：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_1')">1</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_1b')">1b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_1c')">1c</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_2')">2</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_3')">3</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_4')">4</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_4b')">4b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_4c')">4c</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_4d')">4d</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_5')">5</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景6-15：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_5a')">5a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_6')">6</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_7')">7</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_8')">8</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_9')">9</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_10')">10</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_11')">11</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_12')">12</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_13')">13</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_14')">14</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_15')">15</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">结局：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_lover_wuya_end')">结局</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 第五章单身线 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">📘 第五章·单身线</label>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景1-4：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_1')">1</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_2')">2</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_3')">3</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_4')">4</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_4b')">4b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_5')">5</button>
+                            </div>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">场景6-8：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_6')">6</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_7a')">7a</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_7b')">7b</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_8')">8</button>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_8b')">8b</button>
+                            </div>
+                            <div>
+                                <span style="color:#888;font-size:11px;">结局：</span><br>
+                                <button class="dev-btn-small" onclick="game.devJump('xw_5_single_end')">结局</button>
                             </div>
                         </div>
                         
@@ -230,6 +564,22 @@
                                 <input type="text" id="dev-node-id" placeholder="输入节点ID，如 xw_3_1" 
                                     style="flex:1;padding:10px;border-radius:6px;border:1px solid #444;background:#2a2a4a;color:#fff;font-size:14px;">
                                 <button class="dev-btn-primary" onclick="game.devJumpById()">跳转</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 情侣关系设置 -->
+                        <div style="margin-bottom:15px;">
+                            <label style="color:#aaa;display:block;margin-bottom:8px;font-weight:bold;">💑 情侣关系设置</label>
+                            <div style="margin-bottom:6px;">
+                                <span style="color:#888;font-size:11px;">当前：</span>
+                                <span id="dev-relationship-status" style="color:#f88;font-size:12px;">无</span>
+                            </div>
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                <button class="dev-btn-small" onclick="game.devSetRelationship('xiao_tong')">木星</button>
+                                <button class="dev-btn-small" onclick="game.devSetRelationship('long_xinheng')">谨言</button>
+                                <button class="dev-btn-small" onclick="game.devSetRelationship('gan_zhiyu')">方圆</button>
+                                <button class="dev-btn-small" onclick="game.devSetRelationship('wu_ya')">吴琊</button>
+                                <button class="dev-btn-small" onclick="game.devSetRelationship(null)" style="border-color:rgba(255,100,100,0.4);color:rgba(255,120,120,0.8);">清除</button>
                             </div>
                         </div>
                         
@@ -289,6 +639,78 @@
                             <button class="menu-item" onclick="game.toggleDevPanel()" style="flex:1;background:#555;">关闭</button>
                         </div>
                     </div>
+                </div>
+        
+        <!-- 音乐测试面板 -->
+        <div id="music-panel" class="overlay">
+            <div class="music-panel-content">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                    <h3 style="color:#fff;margin:0;">🎵 音乐测试</h3>
+                    <button onclick="game.toggleMusicPanel()" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;">×</button>
+                </div>
+                
+                <!-- 当前节点信息 -->
+                <div style="background:#2a2a4a;padding:12px;border-radius:8px;margin-bottom:15px;">
+                    <div style="color:#888;font-size:12px;margin-bottom:4px;">当前节点</div>
+                    <div id="music-current-node" style="color:#f88;font-size:14px;font-weight:bold;">-</div>
+                    <div id="music-current-music" style="color:#8af;font-size:12px;margin-top:4px;">当前音乐: -</div>
+                </div>
+                
+                <!-- 音乐选择区域 -->
+                <div style="margin-bottom:15px;">
+                    <label style="color:#aaa;font-size:12px;display:block;margin-bottom:8px;">选择音乐</label>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                        <button class="music-select-btn" data-music="xw_xiaowan" onclick="game.musicSelect('xw_xiaowan')">下完这场雨</button>
+                        <button class="music-select-btn" data-music="xw_zhaopian" onclick="game.musicSelect('xw_zhaopian')">照片</button>
+                        <button class="music-select-btn" data-music="xw_mounian" onclick="game.musicSelect('xw_mounian')">某年某月</button>
+                        <button class="music-select-btn" data-music="xw_daoxiang" onclick="game.musicSelect('xw_daoxiang')">稻香</button>
+                        <button class="music-select-btn" data-music="xw_jifen" onclick="game.musicSelect('xw_jifen')">几分之几</button>
+                        <button class="music-select-btn" data-music="xw_yanyuan" onclick="game.musicSelect('xw_yanyuan')">演员</button>
+                        <button class="music-select-btn" data-music="xw_lianren" onclick="game.musicSelect('xw_lianren')">恋人</button>
+                        <button class="music-select-btn" data-music="xw_banma" onclick="game.musicSelect('xw_banma')">斑马</button>
+                        <button class="music-select-btn" data-music="xw_shuohaobuku" onclick="game.musicSelect('xw_shuohaobuku')">说好不哭</button>
+                        <button class="music-select-btn" data-music="xw_luokong" onclick="game.musicSelect('xw_luokong')">落空</button>
+                        <button class="music-select-btn" data-music="xw_heni" onclick="game.musicSelect('xw_heni')">和你</button>
+                        <button class="music-select-btn" data-music="xw_xiaye" onclick="game.musicSelect('xw_xiaye')">夏夜烟火</button>
+                        <button class="music-select-btn" data-music="xw_lingnan" onclick="game.musicSelect('xw_lingnan')">岭南小事</button>
+                        <button class="music-select-btn" data-music="xw_jili" onclick="game.musicSelect('xw_jili')">菊次郎</button>
+                        <button class="music-select-btn" data-music="xw_hongchen" onclick="game.musicSelect('xw_hongchen')">红尘客栈</button>
+                        <button class="music-select-btn" data-music="xw_dear" onclick="game.musicSelect('xw_dear')">Dear D</button>
+                        <button class="music-select-btn" data-music="xw_buzai" onclick="game.musicSelect('xw_buzai')">不再联系</button>
+                        <button class="music-select-btn" data-music="xw_shesde" onclick="game.musicSelect('xw_shesde')">舍得</button>
+                    </div>
+                    <div style="color:#888;font-size:11px;margin-bottom:8px;">选中的音乐：<span id="music-selected" style="color:#8f8;">无</span></div>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div style="display:flex;gap:10px;margin-bottom:15px;">
+                    <button class="dev-btn-primary" onclick="game.musicTestPlay()" style="flex:1;">▶ 播放</button>
+                    <button class="dev-btn" onclick="game.musicTestStop()" style="flex:1;background:#444;">⏹ 停止</button>
+                </div>
+                
+                <!-- 节点快速跳转 -->
+                <div style="margin-bottom:15px;">
+                    <label style="color:#aaa;font-size:12px;display:block;margin-bottom:8px;">快速跳转节点</label>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                        <button class="music-jump-btn" onclick="game.musicJumpChapter5()">第五章入口</button>
+                        <button class="music-jump-btn" onclick="game.musicJumpLine('xiaotong')">木星线</button>
+                        <button class="music-jump-btn" onclick="game.musicJumpLine('longxinheng')">谨言线</button>
+                        <button class="music-jump-btn" onclick="game.musicJumpLine('ganzhiyu')">方圆线</button>
+                        <button class="music-jump-btn" onclick="game.musicJumpLine('wuya')">吴琊线</button>
+                        <button class="music-jump-btn" onclick="game.musicJumpLine('single')">单身线</button>
+                    </div>
+                    <div style="display:flex;gap:10px;">
+                        <input type="text" id="music-node-input" placeholder="输入节点ID" 
+                            style="flex:1;padding:10px;border-radius:6px;border:1px solid #444;background:#2a2a4a;color:#fff;font-size:14px;">
+                        <button class="dev-btn-primary" onclick="game.musicJumpToNode()">跳转</button>
+                    </div>
+                </div>
+                
+                <!-- 保存配置 -->
+                <div style="background:#3a3a5a;padding:12px;border-radius:8px;margin-bottom:15px;">
+                    <div style="color:#aaa;font-size:12px;margin-bottom:8px;">💾 保存音乐配置到节点</div>
+                    <div style="color:#888;font-size:11px;margin-bottom:8px;">会将选中的音乐保存为当前节点的默认音乐配置</div>
+                    <button class="dev-btn-primary" onclick="game.musicSaveConfig()" style="width:100%;background:#4a8;">保存配置</button>
                 </div>
             </div>
         </div>
