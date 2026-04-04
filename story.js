@@ -10646,7 +10646,7 @@ const storyData = {
                     { speaker: 'narrator', text: '...' },
                     { speaker: 'narrator', text: '山海虽远。' },
                     { speaker: 'narrator', text: '但两颗心靠在一起。' },
-                    { speaker: 'narrator', text: '就什么都不怕了。' }
+                    { speaker: 'narrator', text: '就什么都不怕了。' },
                     { speaker: 'narrator', text: '【甜蜜和好】' },
                     { speaker: 'narrator', text: '— 山海·完 —' }
                 ],
@@ -10667,7 +10667,7 @@ const storyData = {
                     { speaker: 'narrator', text: '...' },
                     { speaker: 'narrator', text: '肖童还是每天来接夏晚下课。' },
                     { speaker: 'narrator', text: '他们还是一起去吃饭，一起在江边散步。' },
-                    { speaker: 'narrator', text: '看起来和以前一模一样。' }
+                    { speaker: 'narrator', text: '看起来和以前一模一样。' },
                     { speaker: 'narrator', text: '...' },
                     { speaker: 'narrator', text: '只是他们不再提英国的事了。' },
                     { speaker: 'narrator', text: '好像不提，就不会发生。' },
@@ -10685,13 +10685,13 @@ const storyData = {
                     { speaker: 'narrator', text: '有一天晚上。' },
                     { speaker: 'narrator', text: '肖童送她到校门口。' },
                     { speaker: 'xiao_tong', text: '「早点睡。」' },
-                    { speaker: 'xia_wan', text: '「嗯。」' }
+                    { speaker: 'xia_wan', text: '「嗯。」' },
                     { speaker: 'narrator', text: '夏晚转身走了几步。' },
                     { speaker: 'narrator', text: '又停下来。' },
                     { speaker: 'narrator', text: '回过头。' },
                     { speaker: 'narrator', text: '...' },
                     { speaker: 'xia_wan', text: '「你……还会去英国吗？」' },
-                    { speaker: 'narrator', text: '她还是问出口了。' }
+                    { speaker: 'narrator', text: '她还是问出口了。' },
                     { speaker: 'narrator', text: '...' },
                     { speaker: 'narrator', text: '肖童愣了一下。' },
                     { speaker: 'narrator', text: '他站在那里，路灯把他的脸照得忽明忽暗。' },
@@ -10701,7 +10701,7 @@ const storyData = {
                     { speaker: 'narrator', text: '和稀泥一样。' },
                     { speaker: 'narrator', text: '...' },
                     { speaker: 'xia_wan', text: '「……好。」' },
-                    { speaker: 'narrator', text: '夏晚没再问。' }
+                    { speaker: 'narrator', text: '夏晚没再问。' },
                     { speaker: 'narrator', text: '...' },
                     { speaker: 'narrator', text: '她转身走进校门。' },
                     { speaker: 'narrator', text: '走了几步，泪就掉下来了。' },
