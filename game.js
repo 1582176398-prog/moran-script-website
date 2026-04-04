@@ -231,7 +231,6 @@ class VisualNovelGame {
                 <div class="transition-bg">
                     <div class="transition-gradient"></div>
                     <video autoplay muted loop playsinline id="transition-video">
-                        <source src="file:///D:/SteamLibrary/steamapps/workshop/content/431960/3466567674/Wavy%20Grass%204K60FPS.mp4" type="video/mp4">
                     </video>
                     <div class="transition-video-overlay"></div>
                     <div class="transition-glow top"></div>
