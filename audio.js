@@ -427,6 +427,26 @@ class AudioManager {
                 mp3Moment: 'zy_jili',  // 第一天工作
                 ambient: 'shop' 
             },
+            'zy_1_1_a1_a': { 
+                mp3Moment: 'zy_jili',  // 期待相遇
+                ambient: 'shop' 
+            },
+            'zy_1_1_a1_b': { 
+                mp3Moment: 'zy_jili',  // 礼貌道别
+                ambient: 'shop' 
+            },
+            'zy_1_11_a': { 
+                mp3Moment: 'zy_jili',  // 第一天工作-分支A
+                ambient: 'shop' 
+            },
+            'zy_1_11_b': { 
+                mp3Moment: 'zy_jili',  // 第一天工作-分支B
+                ambient: 'shop' 
+            },
+            'zy_1_11_end': { 
+                mp3Moment: 'zy_jili',  // 第一章结局
+                ambient: 'shop' 
+            },
             
             // ========== 夏晚线 第一章 ==========
             // 用户指定音乐配置：
@@ -562,6 +582,47 @@ class AudioManager {
                 mp3Moment: 'zy_jili',  // 融入
                 ambient: 'shop' 
             },
+            
+            // ========== 周砚线 第二章扩展 ==========
+            // 岭南小事 - 日常轻松
+            'zy_2_9': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_9_a': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_9_b': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_9_b_a': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_9_b_b': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_10': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_10_a': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_10_b': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_11': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_11_1': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_12': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_12_a': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_12_b': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_13': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_13_a': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_13_b': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_14': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_14_1': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_14_1_a': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_14_1_b': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_15': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_15_a': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_15_b': { mp3Moment: 'zy_lingnan', ambient: 'street' },
+            'zy_2_16': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_16_1': { mp3Moment: 'zy_lingnan', ambient: 'shop' },
+            'zy_2_17': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_17_a': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_17_b': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_17_c': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_17_c_a': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_17_c_b': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_18': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_18_a': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_18_b': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_19': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_19_1': { mp3Moment: 'zy_jili', ambient: 'shop' },
+            'zy_2_20': { mp3Moment: 'zy_jili', ambient: 'campus' },
+            'zy_2_20_1': { mp3Moment: 'zy_jili', ambient: 'campus' },
             
             // ========== 夏晚线 第二章 ==========
             // 还伞入口 - 菊次郎的夏天
@@ -855,17 +916,20 @@ class AudioManager {
             'xw_5_lover_xiaotong_4a': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
             'xw_5_lover_xiaotong_4b': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
             'xw_5_lover_xiaotong_5': { mp3Moment: 'xw_lianren', ambient: 'shop' },
-            // 【和好】几分之几
-            'xw_5_lover_xiaotong_6a': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
-            'xw_5_lover_xiaotong_6b': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            // 【和好/冷战】恋人
+            'xw_5_lover_xiaotong_6': { mp3Moment: 'xw_lianren', ambient: 'shop' },
+            'xw_5_lover_xiaotong_6a': { mp3Moment: 'xw_lianren', ambient: 'phone' },
+            'xw_5_lover_xiaotong_6b': { mp3Moment: 'xw_lianren', ambient: 'room' },
             'xw_5_lover_xiaotong_7': { mp3Moment: 'xw_lianren', ambient: 'shop' },
             'xw_5_lover_xiaotong_7a': { mp3Moment: 'xw_lianren', ambient: 'shop' },
             'xw_5_lover_xiaotong_7b_detail': { mp3Moment: 'xw_lianren', ambient: 'shop' },
             'xw_5_lover_xiaotong_7b': { mp3Moment: 'xw_lianren', ambient: 'shop' },
-            // 【异地】恋人
-            'xw_5_lover_xiaotong_8': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
-            'xw_5_lover_xiaotong_8a': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
-            'xw_5_lover_xiaotong_8b': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
+            // 【异地见面】恋人
+            'xw_5_lover_xiaotong_8': { mp3Moment: 'xw_lianren', ambient: 'street' },
+            'xw_5_lover_xiaotong_8a': { mp3Moment: 'xw_lianren', ambient: 'street' },
+            'xw_5_lover_xiaotong_8b': { mp3Moment: 'xw_lianren', ambient: 'phone' },
+            'xw_5_lover_xiaotong_8c': { mp3Moment: 'xw_lianren', ambient: 'phone' },
+            'xw_5_lover_xiaotong_8d': { mp3Moment: 'xw_lianren', ambient: 'phone' },
             'xw_5_lover_xiaotong_9': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
             'xw_5_lover_xiaotong_9a': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
             'xw_5_lover_xiaotong_9b': { mp3Moment: 'xw_lianren', ambient: 'dorm' },
@@ -873,11 +937,13 @@ class AudioManager {
             'xw_5_lover_xiaotong_10': { mp3Moment: 'xw_shesde', ambient: 'street' },
             'xw_5_lover_xiaotong_10a': { mp3Moment: 'xw_shesde', ambient: 'street' },
             'xw_5_lover_xiaotong_10b': { mp3Moment: 'xw_shesde', ambient: 'street' },
-            // 【端午/信任】舍得
-            'xw_5_lover_xiaotong_11': { mp3Moment: 'xw_shesde', ambient: 'street' },
-            'xw_5_lover_xiaotong_11b': { mp3Moment: 'xw_shesde', ambient: 'street' },
+            // 【端午/信任/约定】舍得
+            'xw_5_lover_xiaotong_11': { mp3Moment: 'xw_shesde', ambient: 'phone' },
+            'xw_5_lover_xiaotong_11b': { mp3Moment: 'xw_shesde', ambient: 'phone' },
+            'xw_5_lover_xiaotong_11_detail': { mp3Moment: 'xw_shesde', ambient: 'phone' },
             // 【毕业/工作】舍得
-            'xw_5_lover_xiaotong_12': { mp3Moment: 'xw_shesde', ambient: 'campus' },
+            'xw_5_lover_xiaotong_12': { mp3Moment: 'xw_shesde', ambient: 'phone' },
+            'xw_5_lover_xiaotong_12a': { mp3Moment: 'xw_shesde', ambient: 'phone' },
             'xw_5_lover_xiaotong_13': { mp3Moment: 'xw_shesde', ambient: 'campus' },
             'xw_5_lover_xiaotong_14': { mp3Moment: 'xw_shesde', ambient: 'street' },
             // 【求婚/结局】舍得
@@ -923,6 +989,10 @@ class AudioManager {
             'xw_5_lover_longxinheng_15': { mp3Moment: 'xw_lianren', ambient: 'street' },
             // 【那道墙结局】斑马
             'xw_5_lover_longxinheng_end': { mp3Moment: 'xw_banma', ambient: null },
+            'xw_5_lover_longxinheng_4a': { mp3Moment: 'xw_yanyuan', ambient: 'shop' },
+            'xw_5_lover_longxinheng_end_cold': { mp3Moment: 'xw_banma', ambient: null },
+            'xw_5_lover_longxinheng_end_normal': { mp3Moment: 'xw_banma', ambient: null },
+            'xw_5_lover_longxinheng_end_sweet': { mp3Moment: 'xw_banma', ambient: null },
             
             // ========== 方圆线（点亮与等待） ==========
             // 【告白后】几分之几
@@ -959,6 +1029,9 @@ class AudioManager {
             'xw_5_lover_ganzhiyu_14': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
             'xw_5_lover_ganzhiyu_15': { mp3Moment: 'xw_shuohaobuku', ambient: 'street' },
             'xw_5_lover_ganzhiyu_end': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            'xw_5_lover_ganzhiyu_end_cold': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            'xw_5_lover_ganzhiyu_end_normal': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            'xw_5_lover_ganzhiyu_end_sweet': { mp3Moment: 'xw_shuohaobuku', ambient: null },
             
             // ========== 吴琊线（沉默的爱/不说但在） ==========
             // 【告白后/笨拙】几分之几
@@ -991,6 +1064,9 @@ class AudioManager {
             'xw_5_lover_wuya_14': { mp3Moment: 'xw_shuohaobuku', ambient: null },
             'xw_5_lover_wuya_15': { mp3Moment: 'xw_shuohaobuku', ambient: null },
             'xw_5_lover_wuya_end': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            'xw_5_lover_wuya_end_cold': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            'xw_5_lover_wuya_end_normal': { mp3Moment: 'xw_shuohaobuku', ambient: null },
+            'xw_5_lover_wuya_end_sweet': { mp3Moment: 'xw_shuohaobuku', ambient: null },
             
             // ========== 单身线（遥遥） ==========
             // 【微妙的变化/搬店】几分之几
