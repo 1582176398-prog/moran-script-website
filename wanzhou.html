@@ -3,7 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>致我的晚舟：一封迟来千年的信</title>
+  <title>赠晚舟</title>
+  <meta name="description" content="致我的晚舟：一封迟来千年的信" />
+  <!-- 微信分享卡片 -->
+  <meta property="og:title" content="赠晚舟" />
+  <meta property="og:description" content="致我的晚舟：一封迟来千年的信" />
+  <meta property="og:image" content="og-cover.jpg" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://moran1.icu/wanzhou" />
+  <!-- 微信 -->
+  <meta itemprop="name" content="赠晚舟" />
+  <meta itemprop="description" content="致我的晚舟：一封迟来千年的信" />
+  <meta itemprop="image" content="og-cover.jpg" />
   <style>
     /* ───── 字体 ───── */
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap');
@@ -819,11 +832,6 @@
 <!-- 背景音乐（点击展开书信后播放） -->
 <audio id="bgm" loop preload="auto"></audio>
 
-<!-- 音乐提示（点击展开后显示） -->
-<div id="music-hint" style="position:fixed;bottom:20px;right:20px;z-index:999;background:rgba(0,0,0,0.55);border:1px solid rgba(201,162,39,0.4);border-radius:20px;padding:8px 14px;font-size:0.7rem;color:rgba(255,255,255,0.7);letter-spacing:0.1em;cursor:pointer;transition:opacity 0.5s;opacity:0;pointer-events:none;">
-  🎵 点击关闭音乐
-</div>
-
 <script src="audio(1).js"></script>
 
 <div class="page">
@@ -1077,11 +1085,6 @@ function openLetter() {
     // 图册弹出时即播放音乐
     if (window.audioManager) {
       window.audioManager.fadeIn(2000);
-    }
-    const hint = document.getElementById('music-hint');
-    if (hint) {
-      hint.style.opacity = '1';
-      hint.style.pointerEvents = 'auto';
     }
 
     // 初始化轮播：自动播放 + 手动控制
