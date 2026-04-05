@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>致我的晚舟：一封迟来千年的信</title>
+  <style>
+    /* ───── 字体 ───── */
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+    :root {
+      --ink:      #2c1a0e;
+      --ink-soft: #5c3d1e;
+      --paper:    #f5e8c8;
+      --paper2:   #ede0b0;
+      --seal:     #9b1c1c;
+      --gold:     #c9a227;
+      --shadow:   rgba(44,26,14,0.28);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% 20%, #1a0e06 0%, #0a0604 100%);
+      font-family: 'Noto Serif SC', 'Source Han Serif CN', '宋体', serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ═══════════════════════════════
+       飘雪 Canvas
+    ═══════════════════════════════ */
+    #snow-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ═══════════════════════════════
+       页面内容容器
+    ═══════════════════════════════ */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 60px 20px 80px;
+    }
+
+    /* ═══════════════════════════════
+       顶部标题区
+    ═══════════════════════════════ */
+    .title-area {
+      text-align: center;
+      margin-bottom: 48px;
+      animation: fadeInDown 1.2s ease both;
+    }
+
+    .title-area .main-title {
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.25em;
+      text-shadow: 0 2px 12px rgba(201,162,39,0.45);
+    }
+
+    .title-area .sub-title {
+      font-size: clamp(0.75rem, 2vw, 0.9rem);
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.4em;
+      margin-top: 10px;
+    }
+
+    .divider {
+      width: 160px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 16px auto;
+    }
+
+    /* ═══════════════════════════════
+       信封区域
+    ═══════════════════════════════ */
+    .envelope-wrapper {
+      perspective: 1200px;
+      animation: fadeInUp 1.4s ease both 0.4s;
+    }
+
+    .envelope {
+      position: relative;
+      width: min(380px, 90vw);
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
+    }
+
+    .envelope:hover { transform: scale(1.02) translateY(-4px); }
+    .envelope.opened { cursor: default; }
+
+    /* 信封主体 */
+    .env-body {
+      width: 100%;
+      padding-bottom: 62%;
+      background: linear-gradient(160deg, #d4b483 0%, #c49a5a 50%, #b8853a 100%);
+      border-radius: 4px 4px 0 0;
+      position: relative;
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.5),
+        inset 0 0 60px rgba(255,255,255,0.08);
+    }
+
+    /* 信封纹理：交叉线 */
+    .env-body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 10px),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 10px);
+      border-radius: 4px 4px 0 0;
+    }
+
+    /* 信封盖（上翻盖） */
+    .env-flap {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 52%;
+      transform-origin: top center;
+      transform-style: preserve-3d;
+      transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+    }
+
+    .env-flap-inner {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, #c49a5a 0%, #b8853a 60%, #a0702a 100%);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      box-shadow: inset 0 -4px 10px rgba(0,0,0,0.2);
+    }
+
+    /* 打开时翻转盖子 */
+    .envelope.opened .env-flap {
+      transform: rotateX(-160deg);
+    }
+
+    /* 封蜡印章 */
+    .seal {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, #c0392b, #7b0000);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(155,28,28,0.6), inset 0 1px 3px rgba(255,255,255,0.15);
+      z-index: 20;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
+    .seal-text {
+      color: rgba(255,220,180,0.9);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .envelope.opened .seal {
+      transform: translateX(-50%) scale(0.7) translateY(-6px);
+      opacity: 0.5;
+    }
+
+    /* 按钮 */
+    .open-btn {
+      display: block;
+      margin: 32px auto 0;
+      padding: 12px 40px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: inherit;
+      font-size: 0.9rem;
+      letter-spacing: 0.3em;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+    }
+
+    .open-btn:hover {
+      background: var(--gold);
+      color: #1a0e06;
+      transform: translateY(-2px);
+    }
+
+    .open-btn.hide {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    /* ═══════════════════════════════
+       信件弹窗（固定全屏 + 可滚动）
+    ═══════════════════════════════ */
+    .letter-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 6, 2, 0.7);
+      z-index: 998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+
+    .letter-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .letter-container {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 40px 16px 60px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease 0.1s;
+    }
+
+    .letter-container.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .letter-paper {
+      background: linear-gradient(180deg, var(--paper) 0%, var(--paper2) 100%);
+      padding: 48px 36px 60px;
+      position: relative;
+      border-radius: 0 0 4px 4px;
+      box-shadow:
+        0 12px 40px rgba(0,0,0,0.55),
+        inset 0 0 40px rgba(139,100,50,0.08);
+      animation: none;
+      width: min(380px, 100%);
+      flex-shrink: 0;
+    }
+
+    .letter-container.show .letter-paper {
+      animation: slideUp 0.8s ease 0.6s both;
+    }
+
+    /* 竖线纸纹 */
+    .letter-paper::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 31px,
+        rgba(139,100,50,0.10) 31px,
+        rgba(139,100,50,0.10) 32px
+      );
+      border-radius: 0 0 4px 4px;
+      pointer-events: none;
+    }
+
+    /* 装饰：左侧红边 */
+    .letter-paper::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 28px;
+      width: 1.5px;
+      background: rgba(155,28,28,0.25);
+    }
+
+    /* ── 信纸排版 ── */
+    .letter-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .letter-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.25em;
+      line-height: 1.8;
+    }
+
+    .letter-date {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      letter-spacing: 0.3em;
+      margin-top: 6px;
+    }
+
+    .letter-salutation {
+      font-size: 0.95rem;
+      color: var(--ink);
+      letter-spacing: 0.15em;
+      margin-bottom: 18px;
+      font-weight: 600;
+    }
+
+    .letter-body {
+      color: var(--ink);
+      line-height: 2.1;
+      font-size: clamp(0.82rem, 2.2vw, 0.9rem);
+      letter-spacing: 0.08em;
+      text-align: justify;
+    }
+
+    .letter-body p {
+      margin-bottom: 1.4em;
+      text-indent: 2em;
+    }
+
+    .letter-body p.no-indent {
+      text-indent: 0;
+    }
+
+    .letter-body p.center {
+      text-align: center;
+      text-indent: 0;
+    }
+
+    .letter-footer {
+      margin-top: 32px;
+      text-align: right;
+    }
+
+    .letter-footer p {
+      font-size: 0.85rem;
+      color: var(--ink);
+      letter-spacing: 0.2em;
+      line-height: 2.2;
+    }
+
+    /* 红豆装饰引言 */
+    .quote-line {
+      text-align: center;
+      color: var(--seal);
+      font-size: 0.85rem;
+      letter-spacing: 0.3em;
+      margin: 24px 0;
+      opacity: 0.85;
+    }
+
+    /* 签名印章 */
+    .signature-seal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 4px;
+      border: 1.5px solid var(--seal);
+      color: var(--seal);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-left: 12px;
+      vertical-align: middle;
+      font-weight: 700;
+      opacity: 0.75;
+      transform: rotate(-8deg);
+      display: inline-block;
+      text-align: center;
+      line-height: 1.4;
+      padding: 4px;
+    }
+
+    /* ═══════════════════════════════
+       装饰花纹
+    ═══════════════════════════════ */
+    .corner-deco {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      opacity: 0.25;
+    }
+    .corner-deco.tl { top: 10px; left: 10px; }
+    .corner-deco.tr { top: 10px; right: 10px; transform: scaleX(-1); }
+    .corner-deco.bl { bottom: 10px; left: 10px; transform: scaleY(-1); }
+    .corner-deco.br { bottom: 10px; right: 10px; transform: scale(-1); }
+
+    /* ═══════════════════════════════
+       底部落款
+    ═══════════════════════════════ */
+    .page-footer {
+      margin-top: 48px;
+      text-align: center;
+      color: rgba(255,255,255,0.2);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      animation: fadeIn 2s ease 2s both;
+    }
+
+    /* ═══════════════════════════════
+       关键帧
+    ═══════════════════════════════ */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    /* ═══════════════════════════════
+       响应式
+    ═══════════════════════════════ */
+    @media (max-width: 480px) {
+      .page { padding: 40px 0 60px; }
+
+      .title-area { margin-bottom: 32px; }
+      .title-area .main-title {
+        font-size: 1.25rem;
+        letter-spacing: 0.15em;
+      }
+      .title-area .sub-title {
+        font-size: 0.7rem;
+        letter-spacing: 0.25em;
+      }
+      .divider { width: 100px; }
+
+      .envelope { width: min(320px, 88vw); }
+
+      .open-btn {
+        font-size: 0.8rem;
+        letter-spacing: 0.2em;
+        padding: 10px 28px;
+        margin-top: 24px;
+      }
+
+      .letter-container { padding: 24px 12px 48px; }
+
+      .letter-paper {
+        padding: 32px 20px 44px;
+      }
+
+      .letter-paper::after { left: 16px; }
+
+      .corner-deco { width: 24px; height: 24px; }
+
+      .letter-header { margin-bottom: 24px; }
+      .letter-title {
+        font-size: 0.85rem;
+        letter-spacing: 0.15em;
+        line-height: 1.6;
+      }
+      .letter-date { font-size: 0.65rem; }
+
+      .letter-salutation { font-size: 0.82rem; }
+
+      .letter-body {
+        font-size: 0.78rem;
+        line-height: 1.95;
+        letter-spacing: 0.04em;
+      }
+      .letter-body p { margin-bottom: 1.1em; }
+
+      .quote-line {
+        font-size: 0.78rem;
+        letter-spacing: 0.2em;
+        margin: 18px 0;
+      }
+
+      .letter-footer { margin-top: 24px; }
+      .letter-footer p { font-size: 0.75rem; }
+      .letter-footer p + p { font-size: 0.65rem; }
+
+      .signature-seal {
+        width: 44px;
+        height: 44px;
+        font-size: 0.6rem;
+      }
+
+      .page-footer {
+        font-size: 0.6rem;
+        margin-top: 32px;
+      }
+    }
+
+    /* 超小屏幕 */
+    @media (max-width: 360px) {
+      .letter-paper { padding: 24px 14px 36px; }
+      .letter-body { font-size: 0.72rem; }
+      .letter-title { font-size: 0.78rem; }
+      .envelope { width: min(280px, 84vw); }
+      .letter-container { padding: 16px 8px 40px; }
+    }
+
+    /* ═══════════════════════════════
+       回忆录图册（单张照片轮播）
+    ═══════════════════════════════ */
+    .gallery-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .gallery-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .gallery-inner {
+      background: linear-gradient(160deg, #1c0e06 0%, #2a1508 50%, #1a0e06 100%);
+      border: 1px solid rgba(201,162,39,0.35);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 480px;
+      height: calc(100vh - 32px);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.85);
+      overflow: hidden;
+    }
+
+    /* 照片展示区：照片完整显示 */
+    .gallery-photo-wrap {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gallery-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+      display: block;
+    }
+
+    .gallery-photo.active {
+      opacity: 1;
+    }
+
+    /* 导航控制 */
+    .gallery-controls {
+      flex-shrink: 0;
+      padding: 14px 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid rgba(201,162,39,0.15);
+    }
+
+    .gallery-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .gallery-nav-btn {
+      background: transparent;
+      border: 1px solid rgba(201,162,39,0.4);
+      color: rgba(201,162,39,0.7);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      flex-shrink: 0;
+      font-family: inherit;
+    }
+
+    .gallery-nav-btn:hover {
+      background: rgba(201,162,39,0.12);
+      color: #c9a227;
+      border-color: #c9a227;
+    }
+
+    .gallery-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(201,162,39,0.3);
+      cursor: pointer;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .dot.active {
+      background: #c9a227;
+      transform: scale(1.3);
+    }
+
+    .gallery-open-btn {
+      background: transparent;
+      border: 1px solid rgba(201,162,39,0.55);
+      color: #c9a227;
+      font-size: 0.75rem;
+      letter-spacing: 0.5em;
+      padding: 9px 32px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+
+    .gallery-open-btn:hover {
+      background: rgba(201,162,39,0.12);
+      border-color: #c9a227;
+      transform: translateY(-1px);
+    }
+
+    /* 竖屏手机适配 */
+    @media (max-width: 480px) {
+      .gallery-overlay { padding: 12px; }
+      .gallery-inner {
+        height: calc(100vh - 24px);
+        border-radius: 10px;
+      }
+      .gallery-controls {
+        padding: 10px 16px 12px;
+        gap: 10px;
+      }
+      .gallery-open-btn {
+        font-size: 0.72rem;
+        padding: 8px 24px;
+        letter-spacing: 0.4em;
+      }
+      .gallery-nav-btn { width: 28px; height: 28px; }
+      .dot { width: 5px; height: 5px; }
+    }
+
+    @media (max-width: 360px) {
+      .gallery-inner { border-radius: 8px; }
+      .gallery-nav { gap: 10px; }
+    }
+
+    /* 横屏适配 */
+    @media (orientation: landscape) {
+      .gallery-overlay { padding: 12px; align-items: center; }
+      .gallery-inner {
+        flex-direction: row;
+        height: calc(100vh - 24px);
+        max-width: 85vw;
+      }
+      .gallery-photo-wrap { flex: 1; min-width: 0; }
+      .gallery-controls {
+        flex-direction: column;
+        justify-content: center;
+        border-top: none;
+        border-left: 1px solid rgba(201,162,39,0.15);
+        padding: 20px 14px;
+        width: auto;
+        gap: 14px;
+      }
+      .gallery-nav { flex-direction: column; gap: 10px; }
+    }
+
+    /* ── 竖屏手机：2行3列 ── */
+    @media (max-width: 480px) {
+      .gallery-inner {
+        padding: 16px 12px 16px;
+        height: calc(100vh - 24px);
+      }
+      .gallery-title {
+        font-size: 0.82rem;
+        margin-bottom: 12px;
+      }
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .gallery-open-btn {
+        font-size: 0.72rem;
+        padding: 9px 24px;
+      }
+    }
+
+    /* ── 超小竖屏 ── */
+    @media (max-width: 360px) {
+      .gallery-grid { gap: 6px; }
+      .gallery-inner { padding: 12px 10px 14px; }
+    }
+
+    /* ── 横屏：6列一行 ── */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .gallery-inner {
+        padding: 12px 20px;
+        height: calc(100vh - 24px);
+        max-width: 80vw;
+      }
+      .gallery-title { margin-bottom: 10px; font-size: 0.8rem; }
+      .gallery-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 8px;
+      }
+      .gallery-btn-area { margin-top: 10px; }
+    }
+
+    /* 信件关闭按钮 */
+    .letter-close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(201,162,39,0.3);
+      color: rgba(201,162,39,0.7);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      z-index: 10;
+      font-family: inherit;
+    }
+
+    .letter-close-btn:hover {
+      background: rgba(201,162,39,0.15);
+      color: #c9a227;
+      border-color: #c9a227;
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 480px) {
+      .gallery-inner {
+        padding: 24px 16px 24px;
+        max-height: calc(100vh - 32px);
+      }
+      .gallery-grid { gap: 8px; }
+      .gallery-title { font-size: 0.9rem; }
+      .gallery-caption { font-size: 0.58rem; }
+      .gallery-open-btn {
+        font-size: 0.72rem;
+        padding: 10px 28px;
+        letter-spacing: 0.4em;
+      }
+    }
+
+    @media (max-height: 600px) and (orientation: landscape) {
+      .gallery-inner {
+        padding: 16px 24px;
+        max-height: calc(100vh - 24px);
+      }
+      .gallery-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 8px;
+      }
+      .gallery-img { aspect-ratio: 3 / 4; }
+      .gallery-subtitle { margin-bottom: 16px; }
+      .gallery-btn-area { margin-top: 16px; }
+    }
+
+    /* 横屏手机 */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .page { padding: 24px 0 40px; }
+      .title-area { margin-bottom: 20px; }
+      .envelope { width: min(280px, 50vw); }
+      .letter-container {
+        padding: 16px 0 32px;
+        align-items: flex-start;
+      }
+      .letter-paper { padding: 24px 20px 36px; }
+      .letter-body { font-size: 0.75rem; line-height: 1.8; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 飘雪画布 -->
+<canvas id="snow-canvas"></canvas>
+
+<!-- 背景音乐（点击展开书信后播放） -->
+<audio id="bgm" loop preload="auto"></audio>
+
+<!-- 音乐提示（点击展开后显示） -->
+<div id="music-hint" style="position:fixed;bottom:20px;right:20px;z-index:999;background:rgba(0,0,0,0.55);border:1px solid rgba(201,162,39,0.4);border-radius:20px;padding:8px 14px;font-size:0.7rem;color:rgba(255,255,255,0.7);letter-spacing:0.1em;cursor:pointer;transition:opacity 0.5s;opacity:0;pointer-events:none;">
+  🎵 点击关闭音乐
+</div>
+
+<script src="audio(1).js"></script>
+
+<div class="page">
+
+  <!-- 标题 -->
+  <div class="title-area">
+    <div class="divider"></div>
+    <div class="main-title">致我的晚舟</div>
+    <div class="sub-title">一封迟来千年的信</div>
+    <div class="divider"></div>
+  </div>
+
+  <!-- 信封 -->
+  <div class="envelope-wrapper">
+    <div class="envelope" id="envelope">
+
+      <!-- 翻盖 -->
+      <div class="env-flap">
+        <div class="env-flap-inner"></div>
+      </div>
+
+      <!-- 封蜡 -->
+      <div class="seal">
+        <span class="seal-text">阎</span>
+      </div>
+
+      <!-- 信封主体（底色） -->
+      <div class="env-body"></div>
+    </div>
+
+    <!-- 按钮 -->
+    <button class="open-btn" id="openBtn" onclick="openLetter()">展 开 书 信</button>
+  </div>
+
+  <!-- 全局遮罩 -->
+  <div class="letter-backdrop" id="letterBackdrop"></div>
+
+  <!-- 回忆录图册（单张照片轮播） -->
+  <div class="gallery-overlay" id="galleryOverlay">
+    <div class="gallery-inner">
+
+      <!-- 照片区域 -->
+      <div class="gallery-photo-wrap">
+        <img class="gallery-photo active" id="galleryPhoto0" src="images/1.jpg" alt="回忆1" />
+        <img class="gallery-photo" id="galleryPhoto1" src="images/2.jpg" alt="回忆2" />
+        <img class="gallery-photo" id="galleryPhoto2" src="images/3.jpg" alt="回忆3" />
+        <img class="gallery-photo" id="galleryPhoto3" src="images/4.jpg" alt="回忆4" />
+        <img class="gallery-photo" id="galleryPhoto4" src="images/5.jpg" alt="回忆5" />
+        <img class="gallery-photo" id="galleryPhoto5" src="images/6.jpg" alt="回忆6" />
+      </div>
+
+      <!-- 导航控制 -->
+      <div class="gallery-controls">
+        <div class="gallery-nav">
+          <button class="gallery-nav-btn prev" id="galleryPrev">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"></polyline></svg>
+          </button>
+          <div class="gallery-dots">
+            <span class="dot active" data-i="0"></span>
+            <span class="dot" data-i="1"></span>
+            <span class="dot" data-i="2"></span>
+            <span class="dot" data-i="3"></span>
+            <span class="dot" data-i="4"></span>
+            <span class="dot" data-i="5"></span>
+          </div>
+          <button class="gallery-nav-btn next" id="galleryNext">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,18 15,12 9,6"></polyline></svg>
+          </button>
+        </div>
+        <button class="gallery-open-btn" id="galleryOpenBtn">阅 读 信 件</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 信件弹窗 -->
+  <div class="letter-container" id="letterContainer">
+    <div class="letter-paper">
+
+      <!-- 角装饰 -->
+      <svg class="corner-deco tl" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 30 Q2 2 30 2" stroke="#8B5C2A" stroke-width="1.5" fill="none"/>
+        <path d="M2 22 Q10 10 22 2" stroke="#8B5C2A" stroke-width="0.8" fill="none"/>
+        <circle cx="2" cy="2" r="2" fill="#8B5C2A"/>
+      </svg>
+      <svg class="corner-deco tr" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 30 Q2 2 30 2" stroke="#8B5C2A" stroke-width="1.5" fill="none"/>
+        <path d="M2 22 Q10 10 22 2" stroke="#8B5C2A" stroke-width="0.8" fill="none"/>
+        <circle cx="2" cy="2" r="2" fill="#8B5C2A"/>
+      </svg>
+      <svg class="corner-deco bl" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 30 Q2 2 30 2" stroke="#8B5C2A" stroke-width="1.5" fill="none"/>
+        <path d="M2 22 Q10 10 22 2" stroke="#8B5C2A" stroke-width="0.8" fill="none"/>
+        <circle cx="2" cy="2" r="2" fill="#8B5C2A"/>
+      </svg>
+      <svg class="corner-deco br" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 30 Q2 2 30 2" stroke="#8B5C2A" stroke-width="1.5" fill="none"/>
+        <path d="M2 22 Q10 10 22 2" stroke="#8B5C2A" stroke-width="0.8" fill="none"/>
+        <circle cx="2" cy="2" r="2" fill="#8B5C2A"/>
+      </svg>
+
+      <!-- 信头 -->
+      <div class="letter-header">
+        <div class="letter-title">致我的晚舟：一封迟来千年的信</div>
+        <div class="letter-date">顺治二年  乙酉  江阴</div>
+      </div>
+
+      <div class="letter-salutation">晚舟：</div>
+
+      <div class="letter-body">
+        <p>见字如面。</p>
+
+        <p>这封信，我在江阴城的城楼之上，写了一遍又一遍，墨汁冻住，指尖冰凉，终究没能送到你手上。如今跨过生死，跨过数百年光阴，我终于能以三郎的身份，而不是守城将军阎应元，好好跟你说说话。</p>
+
+        <p>世人都记得我阎应元，八十日带发效忠，守江阴孤城，护百姓安危，说我是铁骨将军，是大明忠魂，可他们从不知道，我这一生，最愧对的，从来不是江山社稷，不是满城百姓，而是你赵晚舟。</p>
+
+        <p>我是你的义兄，是身披战甲、身负万民的将领，偏偏不能是名正言顺护你一生的良人。我把你的名字，一针一线缝进战甲内层，每一次上阵迎敌，每一次直面刀光剑影，贴着心口的，全是你。我不敢说，不敢认，不敢给你一丝一毫的期许，我怕我战死沙场，留你一人在这乱世，更怕这禁忌的情意，毁了你一生安稳。</p>
+
+        <p>我看着你陪我守着这座孤城，看着你眼底的温柔与倔强，看着你明明满心苦楚，却从不对我言说半句。你懂我的家国大义，懂我的身不由己，懂我所有不能宣之于口的深情，可我却连一句"我爱你"，都只能藏在心底，烂在骨血里。</p>
+
+        <p>我曾盼过战事平息，盼过卸甲归田，盼过抛开所有身份枷锁，只做你的三郎，陪你看庭院红豆开花，陪你岁岁年年，三餐四季。可我终究食言了，城破之时，我以身殉国，没能护住你，没能兑现哪怕一句承诺，留你独自面对满城烽火，生死别离。</p>
+
+        <p class="center" style="font-size:1.05em;font-weight:700;color:#9b1c1c;letter-spacing:0.4em;">晚舟，我负了你。</p>
+
+        <p>负了你满心欢喜的等待，负了你深藏心底的爱意，负了你一生所求的安稳。此生，我是万民的将军，是大明的臣子，唯独不是你的夫君。战甲染血，忠骨埋沙，我的爱意，终究随着江阴的烽火，葬在了那座孤城，没能给你一场光明正大的相守，没能给你一纸婚书，没能给你一个家。</p>
+
+        <p>若有来世，我不要再做将军，不要这家国重担，不要这义兄名分，只做一介布衣，寻常儿郎。没有战乱，没有枷锁，没有生离死别，我会早早奔赴你，明目张胆地爱你，八抬大轿娶你，陪你春看百花冬赏雪，朝煮清茶暮话桑麻，把此生所有的亏欠，全都弥补给你。</p>
+      </div>
+
+      <div class="quote-line">
+        红豆尚可尽，相思无已时。
+      </div>
+
+      <div class="letter-body">
+        <p>晚舟，忘了阎应元，忘了这座孤城，忘了所有的意难平。</p>
+        <p>下辈子，换我奔向你，换我守你一生，岁岁无忧，平安喜乐，再也不要分离。</p>
+        <p class="no-indent" style="letter-spacing:0.35em;color:#9b1c1c;font-weight:600;">此生无缘，来世必赴。</p>
+      </div>
+
+      <!-- 落款 -->
+      <div class="letter-footer">
+        <p>三郎 · 阎应元</p>
+        <p style="font-size:0.72rem;opacity:0.6;">顺治二年  乙酉秋</p>
+        <span class="signature-seal">阎<br/>应<br/>元</span>
+      </div>
+
+    </div><!-- /letter-paper -->
+
+    <!-- 关闭按钮 -->
+    <button class="letter-close-btn" id="letterCloseBtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div><!-- /letter-container -->
+
+  <div class="page-footer">
+    三郎执笔  晚舟永藏
+  </div>
+
+</div><!-- /page -->
+
+<script>
+/* ══════════════════════════════════
+   飘雪特效
+══════════════════════════════════ */
+(function () {
+  const canvas = document.getElementById('snow-canvas');
+  const ctx = canvas.getContext('2d');
+  let W = window.innerWidth;
+  let H = window.innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+
+  window.addEventListener('resize', () => {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+  });
+
+  const FLAKE_COUNT = 120;
+  const flakes = [];
+
+  function rand(a, b) { return Math.random() * (b - a) + a; }
+
+  for (let i = 0; i < FLAKE_COUNT; i++) {
+    flakes.push({
+      x: rand(0, W),
+      y: rand(-H, H),
+      r: rand(1.5, 4.5),
+      speed: rand(0.6, 2.2),
+      drift: rand(-0.4, 0.4),
+      opacity: rand(0.4, 0.95),
+      wobble: rand(0, Math.PI * 2),
+      wobbleSpeed: rand(0.01, 0.04),
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const f of flakes) {
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${f.opacity})`;
+      ctx.fill();
+
+      f.y += f.speed;
+      f.wobble += f.wobbleSpeed;
+      f.x += f.drift + Math.sin(f.wobble) * 0.5;
+
+      if (f.y > H + 10) {
+        f.y = -10;
+        f.x = rand(0, W);
+      }
+      if (f.x > W + 10) f.x = -10;
+      if (f.x < -10) f.x = W + 10;
+    }
+    requestAnimationFrame(draw);
+  }
+
+  // 绑定信件关闭按钮
+  const closeBtn = document.getElementById('letterCloseBtn');
+  if (closeBtn) closeBtn.onclick = closeLetter;
+
+  draw();
+})();
+
+/* ══════════════════════════════════
+   信件展开交互
+══════════════════════════════════ */
+/* ══════════════════════════════════
+   信件展开交互
+══════════════════════════════════ */
+function openLetter() {
+  const envelope = document.getElementById('envelope');
+  const btn = document.getElementById('openBtn');
+
+  // 先翻开信封盖
+  envelope.classList.add('opened');
+  btn.classList.add('hide');
+
+  // 延迟后显示回忆录图册
+  setTimeout(() => {
+    const backdrop = document.getElementById('letterBackdrop');
+    const gallery = document.getElementById('galleryOverlay');
+    if (backdrop) backdrop.classList.add('show');
+    if (gallery) gallery.classList.add('show');
+
+    // 图册弹出时即播放音乐
+    if (window.audioManager) {
+      window.audioManager.fadeIn(2000);
+    }
+    const hint = document.getElementById('music-hint');
+    if (hint) {
+      hint.style.opacity = '1';
+      hint.style.pointerEvents = 'auto';
+    }
+
+    // 初始化轮播：自动播放 + 手动控制
+    initGalleryCarousel();
+
+    // 点击"阅读信件"按钮
+    document.getElementById('galleryOpenBtn').onclick = function() {
+      gallery.classList.remove('show');
+      if (window._galleryTimer) {
+        clearInterval(window._galleryTimer);
+        window._galleryTimer = null;
+      }
+      const letterContainer = document.getElementById('letterContainer');
+      if (letterContainer) letterContainer.classList.add('show');
+    };
+  }, 800);
+}
+
+// 图册轮播逻辑
+function initGalleryCarousel() {
+  var photos = document.querySelectorAll('.gallery-photo');
+  var dots = document.querySelectorAll('.dot');
+  var current = 0;
+  var total = photos.length;
+
+  // 重置状态
+  photos.forEach(function(p) { p.classList.remove('active'); });
+  dots.forEach(function(d) { d.classList.remove('active'); });
+  photos[0].classList.add('active');
+  dots[0].classList.add('active');
+
+  // 自动轮播：每张2秒
+  window._galleryTimer = setInterval(function() {
+    photos[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (current + 1) % total;
+    photos[current].classList.add('active');
+    dots[current].classList.add('active');
+  }, 2000);
+
+  function goTo(index) {
+    if (index === current) return;
+    photos[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = index;
+    photos[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  document.getElementById('galleryPrev').onclick = function() {
+    goTo((current - 1 + total) % total);
+  };
+  document.getElementById('galleryNext').onclick = function() {
+    goTo((current + 1) % total);
+  };
+  dots.forEach(function(dot) {
+    dot.onclick = function() {
+      goTo(parseInt(this.getAttribute('data-i')));
+    };
+  });
+}
+
+function closeLetter() {
+  const envelope = document.getElementById('envelope');
+  const btn = document.getElementById('openBtn');
+  const backdrop = document.getElementById('letterBackdrop');
+  const letterContainer = document.getElementById('letterContainer');
+
+  // 关闭信件弹窗
+  if (letterContainer) letterContainer.classList.remove('show');
+  // 关闭遮罩
+  if (backdrop) backdrop.classList.remove('show');
+
+  // 重置信封：收起信纸 + 合上信封盖
+  setTimeout(() => {
+    if (envelope) envelope.classList.remove('opened');
+    if (btn) btn.classList.remove('hide');
+  }, 300);
+}
+</script>
+
+</body>
+</html>
