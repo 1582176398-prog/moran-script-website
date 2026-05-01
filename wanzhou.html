@@ -528,232 +528,6 @@
       .letter-container { padding: 16px 8px 40px; }
     }
 
-    /* ═══════════════════════════════
-       回忆录图册（单张照片轮播）
-    ═══════════════════════════════ */
-    .gallery-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-    }
-
-    .gallery-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .gallery-inner {
-      background: linear-gradient(160deg, #1c0e06 0%, #2a1508 50%, #1a0e06 100%);
-      border: 1px solid rgba(201,162,39,0.35);
-      border-radius: 12px;
-      width: 100%;
-      max-width: 480px;
-      height: calc(100vh - 32px);
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.85);
-      overflow: hidden;
-    }
-
-    /* 照片展示区：照片完整显示 */
-    .gallery-photo-wrap {
-      flex: 1;
-      min-height: 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .gallery-photo {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      opacity: 0;
-      transition: opacity 0.7s ease;
-      display: block;
-    }
-
-    .gallery-photo.active {
-      opacity: 1;
-    }
-
-    /* 导航控制 */
-    .gallery-controls {
-      flex-shrink: 0;
-      padding: 14px 20px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      border-top: 1px solid rgba(201,162,39,0.15);
-    }
-
-    .gallery-nav {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      width: 100%;
-      justify-content: center;
-    }
-
-    .gallery-nav-btn {
-      background: transparent;
-      border: 1px solid rgba(201,162,39,0.4);
-      color: rgba(201,162,39,0.7);
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.25s;
-      flex-shrink: 0;
-      font-family: inherit;
-    }
-
-    .gallery-nav-btn:hover {
-      background: rgba(201,162,39,0.12);
-      color: #c9a227;
-      border-color: #c9a227;
-    }
-
-    .gallery-dots {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: rgba(201,162,39,0.3);
-      cursor: pointer;
-      transition: all 0.3s;
-      flex-shrink: 0;
-    }
-
-    .dot.active {
-      background: #c9a227;
-      transform: scale(1.3);
-    }
-
-    .gallery-open-btn {
-      background: transparent;
-      border: 1px solid rgba(201,162,39,0.55);
-      color: #c9a227;
-      font-size: 0.75rem;
-      letter-spacing: 0.5em;
-      padding: 9px 32px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-family: inherit;
-    }
-
-    .gallery-open-btn:hover {
-      background: rgba(201,162,39,0.12);
-      border-color: #c9a227;
-      transform: translateY(-1px);
-    }
-
-    /* 竖屏手机适配 */
-    @media (max-width: 480px) {
-      .gallery-overlay { padding: 12px; }
-      .gallery-inner {
-        height: calc(100vh - 24px);
-        border-radius: 10px;
-      }
-      .gallery-controls {
-        padding: 10px 16px 12px;
-        gap: 10px;
-      }
-      .gallery-open-btn {
-        font-size: 0.72rem;
-        padding: 8px 24px;
-        letter-spacing: 0.4em;
-      }
-      .gallery-nav-btn { width: 28px; height: 28px; }
-      .dot { width: 5px; height: 5px; }
-    }
-
-    @media (max-width: 360px) {
-      .gallery-inner { border-radius: 8px; }
-      .gallery-nav { gap: 10px; }
-    }
-
-    /* 横屏适配 */
-    @media (orientation: landscape) {
-      .gallery-overlay { padding: 12px; align-items: center; }
-      .gallery-inner {
-        flex-direction: row;
-        height: calc(100vh - 24px);
-        max-width: 85vw;
-      }
-      .gallery-photo-wrap { flex: 1; min-width: 0; }
-      .gallery-controls {
-        flex-direction: column;
-        justify-content: center;
-        border-top: none;
-        border-left: 1px solid rgba(201,162,39,0.15);
-        padding: 20px 14px;
-        width: auto;
-        gap: 14px;
-      }
-      .gallery-nav { flex-direction: column; gap: 10px; }
-    }
-
-    /* ── 竖屏手机：2行3列 ── */
-    @media (max-width: 480px) {
-      .gallery-inner {
-        padding: 16px 12px 16px;
-        height: calc(100vh - 24px);
-      }
-      .gallery-title {
-        font-size: 0.82rem;
-        margin-bottom: 12px;
-      }
-      .gallery-grid {
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-        gap: 8px;
-      }
-      .gallery-open-btn {
-        font-size: 0.72rem;
-        padding: 9px 24px;
-      }
-    }
-
-    /* ── 超小竖屏 ── */
-    @media (max-width: 360px) {
-      .gallery-grid { gap: 6px; }
-      .gallery-inner { padding: 12px 10px 14px; }
-    }
-
-    /* ── 横屏：6列一行 ── */
-    @media (orientation: landscape) and (max-height: 500px) {
-      .gallery-inner {
-        padding: 12px 20px;
-        height: calc(100vh - 24px);
-        max-width: 80vw;
-      }
-      .gallery-title { margin-bottom: 10px; font-size: 0.8rem; }
-      .gallery-grid {
-        grid-template-columns: repeat(6, 1fr);
-        gap: 8px;
-      }
-      .gallery-btn-area { margin-top: 10px; }
-    }
-
     /* 信件关闭按钮 */
     .letter-close-btn {
       position: absolute;
@@ -778,36 +552,6 @@
       background: rgba(201,162,39,0.15);
       color: #c9a227;
       border-color: #c9a227;
-    }
-
-    /* 移动端适配 */
-    @media (max-width: 480px) {
-      .gallery-inner {
-        padding: 24px 16px 24px;
-        max-height: calc(100vh - 32px);
-      }
-      .gallery-grid { gap: 8px; }
-      .gallery-title { font-size: 0.9rem; }
-      .gallery-caption { font-size: 0.58rem; }
-      .gallery-open-btn {
-        font-size: 0.72rem;
-        padding: 10px 28px;
-        letter-spacing: 0.4em;
-      }
-    }
-
-    @media (max-height: 600px) and (orientation: landscape) {
-      .gallery-inner {
-        padding: 16px 24px;
-        max-height: calc(100vh - 24px);
-      }
-      .gallery-grid {
-        grid-template-columns: repeat(6, 1fr);
-        gap: 8px;
-      }
-      .gallery-img { aspect-ratio: 3 / 4; }
-      .gallery-subtitle { margin-bottom: 16px; }
-      .gallery-btn-area { margin-top: 16px; }
     }
 
     /* 横屏手机 */
@@ -869,43 +613,6 @@
   <!-- 全局遮罩 -->
   <div class="letter-backdrop" id="letterBackdrop"></div>
 
-  <!-- 回忆录图册（单张照片轮播） -->
-  <div class="gallery-overlay" id="galleryOverlay">
-    <div class="gallery-inner">
-
-      <!-- 照片区域 -->
-      <div class="gallery-photo-wrap">
-        <img class="gallery-photo active" id="galleryPhoto0" src="images/1.jpg" alt="回忆1" />
-        <img class="gallery-photo" id="galleryPhoto1" src="images/2.jpg" alt="回忆2" />
-        <img class="gallery-photo" id="galleryPhoto2" src="images/3.jpg" alt="回忆3" />
-        <img class="gallery-photo" id="galleryPhoto3" src="images/4.jpg" alt="回忆4" />
-        <img class="gallery-photo" id="galleryPhoto4" src="images/5.jpg" alt="回忆5" />
-        <img class="gallery-photo" id="galleryPhoto5" src="images/6.jpg" alt="回忆6" />
-      </div>
-
-      <!-- 导航控制 -->
-      <div class="gallery-controls">
-        <div class="gallery-nav">
-          <button class="gallery-nav-btn prev" id="galleryPrev">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"></polyline></svg>
-          </button>
-          <div class="gallery-dots">
-            <span class="dot active" data-i="0"></span>
-            <span class="dot" data-i="1"></span>
-            <span class="dot" data-i="2"></span>
-            <span class="dot" data-i="3"></span>
-            <span class="dot" data-i="4"></span>
-            <span class="dot" data-i="5"></span>
-          </div>
-          <button class="gallery-nav-btn next" id="galleryNext">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,18 15,12 9,6"></polyline></svg>
-          </button>
-        </div>
-        <button class="gallery-open-btn" id="galleryOpenBtn">阅 读 信 件</button>
-      </div>
-
-    </div>
-  </div>
 
   <!-- 信件弹窗 -->
   <div class="letter-container" id="letterContainer">
@@ -1165,81 +872,23 @@
 function openLetter() {
   const envelope = document.getElementById('envelope');
   const btn = document.getElementById('openBtn');
+  const backdrop = document.getElementById('letterBackdrop');
+  const letterContainer = document.getElementById('letterContainer');
 
   // 先翻开信封盖
   envelope.classList.add('opened');
   btn.classList.add('hide');
 
-  // 延迟后显示回忆录图册
+  // 延迟后直接显示信件
   setTimeout(() => {
-    const backdrop = document.getElementById('letterBackdrop');
-    const gallery = document.getElementById('galleryOverlay');
     if (backdrop) backdrop.classList.add('show');
-    if (gallery) gallery.classList.add('show');
+    if (letterContainer) letterContainer.classList.add('show');
 
-    // 图册弹出时即播放音乐
+    // 信件弹出时即播放音乐
     if (window.audioManager) {
       window.audioManager.fadeIn(2000);
     }
-
-    // 初始化轮播：自动播放 + 手动控制
-    initGalleryCarousel();
-
-    // 点击"阅读信件"按钮
-    document.getElementById('galleryOpenBtn').onclick = function() {
-      gallery.classList.remove('show');
-      if (window._galleryTimer) {
-        clearInterval(window._galleryTimer);
-        window._galleryTimer = null;
-      }
-      const letterContainer = document.getElementById('letterContainer');
-      if (letterContainer) letterContainer.classList.add('show');
-    };
   }, 800);
-}
-
-// 图册轮播逻辑
-function initGalleryCarousel() {
-  var photos = document.querySelectorAll('.gallery-photo');
-  var dots = document.querySelectorAll('.dot');
-  var current = 0;
-  var total = photos.length;
-
-  // 重置状态
-  photos.forEach(function(p) { p.classList.remove('active'); });
-  dots.forEach(function(d) { d.classList.remove('active'); });
-  photos[0].classList.add('active');
-  dots[0].classList.add('active');
-
-  // 自动轮播：每张2秒
-  window._galleryTimer = setInterval(function() {
-    photos[current].classList.remove('active');
-    dots[current].classList.remove('active');
-    current = (current + 1) % total;
-    photos[current].classList.add('active');
-    dots[current].classList.add('active');
-  }, 2000);
-
-  function goTo(index) {
-    if (index === current) return;
-    photos[current].classList.remove('active');
-    dots[current].classList.remove('active');
-    current = index;
-    photos[current].classList.add('active');
-    dots[current].classList.add('active');
-  }
-
-  document.getElementById('galleryPrev').onclick = function() {
-    goTo((current - 1 + total) % total);
-  };
-  document.getElementById('galleryNext').onclick = function() {
-    goTo((current + 1) % total);
-  };
-  dots.forEach(function(dot) {
-    dot.onclick = function() {
-      goTo(parseInt(this.getAttribute('data-i')));
-    };
-  });
 }
 
 function closeLetter() {
