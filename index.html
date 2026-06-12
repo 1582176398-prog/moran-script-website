@@ -194,6 +194,7 @@
             overflow: visible;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
             z-index: 1;
+            min-width: 0;
         }
         
         .script-card::before {
@@ -1149,7 +1150,7 @@
                         <span style="display: block;">剧本杀</span>
                     </h1>
                 </div>
-                <p class="subtitle">重庆城限剧本精品店 · 沉浸式体验</p>
+                <p class="subtitle">重庆大学城店</p>
                 <p class="tagline">✨ 精选情感城限剧本，专业DM带您进入沉浸世界</p>
                 <!-- 搜索和折叠控制 -->
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center;">
@@ -1163,7 +1164,7 @@
 
         <div class="stats">
             <div class="stat-item" onclick="showScriptList()" style="cursor: pointer;">
-                <div class="stat-number">10</div>
+                <div class="stat-number">13</div>
                 <div class="stat-label">部城限剧本</div>
             </div>
             <div class="stat-item" onclick="showDMList()" style="cursor: pointer;">
@@ -1187,7 +1188,7 @@
                     <div class="script-details">
                         <div class="detail-item">
                             <div class="detail-label">👥 人员</div>
-                            <div class="detail-value">3男3女 · 2DM+2NPC</div>
+                            <div class="detail-value">3男3女</div>
                         </div>
                         <div class="detail-item">
                             <div class="detail-label">⏱ 时长</div>
@@ -1470,8 +1471,89 @@
 			<button class="btn btn-role" onclick="showRoleModal('tonggui')">👥 角色简介</button>
 		</div>
             </div>
-        </div>
         
+        <!-- 野菩萨 -->
+        <div class="script-card">
+            <span class="difficulty 进阶">进阶</span>
+            <h2 class="script-title">野菩萨</h2>
+            <p class="script-subtitle">6人现代情感本</p>
+            <div class="script-card-content">
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">8h+</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 现代">现代</span>
+                    <span class="tag 情感">情感</span>
+                </div>
+                <p>你看到的，未必是真相。你相信的，未必是救赎。</p>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <a href="javascript:void(0)" onclick="showPasswordModal('web-pdfs/yepusa.pdf')" class="btn btn-dm">📄 DM手册</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 金粉 -->
+        <div class="script-card">
+            <span class="difficulty 进阶">进阶</span>
+            <h2 class="script-title">金粉</h2>
+            <p class="script-subtitle">7人古风情感本</p>
+            <div class="script-card-content">
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男4女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">8h+</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 古风">古风</span>
+                    <span class="tag 情感">情感</span>
+                </div>
+                <p>世间沉醉，爱恨贪嗔痴恶，难自渡。</p>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <a href="javascript:void(0)" onclick="showPasswordModal('web-pdfs/jinfen.pdf')" class="btn btn-dm">📄 DM手册</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 不复出焉 -->
+        <div class="script-card">
+            <span class="difficulty 进阶">进阶</span>
+            <h2 class="script-title">不复出焉</h2>
+            <p class="script-subtitle">6人古风情感本</p>
+            <div class="script-card-content">
+                <div class="script-details">
+                    <div class="detail-item">
+                        <div class="detail-label">👥 人员</div>
+                        <div class="detail-value">3男3女</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">⏱ 时长</div>
+                        <div class="detail-value">8h+</div>
+                    </div>
+                </div>
+                <div class="script-tags">
+                    <span class="tag 古风">古风</span>
+                    <span class="tag 情感">情感</span>
+                </div>
+                <p>此谷为牢，此念做锁，此爱缠骨，此生，不复出焉。</p>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <a href="javascript:void(0)" onclick="showPasswordModal('web-pdfs/bufuchuyan.pdf')" class="btn btn-dm">📄 DM手册</a>
+                </div>
+            </div>
+        </div>
+        </div>
+
         <!-- 水墨分隔线 -->
         <div class="ink-divider"></div>
 
@@ -3016,7 +3098,10 @@
             { name: '阙落', id: 'queluo' },
             { name: '如故', id: 'rugu' },
             { name: '壁上观', id: 'bishangguan' },
-            { name: '同归', id: 'tonggui' }
+            { name: '同归', id: 'tonggui' },
+            { name: '野菩萨', id: 'yepusa' },
+            { name: '金粉', id: 'jinfen' },
+            { name: '不复出焉', id: 'bufuchuyan' }
         ];
         
         function showScriptList() {
@@ -3123,7 +3208,6 @@
                             <button onclick="addDMTag('${dmName}')" style="padding:10px 15px;background:#8b7500;color:white;border:none;border-radius:10px;cursor:pointer;font-size:0.85rem;pointer-events:auto;">添加</button>
                         </div>
                     </div>
-                </div>
             </div>
             <style>@keyframes floatTag{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}</style>`;
             document.body.appendChild(modal);
@@ -3421,7 +3505,7 @@
         }
         
         // 剧本列表（用于编辑角色）
-        const editScriptNames = ['大宴之上', '万仞青山听水寒', '流芳', '梦灵祈念时', '窃云台', '请君入瓮', '阙落', '如故', '壁上观', '同归'];
+        const editScriptNames = ['大宴之上', '万仞青山听水寒', '流芳', '梦灵祈念时', '窃云台', '请君入瓮', '阙落', '如故', '壁上观', '同归', '野菩萨', '金粉', '不复出焉'];
         
         // 密码验证时效（5分钟）
         const PASSWORD_VALID_MINUTES = 5;
@@ -3895,6 +3979,7 @@
                 if (!res.ok) {
                     const errText = await res.text();
                     console.error('Error response:', errText);
+                    // 返回详细的错误信息
                     throw new Error(`评论提交失败 (${res.status}): ${errText}`);
                 }
                 return true;
@@ -3940,8 +4025,10 @@
                 const replies = comments.filter(c => c.reply_to);
                 
                 list.innerHTML = mainComments.map(c => {
+                    // 确保有有效的评论ID
+                    const validId = c.id || ('text_' + c.comment_text);
                     // 找出该评论的所有回复
-                    const commentReplies = replies.filter(r => r.reply_to === c.id || r.reply_to === c.comment_text);
+                    const commentReplies = replies.filter(r => r.reply_to === c.id || (typeof r.reply_to === 'string' && r.reply_to.startsWith('text_')));
                     const repliesHtml = commentReplies.map(r => `
                         <div style="background: #e8f5e9; border-radius: 8px; padding: 8px 10px; margin-top: 6px; margin-left: 20px; border-left: 3px solid #4caf50;">
                             <div style="font-size: 0.75rem; color: #2e7d32; font-weight: bold; margin-bottom: 3px;">
@@ -3961,8 +4048,8 @@
                                     <div style="font-size: 0.75rem; color: #999; margin-top: 4px;">${new Date(c.created_at).toLocaleString()}</div>
                                 </div>
                                 <div style="display: flex; gap: 4px; flex-shrink: 0;">
-                                    <button onclick="showReplyModal('${dmName}', '${c.id || c.comment_text}', '${c.username || '匿名用户'}')" style="background: #4caf50; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 0.7rem; cursor: pointer;">回复</button>
-                                    <button onclick="deleteCommentAdmin('${dmName}', '${c.id || c.comment_text}', this)" style="background: #e74c3c; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 0.7rem; cursor: pointer;">删除</button>
+                                    <button onclick="showReplyModal('${dmName}', '${validId}', '${c.username || '匿名用户'}')" style="background: #4caf50; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 0.7rem; cursor: pointer;">回复</button>
+                                    <button onclick="deleteCommentAdmin('${dmName}', '${validId}', this)" style="background: #e74c3c; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 0.7rem; cursor: pointer;">删除</button>
                                 </div>
                             </div>
                             ${repliesHtml}
@@ -4277,7 +4364,7 @@
         // ========== 打本历程功能 ==========
         const PLAYS_TABLE = 'my_plays';
         
-        const playsScriptNames = ['大宴之上', '万仞青山听水寒', '流芳', '梦灵祈念时', '窃云台', '请君入瓮', '阙落', '如故', '壁上观', '同归', '自定义'];
+        const playsScriptNames = ['大宴之上', '万仞青山听水寒', '流芳', '梦灵祈念时', '窃云台', '请君入瓮', '阙落', '如故', '壁上观', '同归', '野菩萨', '金粉', '不复出焉', '自定义'];
         
         function initScriptSelect() {
             const select = document.getElementById('scriptSelect');
