@@ -338,7 +338,7 @@ let currentPlIdx = -1, currentIdx = -1, isPlaying = false;
 let isDraggingProgress = false, isDraggingVol = false, isMuted = false, lastVol = 0.8;
 
 const playlists = [
-  { name:'美梦', cover:'./美梦.jpg', songs:[
+  { name:'美梦', cover:'./美梦.jpg', discCover:'./美梦-d.jpg', songs:[
     {title:'梦醒时分', artist:'', url:'./梦醒时分.mp3'},
     {title:'送往繁星', artist:'', url:'./送往繁星.mp3'},
     {title:'昨夜的枪声', artist:'', url:'./昨夜的枪声.mp3'},
@@ -347,13 +347,13 @@ const playlists = [
     {title:'西伯利亚', artist:'', url:'./西伯利亚.mp3'},
     {title:'蝴蝶', artist:'', url:'./蝴蝶.mp3'},
   ]},
-  {name:'盛夏', cover:'./盛夏.jpg', songs:[]},
-  {name:'银屏', cover:'./银屏.jpg', songs:[]},
-  {name:'生吞', cover:'./生吞.jpg', songs:[]},
-  {name:'钉子', cover:'./钉子.jpg', songs:[]},
-  {name:'远望', cover:'./远望.jpg', songs:[]},
-  {name:'归乡', cover:'./归乡.jpg', songs:[]},
-  {name:'空屋', cover:'./空屋.jpg', songs:[]},
+  {name:'盛夏', cover:'./盛夏.jpg', discCover:'./盛夏-d.jpg', songs:[]},
+  {name:'银屏', cover:'./银屏.jpg', discCover:'./银屏-d.jpg', songs:[]},
+  {name:'生吞', cover:'./生吞.jpg', discCover:'./生吞-d.jpg', songs:[]},
+  {name:'钉子', cover:'./钉子.jpg', discCover:'./钉子-d.jpg', songs:[]},
+  {name:'远望', cover:'./远望.jpg', discCover:'./远望-d.jpg', songs:[]},
+  {name:'归乡', cover:'./归乡.jpg', discCover:'./归乡-d.jpg', songs:[]},
+  {name:'空屋', cover:'./空屋.jpg', discCover:'./空屋-d.jpg', songs:[]},
 ];
 
 function renderPlaylists() {
@@ -372,13 +372,14 @@ function openPlaylist(idx) {
   currentPlIdx = idx; currentIdx = -1;
   audio.pause(); isPlaying = false; updatePlayBtn();
   const pl = playlists[idx];
+  const discImg = pl.discCover || pl.cover;
   $('player-header-title').textContent = pl.name;
-  $('pl-bg').style.backgroundImage = `url(${pl.cover})`;
-  if (pl.cover) {
-    $('cover-img').src = pl.cover;
+  $('pl-bg').style.backgroundImage = `url(${discImg})`;
+  if (discImg) {
+    $('cover-img').src = discImg;
     $('cover-circle').style.display = '';
     $('cover-placeholder').style.display = 'none';
-    $('mini-cover-img').src = pl.cover;
+    $('mini-cover-img').src = discImg;
     $('mini-cover-img').style.display = '';
   } else {
     $('cover-circle').style.display = 'none';
@@ -557,8 +558,8 @@ function renderListPanel() {
     const item = document.createElement('div');
     item.className = 'list-item' + (i === currentIdx ? ' active' : '');
     item.addEventListener('click', () => { loadSong(i); if (!isPlaying) togglePlay(); });
-    const ch = pl.cover
-      ? '<div class="list-item-cover"><img src="' + pl.cover + '" alt=""></div>'
+    const ch = (pl.discCover || pl.cover)
+      ? '<div class="list-item-cover"><img src="' + (pl.discCover || pl.cover) + '" alt=""></div>'
       : '<div class="list-item-cover-placeholder"></div>';
     const eqH = (i === currentIdx && isPlaying)
       ? '<div class="eq-bars" style="display:flex"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>'
