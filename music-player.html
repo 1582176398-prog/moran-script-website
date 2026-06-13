@@ -14,7 +14,7 @@ body {
 
 /* ===== 歌单列表页 ===== */
 #playlist-view {
-  height:100vh; display:flex; flex-direction:column; background:#F6F6F6;
+  height:100vh; display:flex; flex-direction:column; background:#111;
 }
 .pl-header {
   padding:24px 20px 16px; flex-shrink:0;
@@ -22,10 +22,10 @@ body {
 }
 .pl-header-title {
   font-size:32px; font-weight:600;
-  letter-spacing:-1px; color:#111;
+  letter-spacing:-1px; color:#FFF;
 }
 .pl-header-subtitle {
-  font-size:13px; color:#999; margin-top:4px;
+  font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;
 }
 .pl-grid {
   flex:1; overflow-y:auto;
@@ -343,6 +343,9 @@ const playlists = [
     {title:'送往繁星', artist:'', url:'./送往繁星.mp3'},
     {title:'昨夜的枪声', artist:'', url:'./昨夜的枪声.mp3'},
     {title:'你我沉默在时间始前', artist:'', url:'./你我沉默在时间始前.mp3'},
+    {title:'冰层下', artist:'', url:'./冰层下.mp3'},
+    {title:'西伯利亚', artist:'', url:'./西伯利亚.mp3'},
+    {title:'蝴蝶', artist:'', url:'./蝴蝶.mp3'},
   ]},
   {name:'盛夏', cover:'./盛夏.jpg', songs:[]},
   {name:'银屏', cover:'./银屏.jpg', songs:[]},
