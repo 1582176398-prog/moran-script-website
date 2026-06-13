@@ -35,12 +35,12 @@ body {
 .pl-grid::-webkit-scrollbar { display:none; }
 .pl-card {
   aspect-ratio:1; overflow:hidden;
-  cursor:pointer;
+  cursor:pointer; background:#EEE;
   -webkit-tap-highlight-color:transparent;
   user-select:none; -webkit-user-select:none;
 }
 .pl-card:active { transform:scale(0.95); }
-.pl-card img { width:100%; height:100%; object-fit:cover; display:block; }
+.pl-card img { width:100%; height:100%; object-fit:contain; display:block; }
 
 /* ===== 播放器页 ===== */
 #player-view {
