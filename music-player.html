@@ -29,14 +29,14 @@ body {
 }
 .pl-grid {
   flex:1; overflow-y:auto;
-  display:grid; grid-template-columns:repeat(2,1fr); gap:28px;
+  display:grid; grid-template-columns:repeat(2,1fr); gap:40px;
   align-content:start; -webkit-overflow-scrolling:touch;
   padding:0 20px 80px;
 }
 .pl-grid::-webkit-scrollbar { display:none; }
 .pl-card {
   aspect-ratio:1; overflow:hidden;
-  cursor:pointer; background:#DDD;
+  cursor:pointer; background:#FFF;
   -webkit-tap-highlight-color:transparent;
   user-select:none; -webkit-user-select:none;
 }
@@ -246,7 +246,7 @@ body {
 
 @media (max-width:480px) {
   .pl-header-title { font-size:26px; }
-  .pl-grid { padding:0 16px 80px; gap:24px; }
+  .pl-grid { padding:0 16px 80px; gap:32px; }
   .cover-circle, .cover-circle-placeholder { width:190px; height:190px; }
   .progress-area { padding:14px 24px 4px; }
   .controls { padding:6px 24px 4px; gap:32px; }
